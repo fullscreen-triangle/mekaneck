@@ -1,0 +1,205 @@
+%==============================================================================
+\section{Categorical Selection and Accessibility Pathways}
+\label{sec:selection}
+%==============================================================================
+
+\subsection{The Selection Problem}
+
+In Maxwell's thought experiment, the demon ``selects'' fast molecules to pass through the door. We now analyse what selection means in categorical terms.
+
+\begin{definition}[Categorical Selection]
+\label{def:categorical_selection}
+A \textbf{categorical selection} is the completion of a specific categorical state $C^* \in [C]_{\text{spatial}}$ from an equivalence class of spatially indistinguishable states.
+\end{definition}
+
+\begin{proposition}[Selection as Equivalence Class Reduction]
+\label{prop:selection_reduction}
+Categorical selection reduces the equivalence class to a singleton:
+\begin{equation}
+[C]_{\text{spatial}} \xrightarrow{\text{selection}} \{C^*\}
+\end{equation}
+This is an information-gain process: $\log |[C]_{\text{spatial}}|$ bits of categorical information are specified.
+\end{proposition}
+
+\begin{proof}
+Before selection, any state in $[C]_{\text{spatial}}$ is possible. After selection, exactly one state $C^*$ is completed. The information gained is:
+\begin{equation}
+I_{\text{selection}} = \log_2 |[C]_{\text{spatial}}| - \log_2 1 = \log_2 |[C]_{\text{spatial}}|
+\end{equation}
+For typical gas systems with $|[C]_{\text{spatial}}| \sim 10^6$, this is $\sim 20$ bits per selection. \qed
+\end{proof}
+
+\subsection{Accessibility Through Phase-Lock Networks}
+
+\begin{theorem}[Phase-Lock Accessibility]
+\label{thm:phase_lock_accessibility}
+When categorical state $C_i$ is completed, the accessible states for subsequent completion are determined by phase-lock adjacency:
+\begin{equation}
+\accessible(C_i) = \{C_j \in \catspace : \exists (m_k, m_l) \in E(\phaselockgraph) \text{ connecting } C_i \text{ to } C_j\}
+\label{eq:accessible_states}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Categorical transitions require physical mechanism. The mechanisms available are:
+\begin{enumerate}
+    \item Molecular collisions: transfer energy and phase information
+    \item Phase-lock coupling: synchronise oscillatory states
+    \item Electromagnetic interaction: modify electronic configurations
+\end{enumerate}
+
+All these mechanisms operate through intermolecular interactions. Molecules not connected in $\phaselockgraph$ have negligible interaction strength (below threshold~\eqref{eq:phase_lock_threshold}), hence cannot mediate transitions.
+
+Therefore, accessible states are precisely those reachable through phase-lock network edges. \qed
+\end{proof}
+
+\begin{corollary}[Pathway Opening]
+\label{cor:pathway_opening}
+Completing categorical state $C_i$ ``opens'' pathways to all states in:
+\begin{equation}
+\text{Pathways}(C_i) = \{C_j : d_{\catspace}(C_i, C_j) < \infty\}
+\end{equation}
+the connected component of $\catspace$ containing $C_i$.
+\end{corollary}
+
+\subsection{The Cascade Effect}
+
+\begin{theorem}[Categorical Cascade]
+\label{thm:categorical_cascade}
+Selection of a single categorical state $C_1$ initiates a cascade of accessible completions:
+\begin{align}
+C_1 &\to \accessible(C_1) = \{C_2^{(1)}, C_2^{(2)}, \ldots\} \\
+C_2^{(k)} &\to \accessible(C_2^{(k)}) = \{C_3^{(k,1)}, C_3^{(k,2)}, \ldots\} \\
+&\vdots
+\end{align}
+The cascade propagates through the phase-lock network.
+\end{theorem}
+
+\begin{proof}
+Each completed state makes adjacent states accessible (Theorem~\ref{thm:phase_lock_accessibility}). Completing any accessible state makes its neighbours accessible. This propagation continues until:
+\begin{enumerate}
+    \item The entire connected component is exhausted, or
+    \item Energy/entropy constraints halt the cascade
+\end{enumerate}
+
+The structure of the cascade is determined by $\phaselockgraph$ topology. \qed
+\end{proof}
+
+\begin{definition}[Cascade Wavefront]
+\label{def:cascade_wavefront}
+The \textbf{cascade wavefront} at step $n$ is:
+\begin{equation}
+W_n = \{C \in \catspace : d_{\catspace}(C_1, C) = n\}
+\end{equation}
+the set of states at categorical distance $n$ from the initial selection.
+\end{definition}
+
+\begin{proposition}[Wavefront Propagation]
+\label{prop:wavefront_propagation}
+The wavefront size evolves according to:
+\begin{equation}
+|W_{n+1}| = \sum_{C \in W_n} |\accessible(C) \setminus \gamma(t_n)|
+\end{equation}
+where $\gamma(t_n)$ is the set of already-completed states.
+\end{proposition}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/panel_arg5_dissolution_decision.png}
+\caption{\textbf{Argument 5: Dissolution of Decision—Categorical Completion is Automatic, Not Deliberative.}
+\textbf{(A)} No decision tree exists in phase-lock network topology. The schematic shows a molecule (top teal node) with multiple potential paths (gray dashed lines indicate non-existent alternatives). Only one path (solid green line through teal nodes) exists in the network topology, determined by categorical adjacency. Red lines with crosses mark paths that are topologically forbidden. The system has no choice points: navigation is deterministic. The caption ``Only ONE path exists in topology'' emphasizes that categorical completion requires no decision-making.
+\textbf{(B)} Automatic path following through configuration space. The trajectory (dark teal curve) shows completion progress from start (green circle, configuration $\approx 0.5$) to end (red star, categorical progress $= 1.0$). The smooth, deterministic path follows the gradient of categorical distance $\nabla d_{\text{cat}}(\mathbf{q})$ with no branching points. The system automatically follows network structure without decisions, as indicated by the annotation ``Automatic following / No decisions required.'' The configuration parameter represents position in categorical state space, not physical space.
+\textbf{(C)} No branching implies no decision. Bar plot showing the number of available options at each completion step. All bars are exactly 1.0 (marked by red dashed line), confirming ``Always exactly 1 option'' at every step. If decision-making were required, we would observe $n_{\text{options}} > 1$ at branch points. The constant value $n = 1$ proves that categorical completion is a deterministic flow, not a stochastic or deliberative process. This directly contradicts the demon's purported role as a decision-maker.
+\textbf{(D)} Deterministic reproducibility across 10 independent runs. The completion curve (dark teal) shows identical trajectories for all 10 runs, with completion increasing from 0 to 1.0 following $C(t) = 1 - \exp(-t/\tau_{\text{cat}})$ where $\tau_{\text{cat}}$ is the categorical completion timescale. Perfect overlap of all runs confirms deterministic dynamics: given the same initial categorical state, the system always follows the same path. This demonstrates that categorical completion is automatic and reproducible, requiring no agent, no information processing, and no decisions. The demon's ``choice'' to open the door is revealed as automatic topological navigation.}
+\label{fig:dissolution_decision}
+\end{figure*}
+
+\subsection{Selection Without Information}
+
+We now prove the central result: categorical selection requires no external information.
+
+\begin{theorem}[Information-Free Selection]
+\label{thm:information_free}
+Categorical selection from equivalence class $[C]_{\text{spatial}}$ is determined by phase-lock network topology without external information input. Specifically:
+\begin{equation}
+C^* = \argmin_{C \in [C]_{\text{spatial}}} d_{\catspace}(C, C_{\text{prev}})
+\end{equation}
+where $C_{\text{prev}}$ is the previously completed state.
+\end{theorem}
+
+\begin{proof}
+Consider a system at categorical state $C_{\text{prev}}$ transitioning to spatial configuration $\mathbf{q}_{\text{new}}$.
+
+The accessible categorical states at $\mathbf{q}_{\text{new}}$ are:
+\begin{equation}
+\accessible(C_{\text{prev}}) \cap [C]_{\text{spatial}}(\mathbf{q}_{\text{new}})
+\end{equation}
+the intersection of phase-lock accessible states and spatially compatible states.
+
+\textbf{Case 1: Unique accessible state.}
+If $|\accessible(C_{\text{prev}}) \cap [C]_{\text{spatial}}| = 1$, selection is deterministic---only one categorical state is reachable.
+
+\textbf{Case 2: Multiple accessible states.}
+If multiple states are accessible, physical dynamics (minimising action, maximising entropy production rate) select among them. This selection is governed by:
+\begin{equation}
+C^* = \argmax_{C \in \accessible(C_{\text{prev}}) \cap [C]_{\text{spatial}}}\frac{d\alpha}{dt}
+\end{equation}
+where $\alpha$ is the oscillatory termination probability, favouring states with shorter paths to equilibrium.
+
+In both cases, selection follows from network topology and physical dynamics---no external ``measurement'' or ``decision'' is required.
+
+The ``information'' specifying which categorical state to occupy is structural (encoded in $\phaselockgraph$) rather than acquired through measurement. \qed
+\end{proof}
+
+\begin{corollary}[No Demon Required]
+\label{cor:no_demon}
+The selection process attributed to Maxwell's Demon is categorical completion through phase-lock topology. No agent is required because:
+\begin{enumerate}
+    \item Selection is determined by network structure (Theorem~\ref{thm:information_free})
+    \item Accessibility follows from phase-lock adjacency (Theorem~\ref{thm:phase_lock_accessibility})
+    \item Cascade propagation is automatic (Theorem~\ref{thm:categorical_cascade})
+\end{enumerate}
+\end{corollary}
+
+\subsection{Apparent Sorting Through Categorical Pathways}
+
+\begin{theorem}[Apparent Temperature Sorting]
+\label{thm:apparent_sorting}
+Molecules following categorical pathways appear sorted by temperature because phase-lock clusters correlate with kinetic properties. Specifically, for molecules $i, j$ in the same phase-lock cluster:
+\begin{equation}
+\text{Cov}(E_{\text{kin},i}, E_{\text{kin},j}) > 0
+\label{eq:kinetic_correlation}
+\end{equation}
+despite phase-lock formation being kinetically independent.
+\end{theorem}
+
+\begin{proof}
+Phase-lock clusters form based on molecular properties: polarisability, dipole moment, vibrational frequencies. These properties correlate with molecular mass and structure, which in turn correlate with kinetic energy distribution at thermal equilibrium.
+
+Consider the Maxwell-Boltzmann distribution:
+\begin{equation}
+f(v) = 4\pi \left(\frac{m}{2\pi k_B T}\right)^{3/2} v^2 \exp\left(-\frac{mv^2}{2k_B T}\right)
+\end{equation}
+
+Molecules with similar mass $m$ have similar most-probable velocities $v_p = \sqrt{2k_B T/m}$. Since phase-lock clusters tend to contain molecules with similar properties (similar polarisabilities, similar dipole moments), they tend to contain molecules with similar masses, hence similar kinetic energies.
+
+The correlation~\eqref{eq:kinetic_correlation} arises from shared molecular properties, not from kinetic energy determining phase-lock formation.
+
+\textbf{Causal structure:}
+\begin{equation}
+\text{Molecular properties} \to \begin{cases} \text{Phase-lock clustering} \\ \text{Kinetic energy distribution} \end{cases}
+\end{equation}
+
+Both phase-lock structure and kinetic properties are downstream of molecular properties. The correlation is non-causal: neither determines the other. \qed
+\end{proof}
+
+\begin{corollary}[Sorting Is Correlation, Not Causation]
+\label{cor:correlation_not_causation}
+When molecules ``sorted'' by categorical pathways appear to separate by temperature, this reflects:
+\begin{enumerate}
+    \item Pre-existing phase-lock cluster structure
+    \item Correlation between cluster membership and kinetic properties
+    \item NOT measurement of velocity followed by sorting decision
+\end{enumerate}
+\end{corollary}
+

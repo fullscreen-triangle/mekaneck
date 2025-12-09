@@ -1,0 +1,452 @@
+%==============================================================================
+\section{The Dissolution of Maxwell's Demon}
+\label{sec:dissolution}
+%==============================================================================
+
+\subsection{Restatement of the Paradox}
+
+Maxwell's thought experiment posits a being that:
+\begin{enumerate}
+    \item Observes molecules approaching a door between two chambers
+    \item Measures their velocities to classify them as ``fast'' or ``slow''
+    \item Opens the door selectively to allow fast molecules to pass one way, slow molecules the other
+    \item Creates a temperature difference from thermal equilibrium without doing work
+\end{enumerate}
+
+The paradox: this appears to violate the second law, $\Delta S \geq 0$.
+
+\subsection{Three Decisive Insights}
+
+Before analysing the demon's purported operations, we establish three fundamental results that independently dissolve the paradox.
+
+\begin{theorem}[Temporal Triviality of the Demon]
+\label{thm:temporal_triviality}
+The demon is temporally redundant: any configuration it purportedly creates will occur naturally through thermal fluctuations given sufficient time.
+\end{theorem}
+
+\begin{proof}
+In statistical mechanics, the probability of any configuration $\Gamma$ is given by the Boltzmann distribution:
+\begin{equation}
+P(\Gamma) = \frac{e^{-E(\Gamma)/k_B T}}{Z} > 0 \quad \forall \text{ configurations } \Gamma
+\end{equation}
+where $Z = \sum_\Gamma e^{-E(\Gamma)/k_B T}$ is the partition function.
+
+Crucially, $P(\Gamma) > 0$ for \textit{every} configuration, including the ``sorted'' state the demon supposedly creates. The Poincaré recurrence theorem guarantees that an isolated system will return arbitrarily close to any configuration in finite (though possibly astronomically long) time:
+\begin{equation}
+\forall \epsilon > 0, \exists T_{\text{rec}} < \infty : |\Gamma(T_{\text{rec}}) - \Gamma_{\text{sorted}}| < \epsilon
+\end{equation}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/arg3_retrieval_paradox.png}
+\caption{\textbf{Argument 3: The Retrieval Paradox—Velocity-Based Sorting is Self-Defeating.}
+\textbf{(A)} Timescale hierarchy showing collisions happen first. Molecular collision timescale $\tau_{\text{coll}} \sim 10^{-10}$ s (red bar) is orders of magnitude faster than measurement ($\sim 10^{-8}$ s), gate operation ($\sim 10^{-6}$ s), sorting ($\sim 10^{-3}$ s), and demon decision-making ($\sim 10^{-1}$ s). The collision rate $\nu_{\text{coll}} \sim 10^{10}$ collisions/s in gases at STP ensures velocities randomize before any sorting operation can complete. The label ``TOO SLOW!'' emphasizes that sorting timescale exceeds thermalization timescale by $10^7$, making velocity-based sorting operationally impossible.
+\textbf{(B)} Phase space scrambling showing sorted states randomize in $\tau_{\text{coll}}$. Initially sorted molecules (blue points, $t=0$) with velocities clustered in one region of phase space become completely randomized (red points, $t > \tau_{\text{coll}}$) after a single collision time. The velocity distribution returns to Maxwell-Boltzmann, erasing any sorting. This demonstrates that maintaining sorted states requires infinite retrieval operations.
+\textbf{(C)} Sorting versus thermalization dynamics. The sorting signal strength $S(t) = |\langle v_A \rangle - \langle v_B \rangle|/\sigma_v$ (teal curve) decays exponentially as $S(t) = S_0 \exp(-t/\tau_{\text{coll}})$, while thermal randomization (red shaded region) dominates. The system relaxes to equilibrium ($S \to 0$) within $\sim 2\tau_{\text{coll}}$. The demon's sorting attempt (starting from yellow circle at $S_0 \approx 0.9$) is overwhelmed by thermalization.
+\textbf{(D)} Long-term sorting attempts always return to 50/50 equilibrium. Three independent sorting attempts (colored traces) show fast/total molecule ratio fluctuating around equilibrium value 0.5 (red dashed line). Despite initial deviations, all attempts converge to the equilibrium distribution within $\sim 50$ time steps. The red shaded band indicates $\pm 2\sigma$ fluctuations. This confirms that velocity-sorted states cannot be maintained: the retrieval paradox makes the demon's operation self-defeating.}
+\label{fig:retrieval_paradox}
+\end{figure*}
+
+
+Therefore, the demon does not create anything that would not occur naturally. It merely (supposedly) accelerates what statistical mechanics already predicts. But acceleration is not violation---the second law concerns what \textit{can} happen, not how \textit{quickly} it happens.
+
+The demon is temporally trivial: it is redundant with natural fluctuations. \qed
+\end{proof}
+
+\begin{theorem}[Phase-Lock Temperature Independence]
+\label{thm:phase_lock_temperature_independence}
+The same phase-lock network topology (spatial arrangement and categorical structure) can exist at any temperature. A ``snapshot'' of the system---frozen positions and phase relationships---is temperature-independent.
+\end{theorem}
+
+\begin{proof}
+Consider a snapshot of the system at time $t$: a frozen configuration with definite molecular positions $\{\mathbf{r}_i\}$ and phase-lock relationships $\phaselockgraph$.
+
+In this snapshot, molecules have:
+\begin{enumerate}
+    \item Positions $\mathbf{r}_i$ (which determine phase-lock structure)
+    \item Velocities $\mathbf{v}_i$ (which contribute to kinetic energy and temperature)
+\end{enumerate}
+
+These are \textbf{independent variables}. The phase-lock network depends only on positions:
+\begin{equation}
+\phaselockgraph = \phaselockgraph(\{\mathbf{r}_i\}) \neq \phaselockgraph(\{\mathbf{v}_i\})
+\end{equation}
+
+The same spatial arrangement can occur with:
+\begin{itemize}
+    \item Low velocities (low temperature)
+    \item High velocities (high temperature)
+    \item Any velocity distribution consistent with the positions
+\end{itemize}
+
+Temperature is a statistical average over velocity distributions:
+\begin{equation}
+T = \frac{2}{3 N k_B} \sum_i \frac{1}{2} m_i |\mathbf{v}_i|^2
+\end{equation}
+
+Since velocities are independent of positions in a snapshot, the \textit{same} phase-lock graph $\phaselockgraph$ can correspond to \textit{any} temperature. The categorical structure is temperature-independent.
+
+This means: rearrangement of molecules according to phase-lock topology (categorical completion) is not ``sorting by temperature.'' The same categorical pathway exists whether the system is at 100 K or 1000 K. \qed
+\end{proof}
+
+\begin{corollary}[The Snapshot Principle]
+\label{cor:snapshot}
+In any snapshot (frozen instant), molecular positions can be rearranged along phase-lock adjacency pathways without reference to velocity. The ``sorting'' attributed to the demon is rearrangement by phase-lock structure, which is velocity-blind.
+\end{corollary}
+
+\begin{theorem}[The Retrieval Paradox]
+\label{thm:retrieval_paradox}
+A demon that sorts by molecular velocity is self-defeating: thermal equilibration continuously randomises velocities, requiring infinite retrieval operations.
+\end{theorem}
+
+\begin{proof}
+Suppose the demon successfully ``sorts'' molecule $A$ into the hot chamber based on its velocity $v_A > v_{\text{threshold}}$ at time $t_0$.
+
+After sorting, molecule $A$ undergoes collisions with other molecules. The collision frequency in an ideal gas is:
+\begin{equation}
+\nu_{\text{collision}} = n \sigma \langle v \rangle \approx 10^{10} \text{ s}^{-1}
+\end{equation}
+for standard conditions, where $n$ is number density, $\sigma$ is collision cross-section, and $\langle v \rangle$ is mean velocity.
+
+After a collision at time $t_1 = t_0 + \tau_{\text{collision}}$, molecule $A$ has new velocity $v_A'$, which may be less than $v_{\text{threshold}}$. If $v_A' < v_{\text{threshold}}$, molecule $A$ is now ``slow'' and in the wrong chamber.
+
+The demon must:
+\begin{enumerate}
+    \item Detect that $A$ has become ``slow''
+    \item Retrieve $A$ from the hot chamber
+    \item Return $A$ to the cold chamber
+\end{enumerate}
+
+But during retrieval, $A$ collides again and may become ``fast.'' The demon enters an infinite loop of sorting and retrieval.
+
+For $N$ molecules with collision frequency $\nu$, the demon must process:
+\begin{equation}
+\text{Operations per second} \sim N \cdot \nu \sim 10^{23} \times 10^{10} = 10^{33} \text{ s}^{-1}
+\end{equation}
+
+This exceeds any physical limit. More fundamentally, the demon cannot ``keep up'' with thermal equilibration. Velocity-based sorting is self-defeating because:
+\begin{equation}
+\tau_{\text{sorting}} \gg \tau_{\text{equilibration}} \implies \text{Sorting is futile}
+\end{equation}
+
+The demon cannot maintain a velocity-sorted state against thermal relaxation. \qed
+\end{proof}
+
+\begin{corollary}[Velocity Is the Wrong Criterion]
+\label{cor:wrong_criterion}
+The demon's failure is not due to information costs or measurement disturbance. It fails because velocity is not a stable molecular property---it changes on the collision timescale. Sorting by velocity is like sorting waves by their instantaneous height: the criterion changes faster than sorting can occur.
+\end{corollary}
+
+\subsection{The Dissolution}
+
+With Theorems~\ref{thm:temporal_triviality}--\ref{thm:retrieval_paradox} established, we now show that each step of the demon's operation is either unnecessary, misconceived, or automatically entropy-increasing.
+
+\begin{theorem}[Dissolution of Observation]
+\label{thm:dissolution_observation}
+The demon's ``observation'' of molecular velocities is unnecessary because phase-lock network topology encodes categorical structure without measurement.
+\end{theorem}
+
+\begin{proof}
+From Theorem~\ref{thm:kinetic_independence}, the phase-lock network $\phaselockgraph$ is determined by spatial configuration and molecular properties, not velocities.
+
+From Theorem~\ref{thm:phase_lock_accessibility}, categorical accessibility is determined by network topology.
+
+Therefore, the system's categorical structure---which states are accessible from which---is fully determined without any velocity measurement. The ``information'' about molecular arrangement is structural, encoded in $\phaselockgraph$, not acquired through observation.
+
+The demon need not observe velocities because categorical dynamics do not depend on them. \qed
+\end{proof}
+
+\begin{theorem}[Dissolution of Decision]
+\label{thm:dissolution_decision}
+The demon's ``decision'' to open or close the door is unnecessary because categorical completion follows network topology deterministically.
+\end{theorem}
+
+\begin{proof}
+From Theorem~\ref{thm:information_free}, categorical selection is determined by:
+\begin{equation}
+C^* = \argmin_{C \in \accessible(C_{\text{prev}}) \cap [C]_{\text{spatial}}} d_{\catspace}(C, C_{\text{prev}})
+\end{equation}
+
+This selection follows from:
+\begin{enumerate}
+    \item Previous categorical state $C_{\text{prev}}$ (given)
+    \item Network topology determining $\accessible(C_{\text{prev}})$ (structural)
+    \item Physical dynamics selecting among accessible states (deterministic or stochastic but not deliberative)
+\end{enumerate}
+
+No ``decision'' by an agent is required. The categorical dynamics are self-executing. \qed
+\end{proof}
+
+\begin{theorem}[Dissolution of Sorting]
+\label{thm:dissolution_sorting}
+The demon's ``sorting'' by temperature is a misinterpretation of categorical completion through phase-lock pathways.
+\end{theorem}
+
+\begin{proof}
+From Theorem~\ref{thm:demon_cannot_sort}, temperature is not a molecular attribute but an emergent macroscopic property. Molecules have kinetic energies, not temperatures.
+
+From Theorem~\ref{thm:kinetic_independence}, kinetic energy does not determine phase-lock network topology.
+
+From Theorem~\ref{thm:apparent_sorting}, molecules in the same phase-lock cluster have correlated kinetic energies due to shared molecular properties---not because kinetic energy determines clustering.
+
+When molecules appear ``sorted by temperature,'' they are actually:
+\begin{enumerate}
+    \item Following categorical pathways determined by phase-lock topology
+    \item Clustering by phase-lock adjacency, not kinetic similarity
+    \item Exhibiting kinetic correlations that are consequences, not causes, of clustering
+\end{enumerate}
+
+The ``sorting'' reveals pre-existing categorical structure rather than creating order from measurement. \qed
+\end{proof}
+
+\begin{theorem}[Dissolution of Second Law Violation]
+\label{thm:dissolution_second_law}
+The apparent decrease in entropy is an artefact of ignoring categorical degrees of freedom. Total entropy increases.
+\end{theorem}
+
+\begin{proof}
+From Theorem~\ref{thm:sorting_density}, the demon operation---categorical completion through phase-lock pathways---increases network density:
+\begin{equation}
+|E(\gamma(t_{\text{final}}))| > |E(\gamma(t_{\text{initial}}))|
+\end{equation}
+
+From Corollary~\ref{cor:second_law}, total entropy satisfies:
+\begin{equation}
+\Delta S_{\text{total}} = \Delta S_{\text{spatial}} + \Delta S_{\text{categorical}} \geq 0
+\end{equation}
+
+Even if spatial entropy appears to decrease (molecules ``sorted'' into hot and cold chambers), categorical entropy increases due to network densification.
+
+The second law is not violated; it was never threatened. The paradox arose from incomplete entropy accounting. \qed
+\end{proof}
+
+\subsection{The Demon as Categorical Completion}
+
+\begin{theorem}[Identity Theorem]
+\label{thm:identity}
+Maxwell's Demon is identical to categorical completion through phase-lock network topology:
+\begin{equation}
+\boxed{\text{``Maxwell's Demon''} \equiv \text{Categorical Completion}(\phaselockgraph)}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+We establish a complete correspondence:
+
+\begin{center}
+\begin{tabular}{l|l}
+\textbf{Demon Operation} & \textbf{Categorical Process} \\
+\hline
+Observe molecule & Complete categorical state $C_i$ \\
+Measure velocity & (Unnecessary---topology determines accessibility) \\
+Classify fast/slow & Identify phase-lock cluster membership \\
+Open door & Make adjacent states accessible \\
+Close door & Categorical irreversibility prevents return \\
+Sort molecules & Follow phase-lock pathways \\
+Create $\Delta T$ & Reveal cluster structure (correlated with $T$) \\
+\end{tabular}
+\end{center}
+
+Every demon operation has a categorical counterpart that:
+\begin{itemize}
+    \item Requires no external agent
+    \item Requires no information acquisition
+    \item Follows automatically from network topology
+    \item Increases entropy rather than decreasing it
+\end{itemize}
+
+The demon is not needed because categorical completion through phase-lock topology accomplishes the same apparent effect. But this is not a demon ``in disguise''---it is the recognition that no demon was ever required. The physical process is categorical completion, which was always entropy-increasing. \qed
+\end{proof}
+
+\subsection{Why Maxwell Saw a Demon: Information Complementarity}
+
+\begin{theorem}[Information Complementarity]
+\label{thm:information_complementarity}
+Information has two conjugate faces that cannot be simultaneously observed. Maxwell saw a ``demon'' because he was observing one face of information while the dynamics of the conjugate face remained hidden.
+\end{theorem}
+
+\begin{proof}
+Every categorical state has a conjugate representation:
+\begin{align}
+\mathbf{S}_{\text{front}} &= (S_{k,f}, S_{t,f}, S_{e,f}) \quad \text{(observable face)} \\
+\mathbf{S}_{\text{back}} &= (S_{k,b}, S_{t,b}, S_{e,b}) \quad \text{(hidden face)}
+\end{align}
+related by a conjugate transformation $T$:
+\begin{equation}
+\mathbf{S}_{\text{back}} = T(\mathbf{S}_{\text{front}})
+\end{equation}
+
+This is not a quantum effect but a classical measurement constraint, analogous to the ammeter/voltmeter complementarity in electrical circuits:
+\begin{center}
+\begin{tabular}{l|l}
+\textbf{Electrical Circuit} & \textbf{Categorical Information} \\
+\hline
+Ammeter measures current $I$ directly & Observer sees kinetic energy face \\
+Voltmeter measures voltage $V$ directly & Observer sees categorical structure face \\
+Cannot measure both at same point & Cannot observe both faces simultaneously \\
+$V$ derived from $I$ via Ohm's law & Hidden face derived from observable via $T$
+\end{tabular}
+\end{center}
+
+Maxwell observed the \textit{kinetic energy face}: molecules with velocities, temperatures, and apparent ``sorting.'' The \textit{categorical structure face}---the phase-lock network topology and categorical completion dynamics---was hidden from his view.
+
+When you observe only one face, the dynamics of the conjugate face appear as \textit{external intervention}. Maxwell attributed these hidden dynamics to an intelligent agent: the demon.
+
+But the ``demon'' was not an agent. It was the conjugate face of information completing categorical states according to phase-lock topology. The ``sorting'' Maxwell observed was the projection of categorical completion onto the kinetic energy face. \qed
+\end{proof}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/panel_arg7_information_complementarity.png}
+\caption{\textbf{Argument 7: Information Complementarity—The Demon is a Projection Artifact.}
+\textbf{(A)} Two complementary faces of information. Venn diagram showing the kinetic face (red circle: velocities, energy, temperature) and categorical face (purple circle: network topology, phase-lock structure) with minimal overlap (small purple square in center). The two faces are complementary: observing one face renders the other hidden, analogous to conjugate observables in quantum mechanics. The annotation ``Complementary: cannot observe both simultaneously'' emphasizes measurement incompatibility. Maxwell observed only the kinetic face; the categorical face remained hidden, creating the illusion of a demon.
+\textbf{(B)} Ammeter-voltmeter analogy. Schematic of an electrical component with ammeter (A, red) measuring current and voltmeter (V, purple) measuring voltage. The fundamental constraint ``Cannot use both meters simultaneously on same element'' illustrates complementarity: inserting an ammeter (low resistance) changes the circuit, making voltage measurement impossible, and vice versa. Similarly, observing molecular velocities (kinetic face) obscures phase-lock network structure (categorical face). The demon paradox arises from observing only one meter while the other remains hidden.
+\textbf{(C)} Demon as projection artifact. Schematic showing categorical dynamics (purple box, hidden) projecting onto the kinetic face (red box, observed). The demon (yellow box with annotation ``DEMON = Shadow of hidden dynamics'') is not an agent but a projection artifact—the shadow cast by categorical completion onto the observable kinetic face. Three downward arrows represent multiple projection paths from hidden categorical dynamics to observed kinetic behavior. What Maxwell interpreted as intelligent sorting is actually the visible manifestation of automatic topological navigation occurring on the hidden face. The demon is an epiphenomenon, not a causal agent.
+\textbf{(D)} Complete picture resolves the paradox. Two-column comparison showing Maxwell's incomplete view versus the complete picture. \textit{Left column (Maxwell's View)}: Observing kinetic properties only (``Kinetic only $\to$'') leads to the interpretation of ``Demon sorting'' (red text)—an apparent agent performing intelligent operations. \textit{Right column (Complete View)}: Observing both faces (``Both faces $\to$'') reveals ``Automatic topology'' (green text)—deterministic categorical completion through phase-lock networks. The yellow box at bottom states the resolution: ``NO DEMON EXISTS / Only categorical completion / along network topology.'' The vertical dashed line separates incomplete from complete understanding. The paradox dissolves when both faces are visible: what appeared to require an information-processing demon is revealed as automatic navigation through categorical state space, visible only from the complementary face. This is the deepest resolution: the demon was never real, only a shadow of hidden dynamics.}
+\label{fig:information_complementarity}
+\end{figure*}
+
+
+\begin{corollary}[The Demon as Projection]
+\label{cor:demon_projection}
+Maxwell's Demon is the projection of hidden categorical dynamics onto the observable kinetic face:
+\begin{equation}
+\text{``Demon''} = \Pi_{\text{kinetic}}\left(\frac{d\mathbf{S}_{\text{categorical}}}{dt}\right)
+\end{equation}
+where $\Pi_{\text{kinetic}}$ is the projection operator onto the observable (kinetic) face.
+\end{corollary}
+
+\begin{remark}[Why the Demon Appeared Intelligent]
+The demon appeared to make ``decisions'' because categorical completion follows network topology---a structured, non-random process. When this structured process is projected onto the kinetic face, it appears as purposeful selection. But the ``purpose'' is topological, not intentional. The phase-lock network already encodes which states are adjacent; ``opening the door'' is following adjacency, not deciding.
+\end{remark}
+
+\begin{theorem}[Face-Switching Dissolves the Demon]
+\label{thm:face_switching}
+If Maxwell had been able to observe the categorical face instead of the kinetic face, no demon would have appeared. The ``sorting'' would be revealed as categorical completion through phase-lock pathways.
+\end{theorem}
+
+\begin{proof}
+On the kinetic face, molecules appear to be sorted by velocity. An agent seems required to select which molecules pass.
+
+On the categorical face, molecules are nodes in a phase-lock network. Categorical completion follows network adjacency. No selection occurs; the system follows topological pathways.
+
+The same physical process appears differently on different faces:
+\begin{center}
+\begin{tabular}{l|l}
+\textbf{Kinetic Face (Maxwell's View)} & \textbf{Categorical Face (Phase-Lock View)} \\
+\hline
+Molecules moving with velocities & Nodes in phase-lock network \\
+``Fast'' and ``slow'' classification & Phase-lock cluster membership \\
+Door opening/closing & Adjacent states becoming accessible \\
+Agent making decisions & Topological navigation \\
+Apparent entropy decrease & Categorical entropy increase \\
+Demon required & No agent required
+\end{tabular}
+\end{center}
+
+The demon is an artefact of the observable face, not a feature of the physical process. \qed
+\end{proof}
+
+\subsection{Why the Paradox Persisted}
+
+\begin{proposition}[Source of the Paradox]
+\label{prop:paradox_source}
+Maxwell's Demon paradox persisted for 150 years due to four conceptual errors:
+\begin{enumerate}
+    \item \textbf{Observing only one face of information}: Privileging the kinetic (velocity/temperature) face while the categorical (phase-lock structure) face remained hidden
+    \item \textbf{Treating molecules as independent}: Ignoring phase-lock network structure
+    \item \textbf{Privileging kinetic energy}: Assuming velocity determines categorical behaviour
+    \item \textbf{Incomplete entropy accounting}: Ignoring categorical degrees of freedom
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\textbf{(1) Single-face observation:}
+Maxwell and subsequent analysts observed molecular systems through the kinetic face: velocities, temperatures, and configurational entropy. The conjugate categorical face---phase-lock networks and categorical completion---was not accessible to their theoretical framework.
+
+When dynamics occur on the hidden face, they must be explained through the observable face. The most parsimonious explanation for structured, non-random ``sorting'' on the kinetic face was an intelligent agent. Hence, the demon.
+
+\textbf{(2) Independent particle assumption:}
+Classical statistical mechanics treats molecules as independent particles whose only interactions are collisions. This ignores the persistent phase-lock relationships through Van der Waals and dipole forces that create network structure.
+
+With independent particles, ``sorting'' would require external information to distinguish molecules. With networked particles, categorical structure already distinguishes them.
+
+\textbf{(3) Kinetic energy privilege:}
+The thought experiment assumes the demon sorts by velocity---a kinetic property. But Theorem~\ref{thm:kinetic_independence} establishes that phase-lock networks are kinetically independent. The demon cannot sort by a property that does not determine categorical structure.
+
+\textbf{(4) Incomplete entropy:}
+Traditional analysis computes $\Delta S_{\text{spatial}}$ (configurational entropy from particle positions) while ignoring $\Delta S_{\text{categorical}}$ (entropy from phase-lock structure). Since categorical completion always increases $S_{\text{categorical}}$, accounting for it dissolves the paradox.
+
+These errors led to positing an information-processing demon where none was needed, then searching for where it ``hides'' entropy (in measurement, in memory, in erasure) when the entropy was always increasing through network densification---visible only on the categorical face. \qed
+\end{proof}
+
+\subsection{Final Statement}
+
+\begin{theorem}[Non-Existence of the Demon]
+\label{thm:nonexistence}
+Maxwell's Demon does not exist. The thought experiment describes categorical completion through phase-lock network topology---a physical process requiring:
+\begin{enumerate}
+    \item No intelligent agent
+    \item No information acquisition or processing
+    \item No violation of the second law
+\end{enumerate}
+
+The demon is the null set:
+\begin{equation}
+\text{``Maxwell's Demon''} = \varnothing
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+From Theorems~\ref{thm:dissolution_observation}--\ref{thm:dissolution_second_law}, every aspect of the demon's purported operation is either unnecessary or misconceived.
+
+From Theorem~\ref{thm:identity}, the physical process attributed to the demon is categorical completion through phase-lock topology.
+
+Categorical completion is a physical process, not an agent. It has no intentionality, no information processing, no decision-making. To call it a ``demon'' is a category error.
+
+Therefore, Maxwell's Demon---as an information-processing agent that sorts molecules by temperature---does not exist. What exists is phase-lock network topology and categorical completion dynamics. These are not a demon; they are physics. \qed
+\end{proof}
+
+\begin{remark}[The Resolution Complete]
+We have shown that Maxwell's Demon dissolves under categorical analysis through seven independent arguments:
+
+\textbf{(1) The demon is temporally redundant} (Theorem~\ref{thm:temporal_triviality}): Any configuration it creates will occur naturally through fluctuations.
+
+\textbf{(2) The demon sorts the wrong property} (Theorem~\ref{thm:phase_lock_temperature_independence}): Phase-lock structure is temperature-independent; the same categorical arrangement exists at any temperature.
+
+\textbf{(3) The demon is self-defeating} (Theorem~\ref{thm:retrieval_paradox}): Velocity-based sorting requires infinite retrieval operations against thermal equilibration.
+
+\textbf{(4) The demon cannot sort by temperature} (Theorem~\ref{thm:dissolution_sorting}): Phase-lock networks are kinetically independent.
+
+\textbf{(5) The demon needs no information} (Theorem~\ref{thm:dissolution_observation}): Categorical structure is topological, not acquired.
+
+\textbf{(6) The demon violates no laws} (Theorem~\ref{thm:dissolution_second_law}): Categorical completion increases entropy.
+
+\textbf{(7) The demon is a projection artefact} (Theorem~\ref{thm:information_complementarity}): Information has two conjugate faces; There is no demon.
+
+There is only the phase-lock network, completing categorical states according to topology, revealing structure that was always present and increasing entropy as the second law demands. Maxwell saw a demon because he was looking at one face of information; the ``demon'' was the hidden face doing what physics demands. Maxwell saw a demon because he was looking at one face of information; the ``''
+\end{remark}
+
+\subsection{Summary of the Seven-Fold Dissolution}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|l|l}
+\textbf{Demon Claim} & \textbf{Dissolution} & \textbf{Theorem} \\
+\hline
+Creates special configuration & Natural fluctuations produce same & \ref{thm:temporal_triviality} \\
+Sorts by temperature & Same arrangement at any $T$ & \ref{thm:phase_lock_temperature_independence} \\
+Maintains sorted state & Cannot outpace equilibration & \ref{thm:retrieval_paradox} \\
+Measures velocity & Topology doesn't depend on $v$ & \ref{thm:dissolution_observation} \\
+Makes sorting decisions & Categorical pathways automatic & \ref{thm:dissolution_decision} \\
+Decreases entropy & Categorical entropy increases & \ref{thm:dissolution_second_law} \\
+Exists as agent & Projection of hidden face dynamics & \ref{thm:information_complementarity}
+\end{tabular}
+\caption{The seven-fold dissolution of Maxwell's Demon.}
+\label{tab:dissolution_summary}
+\end{table}
+
+\begin{remark}[The Deepest Resolution]
+The seventh argument---information complementarity---explains not only why the demon does not exist, but \textit{why Maxwell and others saw a demon in the first place}. The demon was not a failure of imagination or a deliberate puzzle; it was the inevitable consequence of observing one face of a two-faced information structure. Any observer confined to the kinetic face will see ``sorting'' and require an agent to explain it. The agent dissolves the moment the observer gains access to the categorical face.
+\end{remark}
+

@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Mekaneck Validation Service
+  # ============================================================================
+  mekaneck-validator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mekaneck:latest
+    container_name: mekaneck-validator
+    volumes:
+      # Mount results directory to host for persistence
+      - ./results:/app/results
+      # Mount source for development (optional)
+      - ./blindhorse:/app/blindhorse:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - VALIDATION_MODE=full
+    command: python -m blindhorse.orchestrator
+    restart: on-failure
+    networks:
+      - mekaneck-net
+
+  # ============================================================================
+  # Mekaneck Development Service (with source mounting)
+  # ============================================================================
+  mekaneck-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mekaneck:dev
+    container_name: mekaneck-dev
+    volumes:
+      - ./results:/app/results
+      - ./blindhorse:/app/blindhorse  # Writable for development
+      - ./mekaneck:/app/mekaneck
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEVELOPMENT=1
+    command: bash
+    stdin_open: true
+    tty: true
+    networks:
+      - mekaneck-net
+
+  # ============================================================================
+  # Jupyter Notebook Service (for interactive analysis)
+  # ============================================================================
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mekaneck:jupyter
+    container_name: mekaneck-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./results:/app/results
+      - ./blindhorse:/app/blindhorse:ro
+      - ./notebooks:/app/notebooks  # Create this directory for notebooks
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: >
+      bash -c "pip install jupyterlab &&
+               jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''"
+    networks:
+      - mekaneck-net
+
+networks:
+  mekaneck-net:
+    driver: bridge
+
+volumes:
+  results:
+    driver: local
+

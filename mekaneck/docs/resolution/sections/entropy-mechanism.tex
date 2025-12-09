@@ -1,0 +1,206 @@
+%==============================================================================
+\section{Entropy Mechanism Through Network Topology}
+\label{sec:entropy}
+%==============================================================================
+
+\subsection{Topological Origin of Entropy}
+
+We now establish that entropy arises from phase-lock network topology, providing the mechanism by which the second law is preserved without invoking information-theoretic arguments.
+
+\begin{definition}[Network Entropy]
+\label{def:network_entropy}
+The \textbf{network entropy} of a phase-lock configuration is:
+\begin{equation}
+S_{\phaselockgraph} = k_B \log \Omega_{\text{PL}}(\phaselockgraph)
+\label{eq:network_entropy}
+\end{equation}
+where $\Omega_{\text{PL}}(\phaselockgraph)$ is the number of categorical states compatible with network topology $\phaselockgraph$.
+\end{definition}
+
+\begin{proposition}[Entropy and Edge Density]
+\label{prop:entropy_edge_density}
+Network entropy is related to edge density:
+\begin{equation}
+S_{\phaselockgraph} \propto k_B |E(\phaselockgraph)|
+\label{eq:entropy_edges}
+\end{equation}
+More edges (constraints) correspond to higher entropy.
+\end{proposition}
+
+\begin{proof}
+Each edge $(m_i, m_j) \in E$ represents a phase-lock constraint: the phase difference $\Phi_i - \Phi_j$ must remain within bounds. More constraints reduce the volume of accessible phase space but increase the categorical richness:
+\begin{equation}
+\Omega_{\text{PL}} \propto \exp(c \cdot |E|)
+\end{equation}
+for some constant $c > 0$. This counterintuitive result arises because constraints create categorical structure: each constraint defines equivalence classes, and categorical states enumerate these classes.
+
+Taking logarithms: $S_{\phaselockgraph} = k_B \log \Omega_{\text{PL}} \propto k_B |E|$. \qed
+\end{proof}
+
+\subsection{Entropy Increase Through Network Densification}
+
+\begin{theorem}[Categorical Mixing Increases Entropy]
+\label{thm:mixing_entropy}
+When two previously separated gas volumes mix, entropy increases due to phase-lock network densification:
+\begin{equation}
+\Delta S_{\text{mix}} = S_{\phaselockgraph_{\text{mixed}}} - S_{\phaselockgraph_{\text{separated}}} = k_B \log \frac{\Omega_{\text{mixed}}}{\Omega_{\text{separated}}} > 0
+\label{eq:mixing_entropy}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\textbf{Initial (separated) state:}
+Two volumes A and B contain phase-lock networks $\phaselockgraph_A = (V_A, E_A)$ and $\phaselockgraph_B = (V_B, E_B)$ with no edges between them:
+\begin{equation}
+\phaselockgraph_{\text{separated}} = \phaselockgraph_A \sqcup \phaselockgraph_B, \quad |E_{\text{separated}}| = |E_A| + |E_B|
+\end{equation}
+
+\textbf{Mixed state:}
+After mixing, molecules from A interact with molecules from B, creating new edges:
+\begin{equation}
+E_{\text{mixed}} = E_A \cup E_B \cup E_{A \leftrightarrow B}
+\end{equation}
+where $E_{A \leftrightarrow B}$ contains edges between A-molecules and B-molecules.
+
+The number of new edges:
+\begin{equation}
+|E_{A \leftrightarrow B}| \approx |V_A| \cdot |V_B| \cdot P_{\text{lock}}
+\end{equation}
+where $P_{\text{lock}}$ is the probability that a random A-B pair satisfies the phase-lock condition.
+
+For typical gases at standard conditions, $P_{\text{lock}} \sim 0.1$ to $0.5$, giving:
+\begin{equation}
+|E_{\text{mixed}}| = |E_{\text{separated}}| + |E_{A \leftrightarrow B}| > |E_{\text{separated}}|
+\end{equation}
+
+From Proposition~\ref{prop:entropy_edge_density}:
+\begin{equation}
+S_{\text{mixed}} \propto k_B |E_{\text{mixed}}| > k_B |E_{\text{separated}}| \propto S_{\text{separated}}
+\end{equation}
+
+Therefore $\Delta S_{\text{mix}} > 0$. \qed
+\end{proof}
+
+\begin{corollary}[No Entropy Paradox]
+\label{cor:no_entropy_paradox}
+The apparent ``sorting'' in Maxwell's thought experiment does not decrease entropy because:
+\begin{enumerate}
+    \item Sorting is categorical completion, not physical rearrangement
+    \item Categorical completion always increases network density
+    \item Increased network density increases entropy
+\end{enumerate}
+\end{corollary}
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/panel_arg6_dissolution_second_law.png}
+\caption{\textbf{Argument 6: Dissolution of Second Law Violation—Categorical Entropy Increase Compensates.}
+\textbf{(A)} Two entropy components with opposite trends. Spatial entropy $S_{\text{spatial}}$ (red line) decreases during apparent sorting as molecules become spatially segregated, following $S_{\text{spatial}} = -k_B \sum_i p_i^{\text{spatial}} \ln p_i^{\text{spatial}}$. Categorical entropy $S_{\text{categorical}}$ (green line) increases as the phase-lock network densifies, with $S_{\text{categorical}} = -k_B \sum_{\alpha} p_{\alpha}^{\text{cat}} \ln p_{\alpha}^{\text{cat}}$ where $\alpha$ indexes categorical states. Total entropy $S_{\text{total}} = S_{\text{spatial}} + S_{\text{categorical}}$ (dark teal dashed line) always increases, satisfying the second law. The gray dotted line at $S = 2.0$ marks the initial equilibrium value. The divergence of spatial and categorical components reveals the hidden entropy production.
+\textbf{(B)} Network densification produces categorical entropy. The number of network edges increases from $\sim 100$ to $264$ over 50 sorting attempts, representing a gain of $+164$ edges (marked in red). Network density $\rho = 2|E|/(|V|(|V|-1))$ increases as molecules form more phase-lock connections. This densification corresponds to increased categorical entropy: $\Delta S_{\text{categorical}} = k_B \ln(\Omega_{\text{final}}/\Omega_{\text{initial}})$ where $\Omega$ is the number of accessible categorical states. The filled green area under the curve represents accumulated categorical entropy. The steep increase demonstrates that apparent sorting creates extensive network structure.
+\textbf{(C)} Total entropy change distribution confirms $\Delta S_{\text{total}} > 0$. Histograms show the distribution of entropy changes across many trials. Spatial entropy changes (red) are predominantly negative ($\Delta S_{\text{spatial}} < 0$, left of dashed line at $\Delta S = 0$), confirming apparent sorting. Categorical entropy changes (green) are predominantly positive ($\Delta S_{\text{categorical}} > 0$, right of line). Crucially, total entropy changes (dark teal) are always positive, with the distribution centered at $\Delta S_{\text{total}} \approx +0.2$ (marked by green text ``$\Delta S > 0$''). The vertical dashed line at $\Delta S = 0$ separates second law violations (left, forbidden) from allowed processes (right). No trials violate the second law.
+\textbf{(D)} Second law accounting shows net entropy increase. Bar chart quantifying entropy changes: spatial entropy decreases by $\Delta S_{\text{spatial}} = -0.3$ (red bar, apparent violation), categorical entropy increases by $\Delta S_{\text{categorical}} = +0.5$ (green bar, hidden compensation), yielding total entropy increase $\Delta S_{\text{total}} = +0.2 > 0$ (dark teal bar, second law satisfied). The numerical values demonstrate that categorical entropy production exceeds spatial entropy reduction by a factor of $\sim 1.7$, providing a comfortable margin. The second law is never violated; the demon's apparent sorting is compensated by hidden network entropy. This resolves the paradox: there is no thermodynamic violation because categorical completion increases total entropy.}
+\label{fig:dissolution_second_law}
+\end{figure*}
+
+\subsection{Entropy as Shortest Path}
+
+\begin{definition}[Oscillatory Termination Probability]
+\label{def:termination_probability}
+For a system in categorical state $C$, the \textbf{oscillatory termination probability} $\alpha(C)$ is the probability that oscillatory dynamics reach equilibrium (terminate) at state $C$.
+\end{definition}
+
+\begin{theorem}[Entropy as Path Length]
+\label{thm:entropy_path}
+Entropy is inversely related to the shortest path length to oscillatory termination:
+\begin{equation}
+S(C) = -k_B \log \ell_{\text{term}}(C)
+\label{eq:entropy_path}
+\end{equation}
+where $\ell_{\text{term}}(C)$ is the shortest path from $C$ to any termination state in $\catspace$.
+\end{theorem}
+
+\begin{proof}
+The termination probability scales inversely with path length:
+\begin{equation}
+\alpha(C) \propto \frac{1}{\ell_{\text{term}}(C)}
+\end{equation}
+Systems with longer paths to termination have lower probability of terminating at the current state.
+
+Define entropy through termination probability:
+\begin{equation}
+S(C) = k_B \log \alpha(C) = k_B \log \frac{1}{\ell_{\text{term}}(C)} = -k_B \log \ell_{\text{term}}(C)
+\end{equation}
+
+Higher entropy corresponds to shorter paths to termination---the system is ``closer'' to equilibrium in categorical space. \qed
+\end{proof}
+
+\begin{corollary}[Entropy Increase as Path Optimisation]
+\label{cor:path_optimisation}
+The second law of thermodynamics states that entropy increases:
+\begin{equation}
+\frac{dS}{dt} \geq 0
+\end{equation}
+
+In path-length terms, this becomes:
+\begin{equation}
+\frac{d\ell_{\text{term}}}{dt} \leq 0
+\end{equation}
+
+Systems evolve toward shorter paths to termination---they optimise their route to equilibrium through categorical space.
+\end{corollary}
+
+\subsection{Why ``Sorting'' Increases Entropy}
+
+\begin{theorem}[Sorting Increases Network Density]
+\label{thm:sorting_density}
+The operation attributed to Maxwell's Demon---categorical selection and pathway following---increases phase-lock network density, hence increases entropy.
+\end{theorem}
+
+\begin{proof}
+Consider the ``demon operation'' as categorical completion:
+
+\textbf{Step 1: Initial selection.}
+Selecting a categorical state $C_1$ from equivalence class $[C]_{\text{spatial}}$ completes that state, making adjacent states accessible.
+
+\textbf{Step 2: Cascade propagation.}
+From Theorem~\ref{thm:categorical_cascade}, selection initiates a cascade through phase-lock network. Each step completes new categorical states.
+
+\textbf{Step 3: Network densification.}
+As more categorical states are completed, the effective phase-lock network densifies:
+\begin{equation}
+|E(\gamma(t_2))| > |E(\gamma(t_1))| \quad \text{for } t_2 > t_1
+\end{equation}
+where $\gamma(t)$ is the completed state set.
+
+This occurs because:
+\begin{itemize}
+    \item New phase relationships are established as states are completed
+    \item Completed states cannot be un-completed (Axiom~\ref{axiom:categorical_irreversibility})
+    \item Each completion adds constraints (edges) to the effective network
+\end{itemize}
+
+\textbf{Step 4: Entropy increase.}
+From Proposition~\ref{prop:entropy_edge_density}:
+\begin{equation}
+\Delta S = k_B \Delta |E| > 0
+\end{equation}
+
+The ``demon operation'' increases entropy. \qed
+\end{proof}
+
+\begin{corollary}[Second Law Preserved]
+\label{cor:second_law}
+Maxwell's Demon, reinterpreted as categorical completion through phase-lock topology, does not violate the second law. The apparent paradox arose from:
+\begin{enumerate}
+    \item Misidentifying the demon's operation (sorting by kinetic energy vs. categorical completion)
+    \item Ignoring categorical degrees of freedom (phase-lock structure)
+    \item Focusing on spatial entropy while ignoring categorical entropy
+\end{enumerate}
+
+When categorical structure is properly accounted for, entropy increases monotonically:
+\begin{equation}
+\frac{dS_{\text{total}}}{dt} = \frac{dS_{\text{spatial}}}{dt} + \frac{dS_{\text{categorical}}}{dt} \geq 0
+\end{equation}
+even if $dS_{\text{spatial}}/dt < 0$ (apparent ordering), because $dS_{\text{categorical}}/dt > 0$ (network densification) dominates.
+\end{corollary}
+

@@ -1,0 +1,199 @@
+%==============================================================================
+\section{Temperature as Emergent from Phase-Lock Statistics}
+\label{sec:temperature}
+%==============================================================================
+
+\subsection{The Standard View of Temperature}
+
+In classical thermodynamics, temperature is a fundamental quantity defined through:
+\begin{equation}
+\frac{1}{T} = \left(\frac{\partial S}{\partial E}\right)_{V,N}
+\label{eq:temperature_standard}
+\end{equation}
+or operationally through thermal equilibrium. For ideal gases:
+\begin{equation}
+\langle E_{\text{kin}} \rangle = \frac{3}{2} N k_B T
+\label{eq:equipartition}
+\end{equation}
+
+This framing suggests temperature determines molecular behaviour: higher $T$ means faster molecules.
+
+\subsection{The Categorical View: Temperature as Emergent}
+
+We now prove that temperature emerges from phase-lock cluster statistics rather than determining them.
+
+\begin{definition}[Cluster Kinetic Distribution]
+\label{def:cluster_kinetic}
+For phase-lock cluster $\mathcal{K}_\alpha \subset V$, define the cluster kinetic energy:
+\begin{equation}
+E_{\alpha} = \sum_{i \in \mathcal{K}_\alpha} \frac{1}{2} m_i |\mathbf{v}_i|^2
+\end{equation}
+and cluster temperature:
+\begin{equation}
+T_\alpha = \frac{2 E_\alpha}{3 |\mathcal{K}_\alpha| k_B}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Temperature Emergence]
+\label{thm:temperature_emergence}
+The macroscopic temperature $T$ of a gas is a statistical functional of phase-lock cluster structure:
+\begin{equation}
+T = \mathcal{F}[\{(\mathcal{K}_\alpha, T_\alpha, |\mathcal{K}_\alpha|)\}_{\alpha=1}^{N_c}]
+\label{eq:temperature_functional}
+\end{equation}
+where $N_c$ is the number of clusters. Specifically:
+\begin{equation}
+T = \frac{\sum_\alpha |\mathcal{K}_\alpha| T_\alpha}{\sum_\alpha |\mathcal{K}_\alpha|} = \frac{\sum_\alpha |\mathcal{K}_\alpha| T_\alpha}{N}
+\label{eq:temperature_average}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The total kinetic energy is:
+\begin{equation}
+E_{\text{total}} = \sum_{i=1}^N \frac{1}{2} m_i |\mathbf{v}_i|^2 = \sum_\alpha E_\alpha = \sum_\alpha \frac{3}{2} |\mathcal{K}_\alpha| k_B T_\alpha
+\end{equation}
+
+The macroscopic temperature satisfies:
+\begin{equation}
+E_{\text{total}} = \frac{3}{2} N k_B T
+\end{equation}
+
+Equating:
+\begin{equation}
+\frac{3}{2} N k_B T = \sum_\alpha \frac{3}{2} |\mathcal{K}_\alpha| k_B T_\alpha
+\end{equation}
+\begin{equation}
+T = \frac{\sum_\alpha |\mathcal{K}_\alpha| T_\alpha}{N}
+\end{equation}
+
+This expresses $T$ as a weighted average over cluster temperatures, proving~\eqref{eq:temperature_functional}. \qed
+\end{proof}
+
+\begin{corollary}[Temperature Does Not Determine Clusters]
+\label{cor:temperature_not_causal}
+The cluster structure $\{\mathcal{K}_\alpha\}$ is determined by phase-lock network topology (Theorem~\ref{thm:kinetic_independence}), which is independent of kinetic energy. Therefore:
+\begin{equation}
+\frac{\partial \{\mathcal{K}_\alpha\}}{\partial T} = 0
+\end{equation}
+Changing temperature does not change which molecules belong to which clusters (at fixed spatial configuration).
+\end{corollary}
+
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/panel_arg4_dissolution_observation.png}
+\caption{\textbf{Argument 4: Dissolution of Observation—Navigation Follows Topology, Not Velocity Measurement.}
+\textbf{(A)} Topology determines path without velocity information. Molecules arranged in a phase-lock network (teal nodes) follow paths determined purely by network adjacency. The path from one side to the other (red nodes indicating transition region) is determined by categorical distance $d_{\text{cat}}(i,j)$ in the network, not by molecular velocities. Navigation occurs through shortest paths in the network graph, requiring no knowledge of kinetic properties.
+\textbf{(B)} Observation not required for navigation. The diagram shows two information channels: velocity measurement (red, crossed out) and topological adjacency (green, active). Navigation proceeds through the green channel alone. The system follows network structure without any measurement of velocities, demonstrating that the demon's ``observation'' is unnecessary. Path completion is automatic through categorical structure.
+\textbf{(C)} Velocity is uncorrelated with network position. Scatter plot of molecular velocity versus network position shows near-zero correlation ($r = -0.150$, dashed red line). The random scatter demonstrates that knowing a molecule's position in the phase-lock network provides no information about its velocity, and vice versa. This confirms that categorical distance $d_{\text{cat}}$ and kinetic distance $d_{\text{kin}}$ are inequivalent metrics, as stated in Section 3.4.
+\textbf{(D)} Topological gate operates on adjacency, not velocity. Schematic of the demon's door showing two molecules (red circles) adjacent to the door and two molecules (blue squares) far from the door. The door opens based purely on topological adjacency in the phase-lock network: any adjacent molecule passes, regardless of velocity. The gate is velocity-blind, operating on categorical structure alone. This dissolves the paradox: there is no velocity measurement, no decision based on kinetic energy, and therefore no violation of the second law. The apparent ``sorting'' is categorical completion through network topology.}
+\label{fig:dissolution_observation}
+\end{figure*}
+
+\subsection{Cluster Temperature Distribution}
+
+\begin{proposition}[Cluster Temperature Variance]
+\label{prop:cluster_variance}
+At thermal equilibrium, the variance of cluster temperatures satisfies:
+\begin{equation}
+\text{Var}(T_\alpha) = \frac{2 T^2}{3 \langle |\mathcal{K}_\alpha| \rangle}
+\label{eq:cluster_variance}
+\end{equation}
+Smaller clusters have larger temperature fluctuations.
+\end{proposition}
+
+\begin{proof}
+For a cluster of $n$ molecules at equilibrium, the kinetic energy follows:
+\begin{equation}
+E_\alpha \sim \text{Gamma}\left(\frac{3n}{2}, k_B T\right)
+\end{equation}
+
+The variance of $E_\alpha$ is:
+\begin{equation}
+\text{Var}(E_\alpha) = \frac{3n}{2} (k_B T)^2
+\end{equation}
+
+Since $T_\alpha = 2E_\alpha / (3n k_B)$:
+\begin{equation}
+\text{Var}(T_\alpha) = \frac{4}{9n^2 k_B^2} \text{Var}(E_\alpha) = \frac{4}{9n^2 k_B^2} \cdot \frac{3n}{2} (k_B T)^2 = \frac{2T^2}{3n}
+\end{equation}
+
+Taking the expectation over cluster sizes gives~\eqref{eq:cluster_variance}. \qed
+\end{proof}
+
+\begin{corollary}[Hot and Cold Clusters at Equilibrium]
+\label{cor:hot_cold_clusters}
+Even at thermal equilibrium (uniform macroscopic $T$), individual clusters have different instantaneous temperatures. Some clusters are ``hot'' ($T_\alpha > T$) and others ``cold'' ($T_\alpha < T$) at any given moment.
+\end{corollary}
+
+\subsection{The Inversion of Causality}
+
+\begin{theorem}[Causal Structure of Temperature]
+\label{thm:causal_structure}
+The causal relationships between phase-lock network, cluster structure, and temperature are:
+\begin{equation}
+\begin{tikzcd}[row sep=small, column sep=small]
+& \text{Molecular Properties} \arrow[dl] \arrow[dr] & \\
+\text{Phase-Lock Network } \phaselockgraph \arrow[d] & & \text{Velocity Distribution} \arrow[d] \\
+\text{Cluster Structure } \{\mathcal{K}_\alpha\} \arrow[dr] & & \text{Individual Kinetic Energies} \arrow[dl] \\
+& \text{Temperature } T &
+\end{tikzcd}
+\end{equation}
+Temperature is downstream of both network structure and kinetic distribution; it determines neither.
+\end{theorem}
+
+\begin{proof}
+\textbf{Phase-lock network from molecular properties:}
+From Section~\ref{sec:phase_lock}, $\phaselockgraph$ is determined by polarisabilities, dipole moments, vibrational frequencies---all molecular properties independent of velocity.
+
+\textbf{Cluster structure from network:}
+Clusters $\{\mathcal{K}_\alpha\}$ are connected components of $\phaselockgraph$---pure graph-theoretic construction.
+
+\textbf{Velocity distribution from molecular properties:}
+The Maxwell-Boltzmann distribution depends on molecular mass $m$, a molecular property.
+
+\textbf{Temperature from cluster structure and velocities:}
+From Theorem~\ref{thm:temperature_emergence}, $T$ is computed from $\{T_\alpha\}$, which require both cluster membership (from network) and velocities.
+
+No arrow points from $T$ to $\phaselockgraph$ or $\{\mathcal{K}_\alpha\}$. Temperature is emergent, not fundamental. \qed
+\end{proof}
+
+\subsection{Implications for Maxwell's Demon}
+
+\begin{theorem}[Demon Cannot Sort by Temperature]
+\label{thm:demon_cannot_sort}
+A hypothetical Maxwell's Demon cannot sort molecules ``by temperature'' because:
+\begin{enumerate}
+    \item Temperature is a macroscopic emergent property, not a molecular attribute
+    \item Individual molecules have kinetic energies, not temperatures
+    \item Kinetic energy does not determine categorical accessibility
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(1) Temperature is macroscopic:}
+From Definition~\ref{def:cluster_kinetic}, even cluster temperature requires multiple molecules. Single-molecule temperature is undefined.
+
+\textbf{(2) Kinetic energy vs. temperature:}
+A molecule has kinetic energy $E_i = \frac{1}{2}m_i|\mathbf{v}_i|^2$, an instantaneous mechanical quantity. Temperature $T$ is a statistical property of ensembles. The demon supposedly measures $E_i$ and infers ``hot'' or ``cold,'' but this conflates distinct concepts.
+
+\textbf{(3) Kinetic energy does not determine accessibility:}
+From Theorem~\ref{thm:kinetic_independence}, phase-lock networks are kinetically independent. Categorical accessibility (which states a molecule can transition to) is determined by network topology, not kinetic energy.
+
+A ``fast'' molecule (high $E_i$) has the same categorical accessibility as a ``slow'' molecule in the same phase-lock cluster. The demon cannot use kinetic energy to predict or control categorical transitions.
+
+Therefore, ``sorting by temperature'' is categorically meaningless. \qed
+\end{proof}
+
+\begin{corollary}[What the Demon Actually Does]
+\label{cor:demon_actual}
+If we reinterpret the demon's operation categorically:
+\begin{enumerate}
+    \item \textbf{``Observing'' a molecule}: Completing a categorical state, making adjacent states accessible
+    \item \textbf{``Opening the door''}: Following phase-lock pathways to the next cluster
+    \item \textbf{``Sorting''}: Revealing pre-existing cluster structure
+\end{enumerate}
+The demon is not sorting by temperature but navigating categorical space along phase-lock topology.
+\end{corollary}
+
