@@ -23,6 +23,7 @@ from .validators import (
     TherapeuticPredictionValidator,
 )
 from .visualization import PharmBMDVisualizer
+from .utils import save_json
 
 
 class PharmBMDValidationSuite:
@@ -302,13 +303,12 @@ class PharmBMDValidationSuite:
                 "suite": "Pharmaceutical Maxwell Demon Validation",
                 "version": "0.1.0",
                 "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-                "total_time_seconds": self.end_time - self.start_time,
+                "total_time_seconds": float(self.end_time - self.start_time),
             },
             "results": self.results,
         }
         
-        with open(output_file, 'w') as f:
-            json.dump(results_with_metadata, f, indent=2)
+        save_json(results_with_metadata, output_file)
         
         print(f"\n✓ Complete results saved to: {output_file}")
 

@@ -1,0 +1,94 @@
+\section{Thermodynamic Accounting}
+
+\subsection{Zero Net Free Energy Constraint}
+
+Pharmaceutical Maxwell demons must satisfy thermodynamic consistency:
+
+\begin{theorem}[Zero Net Free Energy]
+For a complete BMD cycle (measurement-feedback-reset), the average free energy change vanishes:
+\begin{equation}
+\langle \Delta G_{\text{cycle}} \rangle = \langle G_{\text{meas}} + W_{\text{feedback}} + G_{\text{reset}} \rangle = 0
+\end{equation}
+\end{theorem}
+
+\subsection{Energy Budget Breakdown}
+
+\textbf{(1) Measurement Phase}:
+\begin{equation}
+G_{\text{meas}} \approx 0 \quad \text{(non-invasive frequency detection via resonance)}
+\end{equation}
+
+Oscillatory holes detected through paramagnetic coupling to \Otwo\ without energy transfer—measurement is \textit{quantum non-demolition} in categorical space.
+
+\textbf{(2) Feedback Phase}:
+\begin{equation}
+W_{\text{feedback}} = \int \mathbf{F} \cdot d\mathbf{r} = \text{kinetic energy already present}
+\end{equation}
+
+Allosteric gear network activation redirects pre-existing oscillatory energy without external input. Work extracted from thermal fluctuations via information-guided gating.
+
+\textbf{(3) Reset Phase}:
+\begin{equation}
+G_{\text{reset}} = k_B T \ln 2 \times I_{\text{bits}} = \text{ATP hydrolysis cost}
+\end{equation}
+
+Information erasure requires ATP-driven conformational state recovery. For $I = 8.89$ bits (hierarchical cascade):
+\begin{align}
+G_{\text{reset}} &= (1.38 \times 10^{-23} \text{ J/K}) \times (310 \text{ K}) \times \ln(2) \times 8.89 \\
+&= 2.63 \times 10^{-20} \text{ J} \\
+&= 15.8 \text{ kJ/mol}
+\end{align}
+
+ATP hydrolysis provides:
+\begin{equation}
+\Delta G_{\text{ATP}} \approx -30.5 \text{ kJ/mol}
+\end{equation}
+
+Number of ATP molecules required:
+\begin{equation}
+N_{\text{ATP}} = \frac{15.8}{30.5} \approx 0.52 \text{ molecules per BMD cycle}
+\end{equation}
+
+In practice, $N_{\text{ATP}} \approx 1$ ATP per cycle (accounts for coupling efficiency $\sim 50\%$).
+
+\subsection{Probability Enhancement Without Energy Input}
+
+Information catalysis achieves $10^6$-$10^{11}\times$ enhancement through configuration space reduction, \textit{not} energy barrier reduction:
+
+\begin{equation}
+\frac{P_{\text{with BMD}}}{P_{\text{without BMD}}} = \frac{|\Omega_{\text{in}}|}{|\Omega_{\text{out}}|} = \frac{(10^{13})^{10}}{25{,}110} \approx 10^{129}
+\end{equation}
+
+This enhancement is \textit{probability amplification}, not rate enhancement. The BMD increases \textit{occurrence likelihood} of rare events without lowering activation barriers, maintaining thermodynamic consistency.
+
+\subsection{Comparison to Chemical Catalysis}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Property} & \textbf{Chemical Catalyst} & \textbf{Information Catalyst (BMD)} \\
+\midrule
+Enhancement Type & Rate ($k$) & Probability ($P$) \\
+Enhancement Factor & $10^3$-$10^{12}$ & $10^6$-$10^{11}$ \\
+Mechanism & $\Delta G^\ddagger$ reduction & Configuration selection \\
+Energy Input & Zero & Zero (except erasure) \\
+Thermodynamic Cost & None & $k_B T \ln 2$ per bit erased \\
+Reversibility & Yes & Measurement \& feedback reversible \\
+Information & Not required & Essential \\
+\bottomrule
+\end{tabular}
+\caption{Comparison: chemical catalysis vs information catalysis.}
+\end{table}
+
+\subsection{Validation}
+
+Thermodynamic consistency validated through:
+\begin{itemize}
+\item Zero net $\Delta G$ for measurement + feedback phases
+\item ATP cost: 0.52-1.0 molecules per 8.89 bit erasure
+\item Entropy production: $\Delta S_{\text{universe}} = I / (k_B T) = 8.89 \ln 2 = 6.16$ nat
+\item Reversibility: Measurement and feedback phases satisfy $\Delta S = 0$
+\item Information conservation: Total information neither created nor destroyed
+\end{itemize}
+

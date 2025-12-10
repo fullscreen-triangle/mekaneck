@@ -1,3 +1,4 @@
+from ..utils import save_json
 """
 Semantic Gravity Navigation Validator
 
@@ -12,6 +13,7 @@ Tests semantic gravity field construction, trajectory sampling, and therapeutic 
 """
 
 import numpy as np
+import math
 from dataclasses import dataclass
 from typing import List, Dict, Tuple, Callable
 import json
@@ -139,22 +141,22 @@ class SemanticGravityValidator:
         
         for n in problem_sizes:
             # Exhaustive search: O(n!)
-            factorial_ops = np.math.factorial(n) if n <= 20 else np.inf
+            factorial_ops = math.factorial(n) if n <= 20 else float('inf')
             
             # Semantic navigation: O(log n) via binary search in semantic space
-            semantic_ops = np.log2(n)
+            semantic_ops = float(np.log2(n))
             
             # Speedup
-            if factorial_ops != np.inf:
-                speedup = factorial_ops / semantic_ops
+            if factorial_ops != float('inf'):
+                speedup = float(factorial_ops / semantic_ops)
             else:
-                speedup = np.inf
+                speedup = None
             
             results.append({
-                "problem_size": n,
-                "exhaustive_ops": float(factorial_ops) if factorial_ops != np.inf else None,
-                "semantic_ops": semantic_ops,
-                "speedup": float(speedup) if speedup != np.inf else None,
+                "problem_size": int(n),
+                "exhaustive_ops": float(factorial_ops) if factorial_ops != float('inf') else None,
+                "semantic_ops": float(semantic_ops),
+                "speedup": speedup,
             })
         
         test = {
@@ -218,17 +220,17 @@ class SemanticGravityValidator:
                         navigation_times.append(t_idx * 0.01)  # Convert to time
                         break
         
-        success_rate = success_count / n_trials
-        mean_time = np.mean(navigation_times) if navigation_times else 0
+        success_rate = float(success_count / n_trials)
+        mean_time = float(np.mean(navigation_times)) if navigation_times else 0.0
         
         test = {
-            "n_trials": n_trials,
-            "success_count": success_count,
+            "n_trials": int(n_trials),
+            "success_count": int(success_count),
             "success_rate": success_rate,
             "mean_navigation_time": mean_time,
             "healthy_attractor_position": healthy_state.tolist(),
             "disease_repeller_position": disease_state.tolist(),
-            "claim_validated": success_rate > 0.7,  # 70% success threshold
+            "claim_validated": bool(success_rate > 0.7),  # 70% success threshold
         }
         
         return test
@@ -254,10 +256,10 @@ class SemanticGravityValidator:
         predictions = []
         for target_name, target_pos in targets:
             # Categorical distance in semantic space
-            distance = np.linalg.norm(drug_position - target_pos)
+            distance = float(np.linalg.norm(drug_position - target_pos))
             
             # Predict therapeutic potential (inverse distance)
-            potential = 1.0 / (distance + 0.1)
+            potential = float(1.0 / (distance + 0.1))
             
             predictions.append({
                 "target": target_name,
@@ -329,8 +331,7 @@ class SemanticGravityValidator:
     def save_results(self, results: Dict):
         """Save validation results to JSON."""
         output_file = self.output_dir / "semantic_gravity_results.json"
-        with open(output_file, 'w') as f:
-            json.dump(results, f, indent=2)
+        save_json(results, output_file)
         print(f"\n✓ Results saved to: {output_file}")
     
     def print_summary(self, results: Dict):

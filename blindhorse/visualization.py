@@ -482,25 +482,47 @@ class PharmBMDVisualizer:
         print("GENERATING VISUALIZATIONS")
         print("="*70)
         
-        if "hardware" in all_results:
-            print("\n1. Plotting hardware oscillations...")
-            self.plot_hardware_oscillations(all_results["hardware"])
+        if "hardware" in all_results and "error" not in all_results["hardware"]:
+            try:
+                print("\n1. Plotting hardware oscillations...")
+                self.plot_hardware_oscillations(all_results["hardware"])
+                print("   ✓ Hardware oscillations plotted")
+            except Exception as e:
+                print(f"   ✗ Error plotting hardware oscillations: {e}")
         
-        if "harmonic" in all_results:
-            print("2. Plotting harmonic network...")
-            self.plot_harmonic_network(all_results["harmonic"])
+        if "harmonic" in all_results and "error" not in all_results["harmonic"]:
+            try:
+                print("2. Plotting harmonic network...")
+                self.plot_harmonic_network(all_results["harmonic"])
+                print("   ✓ Harmonic network plotted")
+            except Exception as e:
+                print(f"   ✗ Error plotting harmonic network: {e}")
         
-        if "sentropy" in all_results:
-            print("3. Plotting S-entropy space...")
-            self.plot_sentropy_space(all_results["sentropy"])
+        if "sentropy" in all_results and "error" not in all_results["sentropy"]:
+            try:
+                print("3. Plotting S-entropy space...")
+                self.plot_sentropy_space(all_results["sentropy"])
+                print("   ✓ S-entropy space plotted")
+            except Exception as e:
+                print(f"   ✗ Error plotting S-entropy space: {e}")
         
-        if "gear" in all_results:
-            print("4. Plotting gear ratios...")
-            self.plot_gear_ratios(all_results["gear"])
+        if "gear" in all_results and "error" not in all_results["gear"]:
+            try:
+                print("4. Plotting gear ratios...")
+                self.plot_gear_ratios(all_results["gear"])
+                print("   ✓ Gear ratios plotted")
+            except Exception as e:
+                print(f"   ✗ Error plotting gear ratios: {e}")
         
-        # Always generate summary
-        print("5. Plotting complete validation summary...")
-        self.plot_complete_validation_summary(all_results)
+        # Always try to generate summary
+        try:
+            print("5. Plotting complete validation summary...")
+            self.plot_complete_validation_summary(all_results)
+            print("   ✓ Complete validation summary plotted")
+        except Exception as e:
+            print(f"   ✗ Error plotting complete summary: {e}")
         
-        print(f"\n✓ All visualizations saved to: {self.output_dir}")
+        print(f"\n✓ Visualization generation complete!")
+        print(f"  Saved to: {self.output_dir}")
+        print("="*70)
 

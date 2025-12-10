@@ -1,3 +1,4 @@
+from ..utils import save_json
 """
 Gear Ratio Prediction Validator
 
@@ -100,10 +101,10 @@ class GearRatioValidator:
             if i < 2:
                 # Before drug entry
                 cascade.append({
-                    "level": i+1,
+                    "level": int(i+1),
                     "name": name,
-                    "frequency_hz": char_freq,
-                    "timescale_s": char_time,
+                    "frequency_hz": float(char_freq),
+                    "timescale_s": float(char_time),
                     "drug_influenced": False,
                 })
             else:
@@ -116,18 +117,18 @@ class GearRatioValidator:
                     current_freq *= gear
                 
                 cascade.append({
-                    "level": i+1,
+                    "level": int(i+1),
                     "name": name,
-                    "frequency_hz": current_freq,
-                    "timescale_s": 1.0 / current_freq if current_freq > 0 else char_time,
+                    "frequency_hz": float(current_freq),
+                    "timescale_s": float(1.0 / current_freq) if current_freq > 0 else float(char_time),
                     "drug_influenced": True,
                 })
         
         return {
             "cascade": cascade,
             "entry_level": 2,
-            "num_levels": len(levels),
-            "total_gear_ratio": current_freq / drug_frequency if drug_frequency > 0 else 0,
+            "num_levels": int(len(levels)),
+            "total_gear_ratio": float(current_freq / drug_frequency) if drug_frequency > 0 else 0.0,
         }
     
     def validate_gear_ratio_statistics(self) -> Dict:
@@ -139,35 +140,35 @@ class GearRatioValidator:
         - Std: 4,231
         - Efficiency η: 0.73 ± 0.12
         """
-        gear_ratios = [case.gear_ratio for case in self.test_cases]
+        gear_ratios = [float(case.gear_ratio) for case in self.test_cases]
         
-        mean_gear = np.mean(gear_ratios)
-        std_gear = np.std(gear_ratios, ddof=1)
+        mean_gear = float(np.mean(gear_ratios))
+        std_gear = float(np.std(gear_ratios, ddof=1))
         
         # Efficiency: actual / theoretical max
         # Model: η = (actual response) / (ideal instantaneous)
         efficiencies = []
         for case in self.test_cases:
             # Theoretical: instant (1 oscillation period)
-            theoretical_time = 1.0 / case.drug_frequency
+            theoretical_time = 1.0 / case.drug_frequency_hz
             # Actual: measured response time
             actual_time = case.measured_response_time_hr * 3600
             # Efficiency
-            eta = theoretical_time / actual_time if actual_time > 0 else 0
+            eta = float(theoretical_time / actual_time) if actual_time > 0 else 0.0
             efficiencies.append(eta)
         
-        mean_efficiency = np.mean(efficiencies)
-        std_efficiency = np.std(efficiencies, ddof=1)
+        mean_efficiency = float(np.mean(efficiencies))
+        std_efficiency = float(np.std(efficiencies, ddof=1))
         
         statistics = {
-            "num_test_cases": len(self.test_cases),
+            "num_test_cases": int(len(self.test_cases)),
             "gear_ratios": {
                 "values": gear_ratios,
                 "mean": mean_gear,
                 "std": std_gear,
                 "claim_mean": 2847,
                 "claim_std": 4231,
-                "mean_match": abs(mean_gear - 2847) / 2847 < 0.5,
+                "mean_match": bool(abs(mean_gear - 2847) / 2847 < 0.5),
             },
             "efficiencies": {
                 "values": efficiencies,
@@ -196,12 +197,12 @@ class GearRatioValidator:
             )
             
             # Convert to hours
-            t_predicted_hr = t_response / 3600
-            t_measured_hr = case.measured_response_time_hr
+            t_predicted_hr = float(t_response / 3600)
+            t_measured_hr = float(case.measured_response_time_hr)
             
             # Calculate error
-            relative_error = abs(t_predicted_hr - t_measured_hr) / t_measured_hr if t_measured_hr > 0 else 0
-            accurate = relative_error < 0.3  # Within 30%
+            relative_error = float(abs(t_predicted_hr - t_measured_hr) / t_measured_hr) if t_measured_hr > 0 else 0.0
+            accurate = bool(relative_error < 0.3)  # Within 30%
             
             predictions.append({
                 "drug": case.drug_name,
@@ -212,14 +213,14 @@ class GearRatioValidator:
                 "accurate": accurate,
             })
         
-        accuracy = np.mean([p["accurate"] for p in predictions])
+        accuracy = float(np.mean([p["accurate"] for p in predictions]))
         
         test_results = {
             "predictions": predictions,
             "accuracy": accuracy,
             "claim_accuracy": 0.884,
             "claim_std": 0.067,
-            "claim_validated": abs(accuracy - 0.884) < 0.15,  # Within tolerance
+            "claim_validated": bool(abs(accuracy - 0.884) < 0.15),  # Within tolerance
         }
         
         return test_results
@@ -285,8 +286,7 @@ class GearRatioValidator:
     def save_results(self, results: Dict):
         """Save validation results to JSON."""
         output_file = self.output_dir / "gear_ratio_results.json"
-        with open(output_file, 'w') as f:
-            json.dump(results, f, indent=2)
+        save_json(results, output_file)
         print(f"\n✓ Results saved to: {output_file}")
     
     def print_summary(self, results: Dict):

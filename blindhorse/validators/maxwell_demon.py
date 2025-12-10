@@ -1,3 +1,4 @@
+from ..utils import save_json
 """
 Maxwell Demon Decomposition Validator
 
@@ -121,7 +122,7 @@ class MaxwellDemonValidator:
         
         # Validate channel count
         expected_count = 3 ** self.depth
-        count_match = len(channels) == expected_count
+        count_match = bool(len(channels) == expected_count)
         
         # Validate orthogonality (non-overlapping)
         print(f"  Validating orthogonality (checking sample)...")
@@ -146,27 +147,28 @@ class MaxwellDemonValidator:
             full_overlap = all(overlaps)
             overlap_tests.append(not full_overlap)  # Should NOT overlap
         
-        orthogonality_rate = np.mean(overlap_tests)
+        orthogonality_rate = float(np.mean(overlap_tests))
         
         # Validate volume conservation
-        total_volume = sum(ch.volume for ch in channels)
+        total_volume = float(sum(ch.volume for ch in channels))
         initial_volume = 1.0
         for axis_min, axis_max in space_bounds:
             initial_volume *= (axis_max - axis_min)
+        initial_volume = float(initial_volume)
         
-        volume_conserved = np.abs(total_volume - initial_volume) / initial_volume < 0.01
+        volume_conserved = bool(np.abs(total_volume - initial_volume) / initial_volume < 0.01)
         
         decomposition = {
-            "num_channels": len(channels),
-            "expected_channels": expected_count,
+            "num_channels": int(len(channels)),
+            "expected_channels": int(expected_count),
             "count_match": count_match,
-            "orthogonality_tests": len(overlap_tests),
+            "orthogonality_tests": int(len(overlap_tests)),
             "orthogonality_rate": orthogonality_rate,
             "total_volume": total_volume,
             "initial_volume": initial_volume,
-            "volume_error": abs(total_volume - initial_volume) / initial_volume,
+            "volume_error": float(abs(total_volume - initial_volume) / initial_volume),
             "volume_conserved": volume_conserved,
-            "computation_time_seconds": elapsed,
+            "computation_time_seconds": float(elapsed),
         }
         
         return decomposition, channels
@@ -179,14 +181,14 @@ class MaxwellDemonValidator:
         
         Claim: F_BMD = 59,049 for depth=10
         """
-        F_BMD = num_channels
+        F_BMD = int(num_channels)
         claim_value = 59049
         
         enhancement = {
             "F_BMD": F_BMD,
             "claim_value": claim_value,
-            "match": F_BMD == claim_value,
-            "relative_error": abs(F_BMD - claim_value) / claim_value if claim_value > 0 else 0,
+            "match": bool(F_BMD == claim_value),
+            "relative_error": float(abs(F_BMD - claim_value) / claim_value) if claim_value > 0 else 0.0,
         }
         
         return enhancement
@@ -212,18 +214,18 @@ class MaxwellDemonValidator:
             information_per_channel.append(I_bits)
         
         # Total information (additive for orthogonal channels)
-        total_information = np.sum(information_per_channel)
-        mean_information = np.mean(information_per_channel)
+        total_information = float(np.sum(information_per_channel))
+        mean_information = float(np.mean(information_per_channel))
         
         # For orthogonal decomposition: I_total = log(N_channels)
-        expected_total = np.log2(len(channels))
+        expected_total = float(np.log2(len(channels)))
         
         parallel_access = {
-            "sampled_channels": n_sample,
+            "sampled_channels": int(n_sample),
             "mean_information_per_channel": mean_information,
             "total_information_bits": total_information,
             "expected_total_bits": expected_total,
-            "information_efficiency": total_information / expected_total if expected_total > 0 else 0,
+            "information_efficiency": float(total_information / expected_total) if expected_total > 0 else 0.0,
             "parallel_access_validated": True,  # Structural property
         }
         
@@ -293,8 +295,7 @@ class MaxwellDemonValidator:
     def save_results(self, results: Dict):
         """Save validation results to JSON."""
         output_file = self.output_dir / "maxwell_demon_results.json"
-        with open(output_file, 'w') as f:
-            json.dump(results, f, indent=2)
+        save_json(results, output_file)
         print(f"\n✓ Results saved to: {output_file}")
     
     def print_summary(self, results: Dict):

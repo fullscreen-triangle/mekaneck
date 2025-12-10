@@ -1,3 +1,4 @@
+from ..utils import save_json
 """
 Trans-Planckian Temporal Validator
 
@@ -228,8 +229,7 @@ class TransPlanckianValidator:
     def save_results(self, results: Dict):
         """Save validation results to JSON."""
         output_file = self.output_dir / "trans_planckian_results.json"
-        with open(output_file, 'w') as f:
-            json.dump(results, f, indent=2)
+        save_json(results, output_file)
         print(f"\n✓ Results saved to: {output_file}")
     
     def print_summary(self, results: Dict):
