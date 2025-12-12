@@ -36,6 +36,27 @@ A harmonic coincidence network $G = (V, E)$ is an undirected graph where:
 \end{itemize}
 \end{definition}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/figure1_conformational_landscape.png}
+    \caption{
+        \textbf{Conformational landscape demonstrates ATP-gated frequency modulation across 4 states with 38.5 $\pm$ 6.5 THz range.} 
+        \textbf{(A)} Free energy landscape (2D contour, cavity volume 2500--5500 \AA$^3$ vs. frequency 25--50 THz) shows three energy wells: \textbf{occluded} (red circle, $\sim$3000 \AA$^3$, $\sim$45 THz, $\Delta G \sim -6$ kJ/mol), \textbf{active} (black circle, $\sim$5000 \AA$^3$, $\sim$38 THz, $\Delta G \sim 0$ kJ/mol), \textbf{resetting} (orange circle, $\sim$4000 \AA$^3$, $\sim$35 THz, $\Delta G \sim -3$ kJ/mol). Color scale: blue = $-9$ kJ/mol, red = $+15$ kJ/mol. Validates Maxwell demon cycle with $\Delta G_{\text{cycle}} \approx 0$. Frequency modulation spans 10 THz (45 $\to$ 35 THz).
+        
+        \textbf{(B)} S-space trajectory (3D: $S_k$, $S_t$, $S_e$, range 0--1.0) shows cyclic path connecting four states: \textbf{open\_outside} (purple, $S_k \sim 0.8$, $S_t \sim 0.6$, $S_e \sim 1.0$), \textbf{occluded} (dark blue, $S_k \sim 0.4$, $S_t \sim 0.2$, $S_e \sim 0.4$), \textbf{open\_inside} (green, $S_k \sim 0.8$, $S_t \sim 0.2$, $S_e \sim 0.4$), \textbf{resetting} (yellow, $S_k \sim 0.9$, $S_t \sim 0.6$, $S_e \sim 1.0$). Blue line forms closed loop, total length $L \approx 2.5$. Validates categorical state machine architecture.
+        
+        \textbf{(C)} State properties (normalized radar plot, 4 axes: frequency, volume, energy, distance, range 0--1.0) for 4 states. Frequency: open\_outside peaks at 1.0 (45 THz), resetting at 0.4 (35 THz). Volume: occluded minimum (0.2, 3000 \AA$^3$), active maximum (1.0, 5000 \AA$^3$). Energy: all cluster 0.4--0.6. Distance: resetting peaks at 0.8. Radar area represents state ``volume'' in 4D space.
+        
+        \textbf{(D)} ATP binding distribution (pie chart): 50\% ATP-bound (red), 50\% ATP-free (teal). Equal distribution indicates $K_d \sim 1$. Validates ATP-gated mechanism operating at thermodynamic equilibrium, maximizing information efficiency (Maxwell demon optimal at $p = 0.5$).
+        
+        \textbf{(E)} Frequency modulation range (scatter plot, 32--44 THz) shows 4 substrate binding events (dark blue circles). Red dashed line: center $f_c = 38.5$ THz. Orange dashed lines: modulation $\Delta f = \pm 6.5$ THz (32--45 THz range). Blue band = acceptance window. Substrates within $\pm 6.5$ THz achieve phase-lock. Fractional bandwidth $\Delta f / f_c = 0.17$ (17\%), comparable to biological oscillator Q-factors ($Q \sim 6$).
+        
+        \textbf{(F)} S-space distance matrix (heatmap, 4$\times$4) quantifies categorical distances $d_S$ between state pairs. Color: yellow = 0.0 (self), red = 1.0 (maximum). Off-diagonal: $d_S(\text{open\_outside}, \text{occluded}) = 0.98$, $d_S(\text{occluded}, \text{resetting}) = 1.03$ (maximum, dark red). Distance $> 1.0$ indicates categorical orthogonality---no direct transition without intermediate state. Validates metric space: symmetry, triangle inequality, identity.
+    }
+    \label{fig:conformational_landscape}
+\end{figure}
+
+
 \subsection{Network Topology Predictions}
 
 \textbf{Node Count}:

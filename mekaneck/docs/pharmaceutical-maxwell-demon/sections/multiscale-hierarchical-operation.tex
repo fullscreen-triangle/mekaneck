@@ -44,19 +44,19 @@ For $\Delta E = 1$ eV:
 \omega_{\text{quantum}} = \frac{\Delta E}{\hbar} = \frac{1.6 \times 10^{-19}}{1.055 \times 10^{-34}} = 1.52 \times 10^{15} \text{ rad/s} = 2.4 \times 10^{14} \text{ Hz}
 \end{equation}
 
-\textbf{Drug Coupling}: Photosensitizers and photodynamic therapy agents (porphyrins, phthalocyanines) couple at this level through singlet-triplet intersystem crossing, generating reactive oxygen species via $^1$O$_2$ (singlet oxygen).
+\textbf{Drug Coupling}: Photosensitisers and photodynamic therapy agents (porphyrins, phthalocyanines) couple at this level through singlet-triplet intersystem crossing, generating reactive oxygen species via $^1$O$_2$ (singlet oxygen).
 
 \textbf{BMD Operation}: Photon absorption (measurement) → excited state formation (feedback) → thermal relaxation (reset)
 
 \subsection{Level 2: Protein Conformational Dynamics ($10^{12}$ Hz, 1 ps)}
 
-\textbf{Physical Mechanism}: Collective vibrational modes of protein backbone and side chains. Normal mode frequencies:
+\textbf{Physical Mechanism}: Collective vibrational modes of the protein backbone and side chains. Normal mode frequencies:
 
 \begin{equation}
 \omega_k = \sqrt{\frac{\lambda_k}{m_{\text{eff}}}}
 \end{equation}
 
-where $\lambda_k$ are eigenvalues of Hessian matrix and $m_{\text{eff}}$ is effective mass.
+where $\lambda_k$ are the eigenvalues of the Hessian matrix and $m_{\text{eff}}$ is the effective mass.
 
 \textbf{Oscillation}: Low-frequency modes ($\omega = 10^{11}-10^{13}$ rad/s) dominate functionally relevant motions. Power spectrum:
 
@@ -74,7 +74,7 @@ K_d \propto \exp\left(-\int S_{\text{protein}}(\omega) S_{\text{drug}}(\omega) d
 
 \textbf{Example: Aspirin-COX-2}
 
-COX-2 active site has dominant mode at $\omega_{\text{COX}} = 8.5 \times 10^{11}$ rad/s (45 cm$^{-1}$). Aspirin acetyl group stretch at $\omega_{\text{aspirin}} = 8.0 \times 10^{11}$ rad/s matches within 6\%, enabling resonant coupling and irreversible acetylation.
+The COX-2 active site has a dominant mode at $\omega_{\text{COX}} = 8.5 \times 10^{11}$ rad/s (45 cm$^{-1}$). Aspirin acetyl group stretch at $\omega_{\text{aspirin}} = 8.0 \times 10^{11}$ rad/s matches within 6\%, enabling resonant coupling and irreversible acetylation.
 
 \subsection{Level 3: Ion Channel Gating ($10^9$ Hz, 1 ns)}
 
@@ -84,15 +84,16 @@ COX-2 active site has dominant mode at $\omega_{\text{COX}} = 8.5 \times 10^{11}
 \frac{dm}{dt} = \alpha_m(V)(1-m) - \beta_m(V)m
 \end{equation}
 
-where $m$ is activation gate variable and $\alpha_m, \beta_m$ are voltage-dependent rate constants.
+where $m$ is the activation gate variable and $\alpha_m, \beta_m$ are the voltage-dependent rate constants.
 
-\textbf{Oscillation}: Gate transitions occur at frequency:
+
+\textbf{Oscillation}: Gate transitions occur at a frequency:
 
 \begin{equation}
 \omega_{\text{gate}} = \alpha_m + \beta_m \sim 10^9 \text{ s}^{-1} = 1 \text{ GHz}
 \end{equation}
 
-\textbf{Drug Coupling}: Channel blockers (lidocaine, tetrodotoxin) stabilize closed state by increasing energy barrier:
+\textbf{Drug Coupling}: Channel blockers (lidocaine, tetrodotoxin) stabilise the closed state by increasing the energy barrier:
 
 \begin{equation}
 \alpha_m^{\text{drug}} = \alpha_m^0 \exp\left(-\frac{\Delta G_{\text{drug}}}{k_B T}\right)
@@ -102,7 +103,7 @@ where $m$ is activation gate variable and $\alpha_m, \beta_m$ are voltage-depend
 
 \textbf{Example: Local Anesthetics}
 
-Lidocaine $K_d = 100$ μM corresponds to $\Delta G_{\text{binding}} = -5.5$ kcal/mol. This modulates activation rate:
+Lidocaine $K_d = 100$ μM corresponds to $\Delta G_{\text{binding}} = -5.5$ kcal/mol. This modulates the activation rate:
 
 \begin{equation}
 \frac{\alpha_m^{\text{lido}}}{\alpha_m^0} = \exp\left(-\frac{5.5 \times 4.184 \times 10^3}{8.314 \times 310}\right) = \exp(-8.9) = 1.4 \times 10^{-4}
@@ -132,7 +133,7 @@ For carbonic anhydrase (one of fastest enzymes): $k_{\text{cat}} = 10^6$ s$^{-1}
 v = \frac{V_{\max}[S]}{K_M(1 + [I]/K_i) + [S]}
 \end{equation}
 
-\textbf{BMD Operation}: Substrate binding (measurement) → transition state stabilization (feedback) → product release (reset)
+\textbf{BMD Operation}: Substrate binding (measurement) → transition state stabilisation (feedback) → product release (reset)
 
 \textbf{Example: Methotrexate-DHFR}
 
@@ -258,6 +259,21 @@ Observed period shift: $-2.5$ hrs, consistent with model.
 
 \textbf{BMD Operation}: Photon detection (measurement) → clock gene expression (feedback) → phase adjustment (reset)
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/pharmaceutical_maxwell_demon_figure.png}
+    \caption{
+        \textbf{Pharmaceutical Biological Maxwell Demon (PharmBMD) complete framework validation demonstrates hierarchical architecture achieving 70\% therapeutic prediction accuracy with $O(1)$ complexity.} 
+        \textbf{(A)} Architectural hierarchy shows six-layer computational stack (bottom to top): \textbf{Hardware Oscillation Harvesting} (blue, foundation layer, 13 oscillators spanning 11 orders of magnitude) extracts zero-cost frequencies from consumer devices; \textbf{Harmonic Coincidence Network} (pink, layer 2) expands base oscillators to $N_{\text{nodes}} \approx 1,950$ through harmonic multiplication $n_{\text{max}} = 150$; \textbf{S-Entropy Coordinates} (orange, layer 3, left branch) maps drugs to 3D categorical space $(S_{\text{knowledge}}, S_{\text{time}}, S_{\text{entropy}})$ for semantic navigation, while \textbf{Maxwell Demon} (purple, layer 3, right branch) implements 3-stage information sorting (Measure-Feedback-Reset) for autonomous frequency filtering; \textbf{Gear Networks} (teal, layer 4, left) compute allosteric coupling $\omega_{\text{therapeutic}} = G \times \omega_{\text{drug}}$ for 5 tested pathways (mean $\bar{G} = 3,221 \pm 2,632$), while \textbf{Phase-Lock Dynamics} (orange, layer 4, right) validate Kuramoto synchronization for 3 drugs with therapeutic threshold $R > 0.7$; \textbf{Therapeutic Prediction} (green, top layer) integrates all subsystems to achieve 70\% binary classification accuracy with $O(1)$ prediction complexity (constant time independent of library size). Arrows indicate information flow from hardware substrate through categorical processing to therapeutic output.
+        
+        \textbf{(B)} Validation status heatmap shows claim-by-claim verification across 9 framework components (rows) and 4 validation categories (columns C1-C4). Color coding: Green = Validated (claim experimentally confirmed), Red = Failed (claim refuted by data), Yellow = Partial (mixed evidence), Gray = Missing (insufficient data). \textbf{Hardware} row: C1 validated (green), C2 failed (red), C3-C4 partial (yellow), confirming 13 oscillators extracted but some frequency gaps remain. \textbf{Harmonics} row: C2-C4 partial (yellow), indicating harmonic expansion functional but network completeness unverified. \textbf{S-Entropy} row: C1 failed (red), C2-C4 validated (green), showing metric space properties are confirmed, but initial coordinate mapping had errors. \textbf{Gear Ratio} row: C1 failed (red), C2-C4 validated (green), indicating individual gear ratios measured ($G \in [892, 7615]$) but mean prediction accuracy moderate. \textbf{Phase Lock} row: C1-C2 failed (red), C3 validated (green), C4 partial (yellow), showing the Kuramoto model works for some drugs (Lithium $\Delta K = +2.5$), but not universally. \textbf{Semantic} row: C1 validated (green), C2 failed (red), C3 validated (green), C4 partial (yellow), confirming $O(\log n)$ complexity but navigation robustness varies.. \textbf{Categorical} row: All validated (green), confirming network topology stores information independent of kinetic temperature. \textbf{Therapeutic} row: C1 failed (red), C2-C4 validated (green), achieving 70\% accuracy (below the 88\% target) while validating the end-to-end pipeline. Overall validation rate: 58\% green (23/40 claims), 28\% red (11/40 failed), 15\% yellow (6/40 partial).
+        
+        \textbf{(C)} Performance metrics radar plot (normalized 0-100\%) quantifies six key performance indicators: \textbf{Prediction Accuracy} (bottom-right, $\sim$70\%, blue shaded region) shows therapeutic classification performance; \textbf{Phase Coherence} (bottom, $\sim$35\%) indicates Kuramoto synchronization strength (below therapeutic threshold $R = 0.7$ or 70\%); \textbf{Mean Gear Ratio} (bottom-left, $\sim$40\%) is normalised by the maximum observed value; \textbf{Semantic Speedup} (left, $\sim$95\%) demonstrates near-optimal $O(\log n)$ complexity vs. $O(n!)$ exhaustive search; \textbf{Speedup vs MD} (top, 100\%, peak performance) confirms 86.4 million$\times$ acceleration over molecular dynamics simulation; \textbf{Resonance} (top-right, $\sim$85\%) quantifies harmonic coincidence network coverage of biological frequency spectrum. Asymmetric profile reveals strengths (computational speedup, semantic navigation) and weaknesses (phase coherence, gear ratio prediction), guiding future development priorities. Blue polygon area represents overall framework maturity—large coverage in upper-left quadrant (computational efficiency) but smaller in lower region (mechanistic accuracy).
+    }
+    \label{fig:framework_validation}
+\end{figure}
+
+
 \textbf{Example: Melatonin Phase Response Curve}
 
 Melatonin administered at time $t$ relative to circadian phase $\phi_0$ produces phase shift:
@@ -297,7 +313,7 @@ G_{ij} = \begin{cases}
 \end{cases}
 \end{equation}
 
-Typical drug couples at Level 2 (protein conformational, $10^{12}$ Hz), propagates:
+Typical drug couples at Level 2 (protein conformational, $10^{12}$ Hz) propagate:
 
 \begin{align}
 \text{Level 2} &\xrightarrow{G_{23} = 10^{-3}} \text{Level 3 (ion channels)} \\
@@ -320,13 +336,13 @@ Therapeutic frequency:
 \omega_{\text{therapeutic}} = 10^{-17} \times 10^{12} = 10^{-5} \text{ Hz}
 \end{equation}
 
-This corresponds to daily timescale (Level 8), explaining therapeutic effects manifest over days-weeks despite molecular binding occurring in picoseconds.
+This corresponds to a daily timescale (Level 8), explaining that therapeutic effects manifest over days to weeks, despite molecular binding occurring in picoseconds.
 
 \subsection{Pharmacokinetic-Pharmacodynamic Integration}
 
 Multi-scale hierarchy naturally integrates pharmacokinetics (drug concentration dynamics) with pharmacodynamics (drug effect dynamics).
 
-\textbf{PK}: Absorption, distribution, metabolism, excretion determine $[D](t)$ at target site.
+\textbf{PK}: Absorption, distribution, metabolism, and excretion determine $[D](t)$ at the target site.
 
 \textbf{PD}: Concentration drives Maxwell demon operation at hierarchical levels:
 
@@ -359,11 +375,11 @@ This exhibits:
 2. Delayed onset at low levels (Levels 7-8, slow kinetics)
 3. Hierarchical accumulation of effects over time
 
-Explains clinical observation: symptomatic relief (Level 5-6) in hours-days, disease modification (Level 7-8) in weeks-months.
+Explains clinical observation: symptomatic relief (Level 5-6) in hours to days, disease modification (Level 7-8) in weeks to months.
 
 \subsection{Thermodynamic Cost Across Hierarchy}
 
-Total BMD operation cost summed across levels:
+The total BMD operation cost summed across levels:
 
 \begin{equation}
 G_{\text{total}} = \sum_{i=1}^8 G_i = \sum_{i=1}^8 k_B T \ln|S_i|

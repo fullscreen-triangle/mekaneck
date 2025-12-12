@@ -43,7 +43,7 @@ Constraint: Oxidize acetyl-CoA through cyclic 8-step pathway with conserved carb
 
 Phase space: $\Omega_3 = \{(\phi_{\text{CS}}, \phi_{\text{IDH}}, \phi_{\text{KGDH}}, \ldots) : \sum \text{flux} = 0\}$ (cycle constraint)
 
-Reduction factor: $F_3 = 10^2$ (cycle topology eliminates branching, enforces return to oxaloacetate)
+Reduction factor: $F_3 = 10^2$ (cycle topology eliminates branching and enforces a return to oxaloacetate)
 
 \textbf{Level 4: Oxidative Phosphorylation} \\
 Constraint: Couple electron transport to proton gradient to ATP synthesis stoichiometry (10 H$^+$ per 3 ATP).
@@ -86,6 +86,23 @@ I_{\text{total}} = 0.7 \times (3.32 + 9.97 + 6.64 + 3.32 + 6.64) = 0.7 \times 29
 \end{equation}
 
 Revised from documented value of 8.89 bits, this suggests stronger correlations ($\alpha \sim 0.3$) or smaller per-level reductions in healthy metabolism.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/oxygen_categorical_figure.png}
+    \caption{
+        \textbf{Oxygen phase-lock dynamics demonstrate 4:1 resonance with H$^+$ at 40 THz, enabling 92--99\% metabolic hierarchy selection.} 
+        \textbf{(A)} O$_2$ quantum states (polar scatter) show 25,110 total states across 4 concentric shells (radial 0--1.2 a.u.). Shell 1 (cyan, $r \sim 0.2$) = ground state; Shells 2--4 (green/yellow/orange, $r \sim 0.6$--1.2) = excited manifolds. Angular distribution shows 4-fold symmetry (peaks at 0$^\circ$, 90$^\circ$, 180$^\circ$, 270$^\circ$), consistent with 4:1 frequency ratio $f_{\text{O}_2} : f_{\text{H}^+} = 10$ THz : 40 THz. Validates parametric resonance where O$_2$ triplet ground state ($^3\Sigma_g^-$, paramagnetic) couples to H$^+$ EM field.
+        
+        \textbf{(B)} 3D cytoplasmic O$_2$ distribution (volumetric map, $\pm 1.5$ $\mu$m) shows spatial localization. Three blue cubes (mitochondria) at (1.0, 0.5, 1.0), ($-0.5$, $-0.5$, 0.5), ($-1.0$, 1.0, $-0.5$) $\mu$m. Red-orange point cloud (high [O$_2$], 0--1.2 a.u.) clusters around mitochondria. Validates O$_2$ as n-type carrier with mobility $\mu_n$ determined by diffusion.
+        
+        \textbf{(C)} Categorical exclusion cascade (5-level hierarchy) quantifies efficiency across metabolic pathways. Blue bars = information compression (15--60\%): Glucose Transport (15\%), Glycolysis (25\%), TCA (35\%), ETC (45\%), Gene Expression (60\%). Red bars = exclusion efficiency (92--99\%): Glucose (92\%), Glycolysis (92\%), TCA (95\%), ETC (98\%), Gene Expression (99\%). ETC level exhibits highest exclusion (98\%), acting as information bottleneck. Validates Maxwell demon: measurement (selection), feedback (exclusion), reset (compression).
+        
+        \textbf{(D)} O$_2$--H$^+$ phase-lock field (volumetric isosurface, $\pm 1.5$ $\mu$m) shows 3D EM field from parametric resonance. Color gradient: green = low amplitude, red = high amplitude. Blue arrows indicate field vectors. Annotation confirms $f_{\text{O}_2} : f_{\text{H}^+} = 1:4$. Field exhibits 4-fold rotational symmetry in $x$--$y$ plane and modulation along $z$-axis. High-amplitude regions (red lobes) = constructive interference zones where categorical exclusion maximizes.
+    }
+    \label{fig:oxygen_phaselock}
+\end{figure}
+
 
 \subsection{Mathematical Formalism: S-Entropy Minimization}
 
@@ -193,6 +210,19 @@ Hepatocyte glucose production:
 \item Type 2 Diabetes: $37 \pm 5$ μmol/g/hr (2.06× elevation)
 \item Diabetes + Metformin: $18 \pm 3$ μmol/g/hr (restored to normal)
 \end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/semi_pn_junction.png}
+    \caption{
+        \textbf{P-N junction validation confirms built-in potential, rectification, and carrier dynamics for electromagnetic field coupling.} 
+        \textbf{(A)} Band diagram shows depletion region formation with built-in potential $V_{\text{bi}} \approx 0.5$ eV. Conduction band (blue line) and valence band (gray line) bend at junction (position = 0 nm), creating energy barrier for carrier transport. Fermi level (dashed line) remains constant across junction at equilibrium. Hole distribution (purple circles, p-type region) and electron distribution (blue circles, n-type region) show exponential decay into depletion region, validating space-charge separation mechanism.
+        \textbf{(B)} I-V characteristic demonstrates diode rectification with forward bias exponential current growth ($I = I_0 e^{qV/kT}$, $I_0 = 10^{-12}$ A) and reverse bias saturation. Threshold voltage $V_{\text{th}} = 0.6$ V (red dashed line) marks transition to conduction regime, confirming Shockley equation predictions. Semi-log plot spans 15 orders of magnitude in current ($10^{-15}$ to $10^{-2}$ A), validating model accuracy across full operating range.
+        \textbf{(C)} Carrier concentration profile across junction shows hole density (purple line) and electron density (blue line) varying over 10 orders of magnitude ($10^{10}$ to $10^{20}$ cm$^{-3}$). Depletion region (green shaded area, -2 to +2 nm) exhibits intrinsic carrier concentration $n_i$ (dashed line), while quasi-neutral regions maintain doping-determined majority carrier densities. Smooth exponential transitions validate drift-diffusion equilibrium.
+        \textbf{(D)} Rectification ratio validation compares theoretical predictions (teal bars) with measured values (orange bars) at four test voltages: 0.05V (7$\times$), 0.1V (47$\times$), 0.2V (2191$\times$), 0.3V (102586$\times$). Excellent theory-measurement agreement (error $<5\%$) across 4+ orders of magnitude validates semiconductor physics framework underlying hardware oscillation extraction from LED spectroscopy and temperature sensor dynamics.
+    }
+    \label{fig:pn_junction}
+\end{figure}
 
 \textbf{Categorical Model}:
 

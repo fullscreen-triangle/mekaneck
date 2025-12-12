@@ -13,8 +13,22 @@ plt.rcParams['figure.figsize'] = (16, 12)
 plt.rcParams['font.size'] = 10
 
 def load_data(json_file):
-    with open(json_file, 'r') as f:
-        return json.load(f)
+    try:
+        with open(json_file, 'r') as f:
+            return json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"Warning: JSON decode error at line {e.lineno}: {e.msg}")
+        print("Loading partial data...")
+        # Try to load what we can
+        with open(json_file, 'r') as f:
+            content = f.read()
+            # Find the last valid closing brace
+            last_brace = content.rfind('}')
+            if last_brace > 0:
+                # Try to parse up to the last valid brace
+                valid_content = content[:last_brace+1]
+                return json.loads(valid_content)
+        raise
 
 def plot_node_expansion(ax, data):
     """Panel A: Harmonic Expansion to 1950 Nodes"""

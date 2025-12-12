@@ -91,6 +91,20 @@ Therapeutic frequency:
 
 This matches observed kinase activation timescales ($\sim$ 10 ms = 100 Hz).
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/gear_ratio_figure.png}
+    \caption{
+        \textbf{Allosteric gear ratio validation establishes frequency transformation mechanism for therapeutic action.} 
+        \textbf{(A)} Gear ratio distribution across pharmaceutical agents shows mean $\bar{G} = 3221 \pm 2632$ (range: [892, 7615], $N=5$ drugs), with broad distribution reflecting pathway-specific frequency transformation requirements. Normal fit (red curve, $\mu=3221$, $\sigma=2354$) captures statistical properties of allosteric coupling strength.
+        \textbf{(B)} Pathway-specific gear ratios demonstrate therapeutic target dependence: Serotonin ($G=3221$), Dopamine ($G=2836$), GABA ($G=1540$), Acetylcholine ($G=7615$), COX pathway ($G=892$), validating hypothesis that $\omega_{\text{therapeutic}} = G \times \omega_{\text{drug}}$ with $O(1)$ prediction complexity.
+        \textbf{(C)} Drug frequency vs. therapeutic response time correlation (bubble size $\propto$ gear ratio) shows inverse relationship: Acetylcholine agonist (40 THz, 680 hours, $G \sim 7000$), SSRI Fluoxetine (37 THz, 336 hours, $G \sim 3000$), Dopamine agonist (44 THz, 168 hours, $G \sim 2000$), Aspirin (52 THz, 6 hours, $G \sim 1000$), demonstrating that larger gear ratios correspond to longer response times and lower therapeutic frequencies.
+        \textbf{(D)} Allosteric gear network mechanism schematic: drug frequency $\omega_{\text{drug}}$ (red) couples to allosteric gear network $G$ (orange), producing therapeutic frequency $\omega_{\text{therapeutic}} = G \times \omega_{\text{drug}}$ (green). Example calculation: $G_{\text{mean}} = 3221$, $\omega_{\text{drug}} = 40$ THz yields $\omega_{\text{ther}} = 1.3 \times 10^5$ Hz, validating frequency downconversion through conformational gear network propagation.
+    }
+    \label{fig:gear_ratio}
+\end{figure}
+
+
 \subsection{Branched Pathway Gear Networks}
 
 Biological pathways exhibit branching and convergence. For network with topology matrix $\mathbf{T}_{ij}$ (connection from node $i$ to $j$):

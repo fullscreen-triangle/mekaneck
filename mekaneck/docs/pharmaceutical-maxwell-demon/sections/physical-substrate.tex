@@ -2,10 +2,10 @@
 
 \subsection{Protonic Charge Density as Information Medium}
 
-The \Hplus\ electromagnetic (EM) field provides the physical substrate for biological information processing. Unlike biochemical signaling which operates through discrete molecular diffusion, the protonic EM field enables continuous, long-range, and instantaneous (within relativistic limits) information transmission.
+The \Hplus\ electromagnetic (EM) field provides the physical substrate for biological information processing. Unlike biochemical signalling, which operates through discrete molecular diffusion, the protonic EM field enables continuous, long-range, and instantaneous (within relativistic limits) information transmission.
 
 \begin{definition}[Protonic EM Field Oscillation]
-The \Hplus\ charge density $\rho_{\Hplus}(\mathbf{r}, t)$ generates electric field $\mathbf{E}(\mathbf{r}, t)$ via Gauss's law:
+The \Hplus\ charge density $\rho_{\Hplus}(\mathbf{r}, t)$ generates an electric field $\mathbf{E}(\mathbf{r}, t)$ via Gauss's law:
 
 \begin{equation}
 \nabla \cdot \mathbf{E} = \frac{\rho_{\Hplus}}{\epsilon_0}
@@ -17,18 +17,18 @@ Proton translocation through membranes creates oscillating dipole moments:
 \mathbf{p}_{\Hplus}(t) = e \cdot \mathbf{d}(t) = e d_0 \cos(\omega_{\Hplus} t + \phi_0)
 \end{equation}
 
-where $e = 1.602 \times 10^{-19}$ C is elementary charge and $d_0 \approx 5$ nm is membrane thickness.
+where $e = 1.602 \times 10^{-19}$ C is the elementary charge and $d_0 \approx 5$ nm is the membrane thickness.
 \end{definition}
 
 \subsection{Fundamental Oscillation Frequency}
 
-Proton oscillation frequency $\omega_{\Hplus}$ is determined by membrane transit time:
+The proton oscillation frequency $\omega_{\Hplus}$ is determined by the membrane transit time:
 
 \begin{equation}
 \tau_{\text{transit}} = \frac{d_0}{v_{\text{drift}}} = \frac{d_0}{\mu_{\Hplus} E_{\text{membrane}}}
 \end{equation}
 
-where $\mu_{\Hplus} = 3.62 \times 10^{-7}$ m$^2$/(V·s) is proton mobility in biological membranes and $E_{\text{membrane}} \approx 10^7$ V/m is transmembrane electric field strength (150 mV across 15 nm).
+where $\mu_{\Hplus} = 3.62 \times 10^{-7}$ m$^2$/(V·s) is the proton mobility in biological membranes and $E_{\text{membrane}} \approx 10^7$ V/m is the transmembrane electric field strength (150 mV across 15 nm).
 
 Calculating:
 \begin{align}
@@ -49,9 +49,26 @@ However, collective oscillations in proton wires (Grotthuss mechanism) accelerat
 
 This frequency ($\sim 40$ GHz) falls in the microwave-infrared boundary, matching documented biological EM emissions from mitochondrial oxidative phosphorylation \cite{Popp1984,Cifra2011}.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/hplus_field_figure.png}
+    \caption{
+        \textbf{H$^+$ electromagnetic field dynamics at 40 THz demonstrate drug-induced phase coherence enhancement.} 
+        \textbf{(A)} H$^+$ field phase oscillation (polar plot) shows field strength $|E|$ (radial, 0--1.6 a.u.) vs. phase angle (0--360$^\circ$) at $f = 40$ THz ($T = 25$ fs). Green trace shows complete cycle with peaks at 300$^\circ$ ($|E| = 1.6$, red dot) and 180$^\circ$ ($|E| = -1.0$, red dot), zero crossing at 270$^\circ$ (green dot). Establishes H$^+$ as biological oscillator for harmonic coincidence network.
+        
+        \textbf{(B)} H$^+$ field topology shows cytoplasmic proton distribution in 2D spatial map ($x$--$y$ plane, $\pm 3$ nm). Five protons (yellow circles) at coordinates: (0, 1.5), (2, 1.5), (0, 0), ($-2$, $-1.5$), (2, $-1.5$) nm. Color map shows field amplitude (blue = $-0.72$ a.u., red = $+0.72$ a.u.) with wavelength $\lambda = 7.5$ $\mu$m. Interference patterns validate biological semiconductor substrate where protons act as oscillatory charge carriers.
+        
+        \textbf{(C)} Drug-modified H$^+$ field phase (polar diagram) quantifies coherence enhancement. Baseline state (gray, left, $R = 0.3$) shows broad angular distribution (90--270$^\circ$, orange trace). Therapeutic state (green, right, $R = 0.9$) shows narrow distribution centered at 0$^\circ$ (green trace). Phase coherence increases 3-fold ($R: 0.3 \to 0.9$), crossing therapeutic threshold $R > 0.7$. Validates time-dependent phase-lock dynamics.
+        
+        \textbf{(D)} Temporal evolution shows amplitude enhancement over 100 fs. Baseline H$^+$ field (dashed gray) oscillates at 40 THz with $A_{\text{baseline}} \approx 1.0$ a.u. Drug-modified field (solid green) shows $+50\%$ enhancement ($A_{\text{drug}} \approx 1.5$ a.u.). Drug binding at $t = 30$ fs (red dashed line) causes immediate amplitude increase, peaking at $t \sim 60$ fs ($A = 1.4$ a.u.). Frequency remains constant (4 cycles in 100 fs), confirming phase-lock preserves carrier frequency while modulating amplitude.
+    }
+    \label{fig:hplus_field}
+\end{figure}
+
+
 \subsection{Spatial Coherence Length}
 
-EM field coherence length $\lambda_{\text{coh}}$ determines spatial range of oscillatory coupling:
+EM field coherence length $\lambda_{\text{coh}}$ determines the spatial range of oscillatory coupling:
 
 \begin{equation}
 \lambda_{\text{coh}} = \frac{c}{\omega_{\Hplus} / 2\pi} = \frac{3 \times 10^8}{4.06 \times 10^{10}} = 7.39 \times 10^{-3} \text{ m} = 7.4 \text{ mm}
@@ -63,11 +80,11 @@ This exceeds typical cellular dimensions (10-100 μm) by 2-3 orders of magnitude
 \lambda_{\text{eff}} = \frac{\lambda_{\text{coh}}}{\sqrt{\epsilon_r}} = \frac{7.4 \text{ mm}}{\sqrt{80}} = 0.83 \text{ mm}
 \end{equation}
 
-where $\epsilon_r \approx 80$ is relative permittivity of cellular cytoplasm.
+where $\epsilon_r \approx 80$ is the relative permittivity of cellular cytoplasm.
 
 \subsection{Energy Density and Intensity}
 
-EM field energy density for oscillating dipole:
+EM field energy density for an oscillating dipole:
 
 \begin{equation}
 u_{\text{EM}} = \frac{1}{2}\epsilon_0 E_0^2 + \frac{1}{2\mu_0} B_0^2
@@ -105,23 +122,23 @@ This is 21 orders of magnitude smaller than thermal energy $k_B T = 4.3 \times 1
 E_{\text{collective}} = N \times E_{\text{cell}} = 10^9 \times 9.6 \times 10^{-39} = 9.6 \times 10^{-30} \text{ J}
 \end{equation}
 
-Phase-locked oscillation further amplifies by $\sqrt{N}$:
+Phase-locked oscillation is further amplified by $\sqrt{N}$:
 
 \begin{equation}
 E_{\text{coherent}} = \sqrt{N} \times E_{\text{collective}} = \sqrt{10^9} \times 9.6 \times 10^{-30} = 3.0 \times 10^{-25} \text{ J}
 \end{equation}
 
-This remains sub-thermal but achieves signal-to-noise ratio sufficient for detection via quantum mechanical coupling to molecular electronic states.
+This remains sub-thermal but achieves a signal-to-noise ratio sufficient for detection via quantum mechanical coupling to molecular electronic states.
 
 \subsection{Phase-Locked Oscillatory Networks}
 
-Biological oscillators couple through \Hplus\ EM field, forming phase-locked networks. The Kuramoto model describes synchronization dynamics:
+Biological oscillators couple through \Hplus\ EM field, forming phase-locked networks. The Kuramoto model describes synchronisation dynamics:
 
 \begin{equation}
 \frac{d\theta_i}{dt} = \omega_i + \frac{K}{N} \sum_{j=1}^N \sin(\theta_j - \theta_i)
 \end{equation}
 
-where $\theta_i$ is phase of oscillator $i$, $\omega_i$ is natural frequency, and $K$ is coupling strength. Critical coupling $K_c = 2/(\pi g(\omega_0))$ where $g(\omega)$ is frequency distribution determines synchronization transition.
+where $\theta_i$ is phase of oscillator $i$, $\omega_i$ is natural frequency, and $K$ is coupling strength. Critical coupling $K_c = 2/(\pi g(\omega_0))$, where $g(\omega)$ is the frequency distribution, determines the synchronisation transition.
 
 \begin{definition}[Oscillatory Hole]
 An oscillatory hole $\mathcal{H}_i$ is a local phase desynchronization:
@@ -133,7 +150,7 @@ An oscillatory hole $\mathcal{H}_i$ is a local phase desynchronization:
 \end{cases}
 \end{equation}
 
-where $\Theta(t) = \arg\left(\frac{1}{N}\sum_{j=1}^N e^{i\theta_j(t)}\right)$ is mean phase and $\theta_{\text{coh}} = \pi/4$ defines coherence threshold.
+where $\Theta(t) = \arg\left(\frac{1}{N}\sum_{j=1}^N e^{i\theta_j(t)}\right)$ is the mean phase and $\theta_{\text{coh}} = \pi/4$ defines the coherence threshold.
 \end{definition}
 
 Holes are equivalent to electron-deficient regions in semiconductor physics: they represent functional absences that can be "filled" by appropriate carriers (drug molecules). The \Hplus\ EM field mediates hole transport through phase gradient diffusion:
