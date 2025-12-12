@@ -21,7 +21,8 @@ scripts = [
     ("7. Trans-Planckian Precision", "transplanckian.py"),
     ("8. H+ Field Dynamics", "hplus_field.py"),
     ("9. Oxygen Phase Lock & Categorical Exclusion", "oxygen_categorical.py"),
-    ("10. MASTER: Pharmaceutical Maxwell Demon", "pharmaceutical_maxwell_demon.py"),
+    ("10. Virtual Categorical Spectrometer", "virtual_categorical_spectrometer.py"),
+    ("11. MASTER: Pharmaceutical Maxwell Demon", "pharmaceutical_maxwell_demon.py"),
 ]
 
 success_count = 0
