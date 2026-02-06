@@ -1,0 +1,35 @@
+\section{Phase-Lock Propagation Dynamics}
+\label{sec:phase_lock_propagation}
+
+Phase-lock propagation enables information transfer across circuit scales with speed $v_{\text{phase}} = \sqrt{K_{\text{coupling}} D_{\text{O}_2}}$.
+
+\subsection{Coupled Oscillator Dynamics}
+
+\begin{equation}
+\frac{d\phi_i}{dt} = \omega_i + \sum_{j=1}^N K_{ij} \sin(\phi_j - \phi_i) + \xi_i(t)
+\end{equation}
+
+where $K_{ij}$ is coupling strength and $\xi_i(t)$ is thermal noise.
+
+\subsection{Phase-Lock Formation Criterion}
+
+Phase-locking occurs when:
+\begin{equation}
+|\omega_i - \omega_j| < K_{ij}
+\end{equation}
+
+Locked phase difference:
+\begin{equation}
+\Delta\phi_{\text{lock}} = \arcsin\left(\frac{\omega_i - \omega_j}{2K_{ij}}\right)
+\end{equation}
+
+\subsection{Propagation Speed}
+
+\begin{equation}
+v_{\text{phase}} = \sqrt{K_{\text{coupling}} D_{\text{O}_2}}
+\end{equation}
+
+For $K_{\text{coupling}} \sim 10^6$ Hz and $D_{\text{O}_2} \approx 2 \times 10^{-5}$ cm$^2$/s:
+\begin{equation}
+v_{\text{phase}} \approx 1.4 \text{ mm/s}
+\end{equation}

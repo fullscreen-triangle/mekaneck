@@ -1,5 +1,11 @@
 # Mekaneck: Pharmaceutical Maxwell Demon Framework
 
+
+<div align="center">
+  <img src="assets/NgoloMask.jpg" alt="Borgia Logo" width="200"/>
+</div>
+
+
 <div align="center">
 
 **Virtual Brain for Drug Testing Through Biological Oscillatory Principles**

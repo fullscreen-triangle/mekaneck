@@ -1,0 +1,167 @@
+\section{Trajectory-Based Mental State Identification}
+\label{sec:trajectory_detailed}
+
+\subsection{The Poincar\'{e} Computing Paradigm}
+
+Traditional neuroscience asks: ``Given initial conditions, what state will the brain reach?'' This is forward simulation from initial conditions.
+
+The Poincar\'{e} computing paradigm inverts this: ``Given a completion condition, what trajectory must have been taken?'' This is backward constraint satisfaction.
+
+\begin{principle}[Backward Determination]
+Specifying the completion state determines what the trajectory MUST have been:
+\begin{equation}
+\Gstate_f \implies \gamma^* \quad \text{(unique trajectory)}
+\end{equation}
+\end{principle}
+
+\subsection{Mental States as Trajectory-Terminus Pairs}
+
+\begin{theorem}[Mental State Structure]
+A mental state is not merely a state---it is a trajectory-terminus pair:
+\begin{equation}
+\boxed{\Mstate = (\gamma, \Gstate_f)}
+\end{equation}
+where:
+\begin{itemize}
+\item $\gamma: [0, T] \to \Sspace_N$ is the trajectory through S-entropy space
+\item $\Gstate_f = \gamma(T)$ is the final (terminus) state
+\end{itemize}
+\end{theorem}
+
+\subsection{Why Trajectory Matters}
+
+\begin{example}[Same Thought, Different States]
+Consider the thought ``cup on chair'':
+\begin{itemize}
+\item While drunk at a party
+\item During an exam about furniture
+\item While searching for lost keys
+\item While reminiscing about grandmother's house
+\end{itemize}
+
+The thought \emph{content} is identical: $\Tcat_{\text{cup-chair}}$
+
+But the \emph{mental states} differ:
+\begin{align}
+\Mstate_{\text{drunk}} &= (\gamma_{\text{party}}, \Gstate_{\text{cup-chair}}) \\
+\Mstate_{\text{exam}} &= (\gamma_{\text{academic}}, \Gstate_{\text{cup-chair}}) \\
+\Mstate_{\text{search}} &= (\gamma_{\text{goal-directed}}, \Gstate_{\text{cup-chair}}) \\
+\Mstate_{\text{memory}} &= (\gamma_{\text{nostalgic}}, \Gstate_{\text{cup-chair}})
+\end{align}
+\end{example}
+
+\begin{theorem}[Mental State Non-Identity]
+Identical terminus states with different trajectories are different mental states:
+\begin{equation}
+\gamma_1 \neq \gamma_2 \implies \Mstate_1 \neq \Mstate_2 \quad \text{even if } \Gstate_{f,1} = \Gstate_{f,2}
+\end{equation}
+\end{theorem}
+
+\subsection{Trajectory as Context}
+
+The trajectory encodes:
+\begin{enumerate}
+\item \textbf{Emotional context}: How $\Hfield$ evolved during approach
+\item \textbf{Cognitive history}: What thoughts preceded this one
+\item \textbf{Perceptual pathway}: What sensory modalities were active
+\item \textbf{Goal structure}: What completion was being sought
+\end{enumerate}
+
+\begin{definition}[Trajectory Context]
+The trajectory context is the integral of state evolution:
+\begin{equation}
+\text{Context}(\gamma) = \int_0^T \frac{d\gamma}{dt} \otimes \Hfield(t) \, dt
+\end{equation}
+\end{definition}
+
+\subsection{The Ternary Trisection Structure}
+
+From the trajectory computing framework, trajectories in S-entropy space have ternary structure:
+
+\begin{theorem}[Trajectory Address]
+Each trajectory corresponds to a ternary address:
+\begin{equation}
+\gamma \leftrightarrow (a_1, a_2, \ldots, a_k) \quad \text{where } a_i \in \{0, 1, 2\}
+\end{equation}
+The address IS the path (trajectory-position identity).
+\end{theorem}
+
+\begin{corollary}[O($\log n$) Navigation]
+Navigation through mental state space has complexity:
+\begin{equation}
+\text{Complexity} = O(\log_3 n)
+\end{equation}
+where $n$ is the number of distinct states. This is 37\% more efficient than binary.
+\end{corollary}
+
+\subsection{Penultimate State Principle}
+
+\begin{principle}[Penultimate Determination]
+To identify a mental state, determine the penultimate state from which it was reached:
+\begin{equation}
+\Mstate = (\gamma, \Gstate_f) \iff \Gstate_{f-1} \xrightarrow{\delta\gamma} \Gstate_f
+\end{equation}
+\end{principle}
+
+This is the key inversion: instead of asking ``where will this go?'' (forward), ask ``where did this come from?'' (backward).
+
+\begin{theorem}[Backward Uniqueness]
+Given $\Gstate_f$ and the constraint structure, the penultimate state $\Gstate_{f-1}$ is unique:
+\begin{equation}
+\Gstate_f + \text{constraints} \implies \Gstate_{f-1} \quad \text{(unique)}
+\end{equation}
+\end{theorem}
+
+\subsection{Mental State Equivalence Classes}
+
+\begin{definition}[Trajectory Equivalence]
+Two trajectories are equivalent if they reach the same terminus with equivalent contexts:
+\begin{equation}
+\gamma_1 \sim \gamma_2 \iff \Gstate_{f,1} = \Gstate_{f,2} \land |\text{Context}(\gamma_1) - \text{Context}(\gamma_2)| < \epsilon
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Equivalence Classes]
+Mental states partition into equivalence classes based on:
+\begin{enumerate}
+\item Terminus identity: Same $\Gstate_f$
+\item Context similarity: Similar trajectory integrals
+\item Emotional proximity: Similar $\Hfield$ profiles
+\end{enumerate}
+\end{theorem}
+
+\subsection{Implications for Neuropharmacology}
+
+\begin{corollary}[Drug Effects as Trajectory Modifiers]
+Drugs modify mental states by altering trajectories, not just termini:
+\begin{equation}
+\Pop_{\text{drug}}: \gamma \to \gamma' \implies \Mstate \to \Mstate'
+\end{equation}
+Even if the final thought is ``unchanged,'' the mental state differs because the trajectory differs.
+\end{corollary}
+
+\begin{example}[Anxiolytic Effect]
+An anxiolytic doesn't change what you think, but changes HOW you get there:
+\begin{align}
+\gamma_{\text{anxious}} &\to \gamma_{\text{calm}} \\
+\Gstate_f &= \Gstate_f \quad \text{(same thought)} \\
+\Mstate_{\text{anxious}} &\neq \Mstate_{\text{calm}} \quad \text{(different mental states)}
+\end{align}
+\end{example}
+
+\subsection{Complete Mental State Specification}
+
+A complete mental state specification requires:
+\begin{equation}
+\Mstate = \left\{
+\begin{array}{l}
+\gamma: \text{trajectory through } \Sspace_N \\
+\Gstate_f: \text{terminus state} \\
+\Hfield: \text{emotional field} \\
+\Pdecay: \text{perceptual constraint} \\
+\Tdecay: \text{thought dynamics}
+\end{array}
+\right\}
+\end{equation}
+
+This is the fundamental unit of the Virtual Brain.

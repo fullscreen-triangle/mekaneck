@@ -1,0 +1,553 @@
+\section{Neural Partition Language: Complete Specification}
+\label{sec:npl_specification}
+
+Building on the partition-based equations of state for hybrid microfluidic circuits, we establish a complete programming language for the Virtual Brain. This language implements Poincar\'{e} computing where programs specify completion conditions and the runtime navigates backward through S-entropy space to satisfy constraints.
+
+\subsection{Foundational Principles}
+
+\begin{principle}[No Null State]
+At every computation step, the system must occupy exactly one category. There is no ``undefined'' or ``null'' state.
+\end{principle}
+
+\begin{principle}[Triple Equivalence]
+All operations can be expressed equivalently in oscillatory, categorical, or partition form:
+\begin{equation}
+\Sosc = \Scat = \Spart = \kB M \ln n
+\end{equation}
+\end{principle}
+
+\begin{principle}[Backward Determination]
+Programs specify completion conditions $\Gstate_f$; the runtime determines what trajectory $\gamma$ must have been taken.
+\end{principle}
+
+\subsection{Type System}
+
+\subsubsection{Coordinate Types}
+
+\begin{definition}[Partition Coordinate Type]
+\begin{verbatim}
+type PartitionCoord = {
+    n : Nat+,           -- depth (n >= 1)
+    l : Fin(n),         -- complexity (0 <= l < n)
+    m : Int[-l..+l],    -- orientation (-l <= m <= +l)
+    s : Spin            -- chirality {-1/2, +1/2}
+}
+-- Capacity: C(n) = 2n²
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[S-Entropy Coordinate Type]
+\begin{verbatim}
+type SCoord = {
+    Sk : Real[0,1],     -- knowledge entropy
+    St : Real[0,1],     -- temporal entropy
+    Se : Real[0,1]      -- evolution entropy
+}
+-- S-space: [0,1]³
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Ternary Address Type]
+\begin{verbatim}
+type TernaryAddr(k : Nat) = Array[k] of {0, 1, 2}
+-- Maps to 3^k cells in S-space
+-- Address IS the path (trajectory-position identity)
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Gyrometric Coordinate Type]
+\begin{verbatim}
+type GyroCoord = {
+    J : Array[N] of Nat,    -- rotational quantum numbers
+    omega : Array[N] of Real,-- angular frequencies
+    gamma : Array[N,N] of Real -- damping coefficients
+}
+\end{verbatim}
+\end{definition}
+
+\subsubsection{State Types}
+
+\begin{definition}[Mental State Type]
+\begin{verbatim}
+type MentalState = {
+    gamma : Trajectory,      -- path through S-space
+    Gamma_f : PartitionState,-- terminus state
+    M : Memory,              -- accumulated emotional change
+    H : EmotionalField,      -- current H+ field state
+    P_decay : DecayCurve,    -- perception decay
+    T_decay : DecayCurve     -- thought decay
+}
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Circuit State Type]
+\begin{verbatim}
+type CircuitState = {
+    rho : ChargeDistribution,-- charge density field
+    D : Real[0,1],           -- hierarchical depth
+    R : Real[0,1],           -- phase coherence
+    sigma2 : Real+,          -- variance
+    regime : CircuitRegime   -- operational regime
+}
+
+type CircuitRegime =
+    | Coherent(R > 0.8)
+    | Turbulent(R < 0.3)
+    | Hierarchical(D >= 0.6)
+    | ApertureDominated
+    | PhaseLocked(K > sigma_omega)
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Thought Type]
+\begin{verbatim}
+type Thought = {
+    O2_config : Array[N] of Vec3,  -- O2 positions
+    electron_pos : Vec3,            -- stabilizing electron
+    hole_phase : Real,              -- oscillatory phase
+    signature : Array[30] of Real   -- 30-dim oscillatory signature
+}
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Perception Type]
+\begin{verbatim}
+type Perception = {
+    modality : SensoryModality,
+    input : SensoryInput,
+    completion : PartitionState,
+    sufficient : Bool              -- sufficiency achieved
+}
+
+type SensoryModality =
+    | Visual | Auditory | Tactile | Olfactory
+    | Gustatory | Proprioceptive | Drug
+\end{verbatim}
+\end{definition}
+
+\subsection{Core Operators}
+
+\subsubsection{Partition Operations}
+
+\begin{definition}[Partition Operators]
+\begin{verbatim}
+-- Partition state transition
+PARTITION(sigma_1, sigma_2) : PartitionState -> PartitionState
+    requires: d_cat(sigma_1, sigma_2) = 1  -- adjacent categories
+    ensures: No Null State maintained
+
+-- Categorical distance
+D_CAT(sigma_1, sigma_2) : PartitionState * PartitionState -> Real
+    = sqrt((n1-n2)² + (l1-l2)² + (m1-m2)² + (s1-s2)²)
+
+-- Partition capacity at depth n
+CAPACITY(n : Nat+) : Nat = 2 * n²
+
+-- Partition coordinate extraction
+COORDS(state : PartitionState) : PartitionCoord
+\end{verbatim}
+\end{definition}
+
+\subsubsection{S-Entropy Operations}
+
+\begin{definition}[S-Entropy Operators]
+\begin{verbatim}
+-- Navigate in S-space
+NAVIGATE(S_current : SCoord, S_target : SCoord) : Trajectory
+    -- Uses ternary trisection: O(log₃ n) complexity
+
+-- S-entropy gradient
+GRAD_S(field : SCoord -> Real) : SCoord -> Vec3
+
+-- Knowledge entropy update
+UPDATE_SK(observation : Perception) : SCoord -> SCoord
+    Sk_new = Sk_old - I(observation)  -- information reduces uncertainty
+
+-- Temporal entropy update
+UPDATE_ST(circuit_completion : Duration) : SCoord -> SCoord
+    St_new = St_old + tau_circuit / tau_max
+
+-- Evolution entropy update
+UPDATE_SE(trajectory_step : TrajectoryStep) : SCoord -> SCoord
+    Se_new = Se_old + |dS/dt| * dt
+\end{verbatim}
+\end{definition}
+
+\subsubsection{Ternary Encoding Operations}
+
+\begin{definition}[Ternary Operators]
+\begin{verbatim}
+-- Encode S-coordinate to ternary address
+ENCODE(S : SCoord, precision : Nat) : TernaryAddr(precision)
+    -- Each trit specifies which third of remaining interval
+
+-- Decode ternary address to S-coordinate
+DECODE(addr : TernaryAddr(k)) : SCoord
+    -- Address IS the path: trajectory-position identity
+
+-- Trisect interval (37% fewer iterations than binary)
+TRISECT(interval : Interval) : (Interval, Interval, Interval)
+
+-- Hierarchical navigation
+NAVIGATE_TERNARY(addr_from, addr_to : TernaryAddr(k)) : Trajectory
+    complexity: O(k) = O(log₃(resolution))
+\end{verbatim}
+\end{definition}
+
+\subsection{Poincar\'{e} Computing Primitives}
+
+\begin{definition}[Trajectory Completion]
+\begin{verbatim}
+-- Core Poincaré computing operation
+COMPLETE(constraints : Constraints,
+         Gamma_f : PartitionState) : Trajectory
+    -- Finds trajectory gamma satisfying:
+    --   (1) ||gamma(T) - S_0|| < epsilon (recurrence)
+    --   (2) constraints(gamma) = true
+    returns: trajectory that MUST have been taken
+
+-- Specify completion condition
+TARGET(Gamma_f : PartitionState,
+       epsilon : Real+) : CompletionCondition
+
+-- Constraint satisfaction
+SATISFY(C : Constraints, gamma : Trajectory) : Bool
+    -- Checks if trajectory satisfies all constraints
+
+-- Equilibrium as recurrence
+EQUILIBRIUM(S_0 : SCoord, epsilon : Real+) : CompletionCondition
+    = TARGET(Gamma_f where ||Gamma_f.S - S_0|| < epsilon)
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Free Energy Operations]
+\begin{verbatim}
+-- Helmholtz free energy (trajectory completion criterion)
+HELMHOLTZ(U : Energy, T : Temperature, S : Entropy) : Energy
+    = U - T * S
+
+-- Gibbs free energy
+GIBBS(H : Enthalpy, T : Temperature, S : Entropy) : Energy
+    = H - T * S
+
+-- Minimize free energy (find completion)
+MINIMIZE_F(F : FreeEnergy, constraints : Constraints) : Trajectory
+\end{verbatim}
+\end{definition}
+
+\subsection{Circuit Dynamics Operators}
+
+\subsubsection{Variance Minimization}
+
+\begin{definition}[Variance Operators]
+\begin{verbatim}
+-- Current variance
+VARIANCE(state : CircuitState) : Real+
+    = <(rho - <rho>)²>
+
+-- Minimum achievable variance
+VAR_MIN(T : Temperature, K : CouplingStrength) : Real+
+    = k_B * T / K
+
+-- Variance reduction dynamics
+REDUCE_VAR(state : CircuitState,
+           target : Real+) : CircuitState
+    -- Thermodynamic optimization toward target variance
+
+-- Geometric aperture selection (variance filter)
+APERTURE(omega_set : Set[Frequency],
+         threshold : Real+) : Set[Frequency]
+    = { omega : sigma²(phi | omega) < threshold }
+    -- Catalytic reduction factor ~10³⁸
+\end{verbatim}
+\end{definition}
+
+\subsubsection{Phase-Lock Operations}
+
+\begin{definition}[Phase-Lock Operators]
+\begin{verbatim}
+-- Phase coherence measure
+COHERENCE(phases : Array[N] of Phase) : Real[0,1]
+    R = (1/N) * |sum_j exp(i * phi_j)|
+
+-- Phase-lock coupling
+PHASE_LOCK(omega_1, omega_2 : Frequency,
+           K : CouplingStrength) : Bool
+    requires: |omega_1 - omega_2| < Delta_omega_c
+
+-- Kuramoto synchronization
+KURAMOTO(oscillators : Array[N] of Oscillator,
+         K : CouplingStrength) : PhaseState
+    -- d(phi_i)/dt = omega_i + (K/N) * sum_j sin(phi_j - phi_i)
+
+-- Phase propagation speed
+V_PHASE(K : CouplingStrength,
+        D_O2 : DiffusionCoeff) : Velocity
+    = sqrt(K * D_O2)
+\end{verbatim}
+\end{definition}
+
+\subsubsection{Hierarchical Cascade Operations}
+
+\begin{definition}[Hierarchy Operators]
+\begin{verbatim}
+-- Hierarchical depth
+DEPTH(fluxes : Array[N] of Flux,
+      threshold : Flux) : Real[0,1]
+    D = (1/N) * sum_i indicator(F_i > threshold)
+
+-- Information compression
+COMPRESS(flux_in, flux_out : Array[N] of Flux,
+         alpha : Array[N] of Real) : Information
+    I = sum_i alpha_i * log2(flux_in_i / flux_out_i)
+
+-- Multi-scale coupling
+CASCADE(levels : Array[N] of Level) : HierarchicalState
+    -- Couples adjacent levels through variance minimization
+
+-- Depth transition (critical at D ≈ 0.4)
+TRANSITION(state : CircuitState) : CircuitRegime
+    if D > 0.6 then Hierarchical
+    else if R > 0.8 then Coherent
+    else if R < 0.3 then Turbulent
+    else ApertureDominated
+\end{verbatim}
+\end{definition}
+
+\subsection{Thermodynamic Operations}
+
+\begin{definition}[Temperature Operations]
+\begin{verbatim}
+-- Categorical thermometry (zero backaction)
+TEMPERATURE_CAT(Se_ref, Se_current : Real,
+                T_0 : Temperature) : Temperature
+    T = T_0 * exp(Se_current - Se_ref)
+    -- Resolution: ~17 picokelvin
+    -- Backaction: Delta_p = 0
+
+-- Temperature as scaling factor
+SCALE(observable : Dimensionless,
+      T : Temperature) : Energy
+    = k_B * T * observable
+
+-- Universal equation of state
+EOS(P : Pressure, V : Volume, N : Nat,
+    T : Temperature,
+    structure : PartitionGeometry) : Constraint
+    P * V = N * k_B * T * S(structure)
+    -- S is temperature-independent structural factor
+\end{verbatim}
+\end{definition}
+
+\subsection{Gyrometric Dynamics}
+
+\begin{definition}[Gyrometric Operators]
+\begin{verbatim}
+-- Rotational quantum number dynamics
+GYRO_EVOLVE(J : GyroCoord,
+            lambda : AffineParameter,
+            F : ExternalForce) : GyroCoord
+    -- d²J_i/dlambda² = -omega²_Ji * (J_i - J_eq,i)
+    --                  - sum_j gamma_ij * dJ_j/dlambda + F_i
+    -- Damped, driven oscillation in rotational state space
+
+-- Gyrometric equilibrium
+GYRO_EQ(omega : Array[N] of Real) : GyroCoord
+    J_eq where d²J/dlambda² = 0
+
+-- Angular momentum coupling
+COUPLE_J(J_1, J_2 : GyroCoord,
+         coupling : CouplingMatrix) : GyroCoord
+\end{verbatim}
+\end{definition}
+
+\subsection{Measurement Operations}
+
+\begin{definition}[Quintupartite + Categorical Thermometry]
+\begin{verbatim}
+-- Six-modality measurement framework
+type MeasurementModality =
+    | Optical(ambiguity: ~10⁶⁰)
+    | Spectral(ambiguity: ~10⁴⁵)
+    | Vibrational(ambiguity: ~10³⁰)
+    | MetabolicGPS(ambiguity: ~10¹⁵)
+    | TemporalCausal(ambiguity: ~10⁰)
+    | CategoricalThermo(exclusion: ~10⁻³)
+
+-- Sequential exclusion
+MEASURE(state : CircuitState,
+        modalities : List[MeasurementModality]) : UniqueState
+    -- Each modality reduces ambiguity by epsilon_i ~ 10⁻¹⁵
+    -- N_0 ~ 10⁶⁰ -> N_6 = 1 unique determination
+    -- Effective resolution: delta_x ~ 0.08 nm
+
+-- Zero-backaction categorical observation
+OBSERVE_CAT(state : PartitionState) : PartitionState
+    -- [O_cat, O_phys] = 0 (commutes with physical observables)
+    -- Measures WHERE electron IS NOT (exhaustive exclusion)
+\end{verbatim}
+\end{definition}
+
+\subsection{Neural-Specific Operations}
+
+\begin{definition}[Consciousness Operations]
+\begin{verbatim}
+-- Consciousness as intersection
+CONSCIOUSNESS(P_decay : DecayCurve,
+              T_decay : DecayCurve) : ConsciousnessState
+    C = P_decay ∩ T_decay
+    -- Exists where/when perception constrains thought
+
+-- Decay curve evolution
+DECAY_EVOLVE(curve : DecayCurve,
+             tau : TimeConstant,
+             input : Optional[InputRate]) : DecayCurve
+    d(curve)/dt = -curve/tau + input
+
+-- Consciousness frequency
+OMEGA_C(omega_T, omega_P : Frequency) : Frequency
+    = (omega_T * omega_P) / (omega_T + omega_P)
+    -- ~2.5 Hz
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Memory Operations]
+\begin{verbatim}
+-- Memory as accumulated change
+MEMORY(H_field : EmotionalField,
+       t_start, t_end : Time) : Memory
+    M = integral(dH/dt, t_start, t_end)
+    -- "How the field got here"
+
+-- Temporal differentiation
+DISTINGUISH(thought : Thought,
+            H : EmotionalField,
+            M_1, M_2 : Memory) : Bool
+    -- (T, H, M_1) ≠ (T, H, M_2) even if T, H identical
+
+-- Memory retrieval
+RETRIEVE(M : Memory,
+         H_now : EmotionalField,
+         t_0 : Time) : EmotionalField
+    H(t_0) = H_now - (M(now) - M(t_0))
+
+-- Prediction from memory
+PREDICT(M : Memory,
+        H_now : EmotionalField,
+        delta_t : Duration) : EmotionalField
+    H(t + delta_t) ≈ H_now + (dM/dt) * delta_t
+\end{verbatim}
+\end{definition}
+
+\begin{definition}[Dream Operations]
+\begin{verbatim}
+-- Dream mode (unbounded thought)
+DREAM(thought : Thought) : Trajectory
+    -- P_decay = 0, no perceptual constraint
+    -- Trajectory navigates full S-space
+    domain: S_N - S_perceptible
+
+-- Wake mode (constrained thought)
+WAKE(thought : Thought,
+     perception : Perception) : Trajectory
+    -- P_decay > 0, perceptual constraint active
+    domain: S_N ∩ S_perceptible
+\end{verbatim}
+\end{definition}
+
+\subsection{Charge-Circuit Integration}
+
+\begin{definition}[Charge Operations]
+\begin{verbatim}
+-- Charge conservation (no ground)
+CONSERVE(rho : ChargeDistribution) : Constraint
+    integral(rho, V) = Q_total = const
+
+-- Autocatalytic redistribution
+REDISTRIBUTE(rho : ChargeDistribution,
+             imbalance : LocalImbalance) : ChargeDistribution
+    -- Variance minimization drives redistribution
+    -- Creates new imbalance -> cycle continues
+
+-- Soul-consciousness coupling
+COUPLE_SC(rho : ChargeDistribution,  -- soul
+          C : ConsciousnessState)     -- consciousness
+    : UnifiedState
+    -- Same non-grounded circuit at different levels
+\end{verbatim}
+\end{definition}
+
+\subsection{Program Structure}
+
+\begin{definition}[NPL Program]
+\begin{verbatim}
+program VirtualBrainProcess {
+    -- Declare target state (completion condition)
+    target: PartitionState
+
+    -- Declare constraints
+    constraints: List[Constraint]
+
+    -- Initial state (optional - determined by backward completion)
+    initial: Optional[MentalState]
+
+    -- The program body specifies WHAT, not HOW
+    body: CompletionSpecification
+
+    -- Runtime navigates S-space to find trajectory
+    -- satisfying target + constraints
+}
+
+-- Example: Conscious perception process
+program ConsciousPerception {
+    target: Gamma_f where sufficient(perception)
+
+    constraints: [
+        P_decay > 0,           -- perception active
+        T_decay > 0,           -- thought active
+        C = P_decay ∩ T_decay, -- consciousness exists
+        M = integral(dH/dt)    -- memory accumulates
+    ]
+
+    body: COMPLETE(constraints, target)
+
+    returns: (gamma, Gamma_f, M)  -- mental state triple
+}
+\end{verbatim}
+\end{definition}
+
+\subsection{Execution Model}
+
+\begin{theorem}[NPL Execution]
+NPL programs execute through:
+\begin{enumerate}
+\item \textbf{Target specification}: Program declares completion condition $\Gstate_f$
+\item \textbf{Constraint collection}: All constraints accumulated
+\item \textbf{Backward navigation}: Runtime navigates S-space backward from target
+\item \textbf{Trajectory determination}: Unique trajectory $\gamma$ satisfying constraints is found
+\item \textbf{State extraction}: Mental state $\Mstate = (\gamma, \Gstate_f, M)$ returned
+\end{enumerate}
+Complexity: $O(\log_3 n)$ via ternary trisection.
+\end{theorem}
+
+\begin{theorem}[Computational Universality]
+NPL achieves computational universality through:
+\begin{enumerate}
+\item \textbf{Controllability}: Arbitrary state transformations via aperture modulation
+\item \textbf{Memory persistence}: Phase-locked states stable against thermal fluctuations
+\item \textbf{Conditional operations}: Phase threshold dynamics
+\item \textbf{Hierarchical composability}: Multi-scale coupling
+\end{enumerate}
+\end{theorem}
+
+\subsection{Efficiency Properties}
+
+\begin{theorem}[NPL Efficiency]
+\begin{enumerate}
+\item \textbf{Ternary advantage}: 37\% fewer iterations than binary search
+\item \textbf{Categorical exclusion}: $10^{60} \to 1$ unique determination
+\item \textbf{Aperture catalysis}: $10^{38}$ reduction factor
+\item \textbf{Hierarchical compression}: $10^{44} \to 10^6$ configurations
+\item \textbf{Overall efficiency}: $10^{22}$ improvement over explicit enumeration
+\end{enumerate}
+\end{theorem}

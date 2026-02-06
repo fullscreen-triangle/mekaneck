@@ -1,0 +1,173 @@
+\section{Trajectory Completion as Equilibrium Criterion}
+\label{sec:trajectory_completion}
+
+We establish that equilibrium in hybrid microfluidic circuits corresponds to trajectory completion in S-entropy space, unifying thermodynamic, chemical, and computational equilibrium concepts.
+
+\subsection{Trajectory Completion Definition}
+
+\begin{definition}[Trajectory Completion]
+A trajectory $\gamma: [0,T] \to \Sspace$ is complete if it satisfies:
+\begin{enumerate}
+\item \textbf{Recurrence}: $\|\gamma(T) - \gamma(0)\| < \epsilon$ for tolerance $\epsilon > 0$
+\item \textbf{Constraint satisfaction}: $\mathcal{C}(\gamma) = \text{true}$ for problem constraints $\mathcal{C}$
+\item \textbf{Stability}: Small perturbations $\delta\gamma$ satisfy $\|\delta\gamma(t)\| < \delta_{\max}$ for all $t \in [0,T]$
+\end{enumerate}
+\end{definition}
+
+\textbf{Physical interpretation}: Completion means the system has returned to its initial configuration (recurrence), achieved the desired state (constraint satisfaction), and is stable against fluctuations (stability).
+
+\subsection{Thermodynamic Equilibrium}
+
+\begin{theorem}[Thermodynamic Equilibrium as Completion]
+Thermodynamic equilibrium states correspond to completed trajectories with zero velocity:
+\begin{equation}
+\frac{d\Scoord}{dt} = \mathbf{0} \quad \Leftrightarrow \quad \text{Thermodynamic equilibrium}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+At thermodynamic equilibrium, macroscopic state variables $(P,V,T,N)$ are time-independent:
+\begin{equation}
+\frac{dP}{dt} = \frac{dV}{dt} = \frac{dT}{dt} = \frac{dN}{dt} = 0
+\end{equation}
+
+These map to S-entropy coordinates through:
+\begin{align}
+\Sk &= f_k(P,V,T,N) \\
+\St &= f_t(\text{fluctuations}) \\
+\Se &= f_e(\text{trajectory history})
+\end{align}
+
+Time-independence of $(P,V,T,N)$ implies $d\Sk/dt = 0$. Equilibrium suppresses fluctuations, yielding $d\St/dt = 0$. Stationary trajectory gives $d\Se/dt = 0$.
+
+Therefore: $d\Scoord/dt = \mathbf{0}$, which is the trivial completion case with $\gamma(t) = \Scoord_{\text{eq}}$ for all $t$.
+\end{proof}
+
+\subsection{Chemical Equilibrium}
+
+\begin{theorem}[Chemical Equilibrium as Completion]
+Chemical equilibrium occurs when reaction trajectories complete:
+\begin{equation}
+\sum_{\text{reactants}} \nu_i \mu_i = \sum_{\text{products}} \nu_j \mu_j \quad \Leftrightarrow \quad \gamma_{\text{reaction}} \text{ complete}
+\end{equation}
+where $\nu_i$ are stoichiometric coefficients and $\mu_i$ are chemical potentials.
+\end{theorem}
+
+\begin{proof}
+Chemical potential in partition coordinates:
+\begin{equation}
+\mu_i = \frac{\partial F}{\partial N_i} = -k_B T \ln Z_i + k_B T \ln N_i
+\end{equation}
+
+where $Z_i = \sum_{(n,\ell,m,s)} g_i(n,\ell,m,s) \exp(-E_i(n,\ell,m,s)/k_B T)$ is the partition function.
+
+At equilibrium:
+\begin{equation}
+\sum_{\text{reactants}} \nu_i \ln Z_i = \sum_{\text{products}} \nu_j \ln Z_j
+\end{equation}
+
+This holds when partition coordinates match:
+\begin{equation}
+\sum_{\text{reactants}} \nu_i (n_i,\ell_i,m_i,s_i) = \sum_{\text{products}} \nu_j (n_j,\ell_j,m_j,s_j)
+\end{equation}
+
+In S-entropy space, this corresponds to trajectory returning to initial point (recurrence), establishing completion.
+\end{proof}
+
+\subsection{Computational Equilibrium}
+
+\begin{theorem}[Computational Equilibrium as Completion]
+A computation reaches equilibrium (halts with correct output) if and only if its trajectory completes.
+\end{theorem}
+
+\begin{proof}
+\textbf{Necessity} ($\Rightarrow$): Assume computation halts with correct output. Halting means no further state changes occur: $\gamma(t) = \gamma_{\text{final}}$ for $t > T_{\text{halt}}$. Correct output means constraints satisfied: $\mathcal{C}(\gamma) = \text{true}$. For recurrent computation (typical in bounded systems), $\gamma_{\text{final}} \approx \gamma_{\text{initial}}$. Therefore, trajectory is complete.
+
+\textbf{Sufficiency} ($\Leftarrow$): Assume trajectory complete. Recurrence $\|\gamma(T) - \gamma(0)\| < \epsilon$ means system returns to initial region. Constraint satisfaction $\mathcal{C}(\gamma) = \text{true}$ means output is correct. Stability ensures result persists. Therefore, computation has halted with correct output (equilibrium).
+\end{proof}
+
+\subsection{Relaxation to Equilibrium}
+
+The approach to equilibrium follows exponential relaxation:
+
+\begin{proposition}[Exponential Relaxation]
+The distance from equilibrium decays exponentially:
+\begin{equation}
+\|\Scoord(t) - \Scoord_{\text{eq}}\| = \|\Scoord(0) - \Scoord_{\text{eq}}\| \exp(-t/\tau_{\text{relax}})
+\end{equation}
+where $\tau_{\text{relax}}$ is the relaxation time.
+\end{proposition}
+
+\begin{proof}
+Near equilibrium, dynamics linearize:
+\begin{equation}
+\frac{d\Scoord}{dt} = -\mathbf{A}(\Scoord - \Scoord_{\text{eq}})
+\end{equation}
+where $\mathbf{A}$ is the stability matrix.
+
+For stable equilibrium, $\mathbf{A}$ has positive eigenvalues $\lambda_i > 0$. The solution is:
+\begin{equation}
+\Scoord(t) - \Scoord_{\text{eq}} = \sum_i c_i \mathbf{v}_i \exp(-\lambda_i t)
+\end{equation}
+where $\mathbf{v}_i$ are eigenvectors and $c_i$ are determined by initial conditions.
+
+The slowest mode dominates at long times:
+\begin{equation}
+\Scoord(t) - \Scoord_{\text{eq}} \approx c_1 \mathbf{v}_1 \exp(-\lambda_1 t)
+\end{equation}
+
+Defining $\tau_{\text{relax}} = 1/\lambda_1$ yields the exponential relaxation law.
+\end{proof}
+
+\subsection{Relaxation Time Scales}
+
+Different equilibrium types have characteristic relaxation times:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Equilibrium Type} & \textbf{Relaxation Time} & \textbf{Physical Process} \\
+\midrule
+Thermal & $\tau_T \sim 10^{-12}$ s & Molecular collisions \\
+Mechanical & $\tau_M \sim 10^{-6}$ s & Pressure equalization \\
+Chemical & $\tau_C \sim 10^{0}$ s & Reaction kinetics \\
+Diffusive & $\tau_D \sim 10^{3}$ s & Mass transport \\
+Biological & $\tau_B \sim 10^{6}$ s & Metabolic cycles \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+These times correspond to trajectory completion times for different circuit processes.
+
+\subsection{Non-Equilibrium Steady States}
+
+Some circuits maintain non-equilibrium steady states through continuous energy input:
+
+\begin{definition}[Non-Equilibrium Steady State (NESS)]
+A NESS is a trajectory $\gamma_{\text{NESS}}(t)$ satisfying:
+\begin{enumerate}
+\item \textbf{Periodicity}: $\gamma_{\text{NESS}}(t + T_{\text{period}}) = \gamma_{\text{NESS}}(t)$
+\item \textbf{Energy dissipation}: $\int_0^{T_{\text{period}}} P_{\text{diss}}(t) \, dt > 0$
+\item \textbf{Stability}: Attracting limit cycle in phase space
+\end{enumerate}
+\end{definition}
+
+\textbf{Examples}: Oscillatory chemical reactions (Belousov-Zhabotinsky), circadian rhythms, cardiac pacemaker cells.
+
+NESS trajectories are periodic but not recurrent to initial conditions—they form closed loops in $\Sspace$ rather than returning to starting points.
+
+\subsection{Measurement of Trajectory Completion}
+
+Experimental determination of completion status:
+
+\textbf{(1) Recurrence test}: Measure $\|\Scoord(T) - \Scoord(0)\|$ at various times $T$. Completion occurs when this distance falls below threshold $\epsilon$.
+
+\textbf{(2) Constraint verification}: Check if output satisfies problem constraints $\mathcal{C}(\gamma)$.
+
+\textbf{(3) Stability analysis}: Perturb system and measure return time. Stable completions return quickly.
+
+\textbf{(4) Energy monitoring}: Track free energy $F[\gamma]$. Completion corresponds to minimum.
+
+\textbf{(5) Coherence measurement}: Phase coherence $R \to 1$ indicates approaching completion.
+
+These measurements enable real-time monitoring of circuit equilibration.

@@ -1,0 +1,220 @@
+\section{Dreams as Unbounded Thought and Memory as Temporal Differentiation}
+\label{sec:dreams_memory_detailed}
+
+\subsection{The Unbounded Thought State}
+
+\begin{definition}[Dream State]
+A dream state occurs when the perception decay curve reaches zero while thought dynamics persist:
+\begin{equation}
+\text{Dream}: \Pdecay(t) = 0, \quad \Tdecay(t) > 0
+\end{equation}
+\end{definition}
+
+\subsection{Why Dreams Are ``Crazy''}
+
+\begin{theorem}[Dream Trajectory Freedom]
+In dream states, thought trajectories are unconstrained:
+\begin{equation}
+\gamma_{\text{dream}}: [0, T] \to \Sspace_N \quad \text{(no constraints)}
+\end{equation}
+compared to waking:
+\begin{equation}
+\gamma_{\text{wake}}: [0, T] \to \Sspace_N \cap \Sspace_{\text{perceptible}}
+\end{equation}
+\end{theorem}
+
+\begin{corollary}[Impossible Trajectories]
+Dreams can navigate trajectories that would be impossible during waking:
+\begin{enumerate}
+\item Physical impossibilities (flying, teleportation)
+\item Logical inconsistencies (person is both X and not-X)
+\item Temporal violations (past and present intermixed)
+\item Identity fluidity (self becomes other)
+\end{enumerate}
+\end{corollary}
+
+\subsection{The Function of Dreams}
+
+\begin{theorem}[Dream Exploration]
+Dreams serve to explore the full trajectory space $\Sspace_N$:
+\begin{equation}
+\text{Dream space} = \Sspace_N - \Sspace_{\text{perceptible}}
+\end{equation}
+This is the complement of waking-accessible states.
+\end{theorem}
+
+\begin{proposition}[Dream-Reality Comparison]
+The brain uses dreams to:
+\begin{enumerate}
+\item Generate ``impossible'' thought configurations
+\item Compare these with waking reality
+\item Calibrate the boundary between possible and impossible
+\end{enumerate}
+\begin{equation}
+\text{Calibration} = \|\gamma_{\text{dream}}\| - \|\gamma_{\text{wake}}\|
+\end{equation}
+\end{proposition}
+
+\section{The Necessity of Memory}
+
+\subsection{Why Memory Must Exist}
+
+\begin{theorem}[Memory Necessity from Time Progression]
+Memory is a necessary consequence of:
+\begin{enumerate}
+\item Time progresses---reality changes
+\item Emotions (H$^+$ field) summarize the unperceivable part of reality
+\item Emotions must change to track changing reality
+\item But: emotions are already trying to ``predict'' what they cannot perceive
+\item Therefore: a record of emotional change is required
+\end{enumerate}
+\end{theorem}
+
+\begin{proposition}[The Prediction Problem]
+Emotions summarize reality at $10^{13}$ Hz---too fast to consciously perceive. Reality keeps changing. Emotions must update. But in what direction? This requires predicting the unknown. The only available information is: how emotions have changed so far.
+\end{proposition}
+
+\subsection{Memory as Accumulated Emotional Change}
+
+\begin{definition}[Memory]
+Memory is the accumulated change in the emotional field:
+\begin{equation}
+\boxed{M(t) = \int_0^t \frac{d\Hfield}{d\tau} \, d\tau = \int_0^t \dot{\Hfield} \, d\tau}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Memory Structure]
+Memory is NOT ``past emotions'' but the \emph{trajectory of emotional change}:
+\begin{equation}
+M = \text{``How the field GOT HERE''}
+\end{equation}
+This encodes:
+\begin{enumerate}
+\item The direction of emotional evolution
+\item The rate of change over time
+\item The path through emotional space (not just the endpoint)
+\end{enumerate}
+\end{theorem}
+
+\subsection{Temporal Differentiation Within Same Context}
+
+\begin{theorem}[The Core Function of Memory]
+Memory exists to distinguish thoughts that occur within the \emph{same} emotional context at \emph{different} times.
+\end{theorem}
+
+\begin{proof}
+Consider thought $\Tcat$ occurring twice:
+\begin{itemize}
+\item At $t_1$: $(\Tcat, \Hfield(t_1))$
+\item At $t_2$: $(\Tcat, \Hfield(t_2))$
+\end{itemize}
+
+Case 1: $\Hfield(t_1) \neq \Hfield(t_2)$ --- Distinguished by emotional context alone.
+
+Case 2: $\Hfield(t_1) = \Hfield(t_2)$ --- Same thought, same emotional state. Without memory, these are \emph{indistinguishable}.
+
+But with memory:
+\begin{itemize}
+\item At $t_1$: $(\Tcat, \Hfield, M(t_1))$
+\item At $t_2$: $(\Tcat, \Hfield, M(t_2))$
+\end{itemize}
+
+Since $M(t_2) = M(t_1) + \int_{t_1}^{t_2} \dot{\Hfield} \, d\tau \neq M(t_1)$ (time passed, emotional field evolved), the two instances are distinguishable.
+\end{proof}
+
+\subsection{Prediction from Memory}
+
+\begin{theorem}[Predictive Function]
+Memory enables prediction of emotional direction by extrapolating the derivative:
+\begin{equation}
+\Hfield(t + \Delta t) \approx \Hfield(t) + \frac{dM}{dt} \cdot \Delta t
+\end{equation}
+Since $\frac{dM}{dt} = \frac{d\Hfield}{dt}$, the memory trajectory encodes the predictive signal for where emotions are \emph{going}.
+\end{theorem}
+
+\begin{corollary}[Emotional Prediction]
+The brain can predict the direction of emotional change by examining the recent history encoded in $M$:
+\begin{equation}
+\text{Predicted direction} = \text{sign}\left(\frac{dM}{dt}\right) = \text{sign}\left(\dot{\Hfield}\right)
+\end{equation}
+\end{corollary}
+
+\subsection{Memory Retrieval}
+
+\begin{theorem}[Retrieval by Inversion]
+Memory retrieval reconstructs past emotional states by inverting the accumulated change:
+\begin{equation}
+\Hfield(t_0) = \Hfield(t) - \int_{t_0}^{t} \dot{\Hfield} \, d\tau = \Hfield(t) - [M(t) - M(t_0)]
+\end{equation}
+\end{theorem}
+
+\begin{corollary}[Context-Dependent Recall]
+Retrieval depends on current emotional state $\Hfield(t)$:
+\begin{equation}
+\text{Recall}(t_0; \Hfield_{\text{now}}) = \Hfield_{\text{now}} - \Delta M
+\end{equation}
+The same memory recalled in different emotional contexts produces different reconstructions.
+\end{corollary}
+
+\subsection{Dreams, Memory, and the Field}
+
+\begin{theorem}[Dream-Memory Relationship]
+During dreams, with perception $\Pdecay = 0$ (no reality input):
+\begin{itemize}
+\item Thoughts are unbounded
+\item The emotional field $\Hfield$ continues to evolve
+\item Memory $M$ continues to accumulate: $\dot{M} = \dot{\Hfield} \neq 0$
+\end{itemize}
+Dreams contribute to memory even though perception is absent.
+\end{theorem}
+
+\begin{corollary}[Dream Content]
+Dream content reflects the emotional trajectory:
+\begin{equation}
+\text{Dream content} \propto \frac{dM}{dt} = \dot{\Hfield}
+\end{equation}
+Emotionally significant periods (high $|\dot{\Hfield}|$) generate more memorable dreams.
+\end{corollary}
+
+\subsection{Memory Consolidation}
+
+\begin{theorem}[Sleep and Memory]
+Sleep enables memory consolidation by:
+\begin{enumerate}
+\item Removing perceptual constraint ($\Pdecay = 0$)
+\item Allowing emotional field to ``relax'' toward equilibrium
+\item Integrating the day's emotional changes into stable memory
+\end{enumerate}
+\begin{equation}
+M_{\text{consolidated}} = M_{\text{pre-sleep}} + \int_{\text{sleep}} \dot{\Hfield}_{\text{relaxation}} \, dt
+\end{equation}
+\end{theorem}
+
+\subsection{Forgetting}
+
+\begin{definition}[Forgetting]
+Forgetting occurs when the accumulated change $M$ loses resolution---fine temporal distinctions blur:
+\begin{equation}
+\text{Forgetting}: \frac{\partial^2 M}{\partial t^2} \to 0 \quad \text{(derivative information lost)}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[Forgetting Dynamics]
+Forgetting rate depends on emotional significance:
+\begin{equation}
+\frac{d(\text{resolution})}{dt} = -\frac{1}{\tau_{\text{forget}}} + |\dot{\Hfield}|
+\end{equation}
+High emotional change ($|\dot{\Hfield}|$ large) maintains memory resolution; low emotional change leads to forgetting.
+\end{theorem}
+
+\subsection{The Complete Picture}
+
+\begin{align}
+\text{Waking} &: \Pdecay > 0, \, \Ccat = \Pdecay \cap \Tdecay, \, \dot{M} = \dot{\Hfield} \\
+\text{Dreaming} &: \Pdecay = 0, \, \Ccat = \emptyset, \, \dot{M} = \dot{\Hfield}_{\text{relaxation}} \\
+\text{Memory} &: M = \int \dot{\Hfield} \, dt \quad \text{(how field got here)} \\
+\text{Mental State} &: \Mstate = (\gamma, \Gstate_f, M) \\
+\text{Prediction} &: \Hfield(t+\Delta t) \approx \Hfield(t) + \dot{M} \cdot \Delta t
+\end{align}
+
+Memory is not storage of the past---it is the \emph{trajectory through emotional space} that allows the mind to know where it is in time.

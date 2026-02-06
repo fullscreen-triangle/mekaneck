@@ -1,0 +1,142 @@
+\section{Sensory Sufficiency Principle}
+\label{sec:sufficiency_detailed}
+
+\subsection{The Core Insight}
+
+Traditional theories of perception assume that sensory systems aim for \emph{complete} information about stimuli---as much detail as possible. We establish the opposite: perception aims for \emph{sufficient} information for categorical completion.
+
+\begin{axiom}[Sensory Sufficiency]
+Perception provides sufficient information for behavioral completion, not complete information about stimuli.
+\end{axiom}
+
+\subsection{The Lion Example}
+
+Consider three observers at a zoo when a lion escapes:
+
+\textbf{Observer A}: Trained zoologist
+\begin{itemize}
+\item Perceives: ``Male African lion, Panthera leo, approximately 5 years old, 180 kg''
+\item Categorical completion: $\Gstate_A = \text{``dangerous predator''}$
+\item Action: Run
+\end{itemize}
+
+\textbf{Observer B}: Child who only knows ``cats''
+\begin{itemize}
+\item Perceives: ``Big cat, looks scary''
+\item Categorical completion: $\Gstate_B = \text{``dangerous animal''}$
+\item Action: Run
+\end{itemize}
+
+\textbf{Observer C}: Looking at phone, doesn't see lion
+\begin{itemize}
+\item Perceives: ``My companions are running''
+\item Categorical completion: $\Gstate_C = \text{``danger (unspecified)''}$
+\item Action: Run
+\end{itemize}
+
+\begin{theorem}[Completion Equivalence]
+All three perceptual states resolve to equivalent categorical completions:
+\begin{equation}
+\Gstate_A \equiv \Gstate_B \equiv \Gstate_C = \text{``flee''}
+\end{equation}
+despite vastly different perceptual content.
+\end{theorem}
+
+\subsection{Mathematical Formalization}
+
+\begin{definition}[Sufficiency Map]
+The sufficiency map $\Sigma$ takes perceptual states to behavioral completions:
+\begin{equation}
+\Sigma: \mathcal{P}_{\text{all}} \to \mathcal{B}_{\text{complete}}
+\end{equation}
+where $\mathcal{P}_{\text{all}}$ is the space of all possible percepts and $\mathcal{B}_{\text{complete}}$ is the space of behavioral completions.
+\end{definition}
+
+\begin{theorem}[Many-to-One Mapping]
+The sufficiency map is many-to-one:
+\begin{equation}
+|\Sigma^{-1}(\Gstate)| \gg 1 \quad \forall \Gstate \in \mathcal{B}
+\end{equation}
+Many perceptual states map to each behavioral completion.
+\end{theorem}
+
+\subsection{Modality Equivalence}
+
+Different sensory modalities can achieve identical categorical completions.
+
+\begin{example}[Hot Stove Detection]
+Consider detecting a hot stove:
+
+\textbf{Visual}: See glowing red element
+\begin{equation}
+\Pcat_{\text{visual}} \xrightarrow{\Sigma} \Gstate_{\text{heat-danger}}
+\end{equation}
+
+\textbf{Tactile}: Touch hot surface
+\begin{equation}
+\Pcat_{\text{tactile}} \xrightarrow{\Sigma} \Gstate_{\text{heat-danger}}
+\end{equation}
+
+\textbf{Chemical}: Smell burning
+\begin{equation}
+\Pcat_{\text{olfactory}} \xrightarrow{\Sigma} \Gstate_{\text{heat-danger}}
+\end{equation}
+
+All modalities achieve identical completion.
+\end{example}
+
+\begin{theorem}[Modality Independence]
+For any categorical completion $\Gstate$, there exist percepts from multiple modalities mapping to it:
+\begin{equation}
+\exists \, \Pcat_{\text{vis}}, \Pcat_{\text{tac}}, \Pcat_{\text{aud}}, \Pcat_{\text{olf}}: \Sigma(\Pcat_i) = \Gstate \quad \forall i
+\end{equation}
+\end{theorem}
+
+\subsection{Implications for Drug Effects}
+
+This has profound implications for neuropharmacology:
+
+\begin{corollary}[Drug-Modality Equivalence]
+A drug that mimics the categorical completion of a sensory percept is perceptually equivalent to that percept:
+\begin{equation}
+\Sigma(\Pcat_{\text{drug}}) = \Sigma(\Pcat_{\text{natural}}) \implies \text{equivalent experience}
+\end{equation}
+\end{corollary}
+
+\begin{example}[Capsaicin]
+Capsaicin activates heat receptors without actual heat:
+\begin{equation}
+\Pcat_{\text{capsaicin}} \xrightarrow{\Sigma} \Gstate_{\text{heat}} = \Sigma(\Pcat_{\text{actual-heat}})
+\end{equation}
+The brain cannot distinguish because sufficiency, not completeness, determines perception.
+\end{example}
+
+\subsection{The Evolutionary Rationale}
+
+Why would evolution select for sufficiency over completeness?
+
+\begin{enumerate}
+\item \textbf{Speed}: Sufficient information enables faster response
+\item \textbf{Efficiency}: Less neural resource required
+\item \textbf{Robustness}: Multiple paths to same completion
+\item \textbf{Flexibility}: Novel stimuli can still trigger appropriate responses
+\end{enumerate}
+
+\begin{theorem}[Sufficiency Optimality]
+Under time pressure and resource constraints, sufficiency-based perception is evolutionarily optimal:
+\begin{equation}
+\max_{\Sigma} \frac{\text{Survival benefit}}{\text{Processing cost} \times \text{Response time}}
+\end{equation}
+\end{theorem}
+
+\subsection{Connection to Categorical Distance}
+
+From the cellular observation equations framework, categorical distance is independent of spatial distance. Similarly:
+
+\begin{theorem}[Perceptual Categorical Distance]
+The categorical distance between a percept and its completion is independent of sensory modality:
+\begin{equation}
+d_{\text{cat}}(\Pcat_{\text{vis}}, \Gstate) = d_{\text{cat}}(\Pcat_{\text{tac}}, \Gstate) = d_{\text{cat}}(\Pcat_{\text{drug}}, \Gstate)
+\end{equation}
+All pathways to the same completion have equal categorical distance.
+\end{theorem}
