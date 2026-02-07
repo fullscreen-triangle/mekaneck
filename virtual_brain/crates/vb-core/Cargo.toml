@@ -1,0 +1,12 @@
+[package]
+name = "vb-core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+ndarray = { workspace = true }
+num-complex = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]

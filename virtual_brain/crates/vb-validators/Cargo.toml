@@ -1,0 +1,17 @@
+[package]
+name = "vb-validators"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+vb-core = { workspace = true }
+vb-operators = { workspace = true }
+vb-engine = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+log = { workspace = true }
+
+[dev-dependencies]

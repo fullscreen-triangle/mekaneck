@@ -1,0 +1,46 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Virtual Brain Team"]
+license = "MIT"
+
+[workspace.dependencies]
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Numerical computing (numpy equivalent)
+ndarray = { version = "0.16", features = ["serde"] }
+num-complex = { version = "0.4", features = ["serde"] }
+num-traits = "0.2"
+
+# Random number generation
+rand = "0.8"
+rand_distr = "0.4"
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Parallelism
+rayon = "1.10"
+
+# Internal crates
+vb-core = { path = "crates/vb-core" }
+vb-operators = { path = "crates/vb-operators" }
+vb-engine = { path = "crates/vb-engine" }
+vb-validators = { path = "crates/vb-validators" }
