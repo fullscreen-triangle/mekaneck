@@ -13,5 +13,7 @@ chrono = { workspace = true }
 thiserror = { workspace = true }
 anyhow = { workspace = true }
 log = { workspace = true }
+ndarray = { workspace = true }
+rand = { workspace = true }
 
 [dev-dependencies]
