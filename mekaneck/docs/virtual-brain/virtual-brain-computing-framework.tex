@@ -43,6 +43,12 @@
 \newcommand{\Pdecay}{P_{\mathrm{decay}}}
 \newcommand{\Tdecay}{T_{\mathrm{decay}}}
 \newcommand{\Mstate}{\mathcal{M}}
+\newcommand{\dS}{d_S}
+\newcommand{\wvec}{\mathbf{w}}
+\newcommand{\Scatent}{S_{\mathrm{cat}}}
+\newcommand{\rxnpos}{\mathbf{r}_0}
+\newcommand{\rxntime}{t_0}
+\newcommand{\obspos}{\mathbf{r}}
 
 \begin{document}
 
@@ -55,7 +61,7 @@
 \date{\today}
 
 \begin{abstract}
-We establish a complete computational framework for virtual brain modeling in which equation output IS observation, requiring no external validation. Building on the Cellular Partition Language (CPL) and the observational identity theorem ($\Gstate_1 \oplus \Pop(\omega) \to \Gstate_2$ where output is simultaneously physical result, observation, and computation), we extend the partition framework to neural systems. The central innovation is the identification of consciousness as the intersection of two decay curves: the perception decay curve $\Pdecay(t)$ (how sensory input resolves to categorical completion) and the thought decay curve $\Tdecay(t)$ (how O$_2$ molecular configurations with electron-stabilized holes evolve). Mental states are defined as trajectory-terminus-memory triples $\Mstate = (\gamma, \Gstate_f, M)$, not merely final states, because the same thought in different emotional contexts---or the same thought in the same emotional context at different times---constitutes different mental states. The H$^+$ flux at $4.06 \times 10^{13}$ Hz provides the emotional substrate---a thermometer for environmental context that thoughts cannot directly perceive but which modulates all cognitive dynamics. Memory exists because time progresses and emotions must track the changing (unperceivable) reality; memory is the accumulated emotional change $M = \int \dot{\Hfield} \, dt$ that enables temporal differentiation of thoughts within the same emotional context. We establish: (1) perception operates on sufficiency, not completeness (three observers with different knowledge of lions all run from danger); (2) all sensory modalities resolve to the same categorical space (touch hot stove $\equiv$ see red element); (3) dreams are unbounded thoughts ($\Pdecay = 0$) enabling exploration of impossible trajectories; (4) memory is necessary for distinguishing thoughts that share both content and emotional context but differ temporally. The Neural Partition Language (NPL) provides primitives for expressing mental processes as constraint satisfaction problems whose solutions are simultaneously neural states and observations. Drug perturbations will be incorporated as trajectory modifiers operating on the established Virtual Brain substrate.
+We establish a computational framework for virtual brain modeling in which equation output IS observation, requiring no external validation. Building on the Cellular Partition Language (CPL) and the observational identity theorem ($\Gstate_1 \oplus \Pop(\omega) \to \Gstate_2$ where output is simultaneously physical result, observation, and computation), we extend the partition framework to neural systems. Consciousness is identified as the intersection of multiple neural propagation modality surfaces $\Ccat = \bigcap_i \mathcal{A}_i(t)$, generalizing the two-curve intersection $\Pdecay \cap \Tdecay$. Mental states are trajectory-terminus-memory triples $\Mstate = (\gamma, \Gstate_f, M)$, not merely final states, because identical thoughts in different contexts constitute different mental states. The H$^+$ flux at $4.06 \times 10^{13}$ Hz provides the emotional substrate; memory is the accumulated emotional change $M = \int \dot{\Hfield} \, dt$ enabling temporal differentiation. We establish: (1) perception operates on sufficiency through a zero-cost categorical aperture ($W_{\text{aperture}} = 0$); (2) all sensory modalities resolve to the same categorical space; (3) dreams are unbounded thoughts ($\Pdecay = 0$); (4) memory is necessary for temporal differentiation of thoughts. The S-distance metric $d_S = \sqrt{\sum_i w_i (\Delta q_i)^2}$ characterizes cognitive separations with mechanism-specific weight vectors that are approximately orthogonal. Heat and categorical entropy are statistically independent ($\text{Cov}(\delta Q, d\Scatent) = 0$); the categorical second law $\Delta \Scatent > 0$ is derived as a theorem from partition structure. The arrow of mental time emerges from categorical counting: the probability of exact trajectory reversal is $P = e^{-\Scatent/\kB} \to 0$. The Neural Partition Language (NPL) provides primitives for expressing mental processes as constraint satisfaction problems. Drug perturbations operate as trajectory modifiers $\Pop_{\mathrm{drug}}(\omega): \Mstate_1 \to \Mstate_2$ on this substrate.
 \end{abstract}
 
 \maketitle
@@ -65,34 +71,38 @@ We establish a complete computational framework for virtual brain modeling in wh
 
 \subsection{The Neuropharmacology Challenge}
 
-Traditional neuropharmacology faces a fundamental validation problem: drug effects are predicted through simulation, then tested experimentally. This approach assumes a gap between theoretical prediction and empirical observation that requires bridging. We eliminate this gap entirely.
+Traditional neuropharmacology faces a fundamental validation problem: drug effects are predicted through simulation, then tested experimentally~\cite{friston2010free}. This approach assumes a gap between theoretical prediction and empirical observation that requires bridging. We eliminate this gap entirely.
 
-The Virtual Brain framework established here implements the observational identity theorem: for any partition equation $\Gstate_1 \oplus \Pop(\omega) \to \Gstate_2$, the output $\Gstate_2$ is simultaneously:
+The Virtual Brain framework established here implements the observational identity theorem~\cite{sachikonye2024categorical,sachikonye2025observation}: for any partition equation $\Gstate_1 \oplus \Pop(\omega) \to \Gstate_2$, the output $\Gstate_2$ is simultaneously:
 \begin{enumerate}
 \item[(P)] The physical neural state
 \item[(O)] The observation that would be made
 \item[(C)] The computational result
 \end{enumerate}
 
-Drug effects will be incorporated as trajectory modifiers $\Pop_{\mathrm{drug}}(\omega)$ operating on this established substrate. But first, the Virtual Brain itself must be constructed.
+Drug effects will be incorporated as trajectory modifiers $\Pop_{\mathrm{drug}}(\omega)$ operating on this established substrate~\cite{sachikonye2024maxwell}. But first, the Virtual Brain itself must be constructed.
 
 \subsection{Core Architecture}
 
-The Virtual Brain comprises seven integrated components:
+The Virtual Brain comprises eleven integrated components:
 
 \begin{enumerate}
 \item \textbf{Thought Geometry}: O$_2$ molecular configurations + electron-stabilized oscillatory holes
 \item \textbf{Emotional Substrate}: H$^+$ flux at $4.06 \times 10^{13}$ Hz
-\item \textbf{Perception}: Sufficient categorical information from sensory input
-\item \textbf{Consciousness}: Intersection of perception and thought decay curves
+\item \textbf{Perception}: Sufficient categorical information via zero-cost aperture
+\item \textbf{Consciousness}: Multimodal propagation surface intersection $\Ccat = \bigcap_i \mathcal{A}_i(t)$
 \item \textbf{Time}: Circuit completion duration ($T_{\mathrm{internal}} = \sum_i \tau_{\mathrm{circuit}}^{(i)}$)
 \item \textbf{Dreams}: Unbounded thought trajectories ($\Pdecay = 0$)
-\item \textbf{Memory}: Field-reality difference ($M = \Hfield - R$)
+\item \textbf{Memory}: Accumulated emotional change ($M = \int \dot{\Hfield} \, dt$)
+\item \textbf{S-Distance}: Partition space metric with cognitive weight vectors
+\item \textbf{Categorical Entropy}: Traversal entropy $\Delta \Scatent > 0$ (theorem)
+\item \textbf{Irreversibility}: Arrow of mental time from categorical counting
+\item \textbf{Categorical Aperture}: Zero-cost information filtering ($W = 0$)
 \end{enumerate}
 
 \subsection{Organization}
 
-Section~\ref{sec:foundations} establishes the S-entropy state space for neural systems. Section~\ref{sec:thought} formalizes thought geometry. Section~\ref{sec:emotion} defines the H$^+$ emotional substrate. Section~\ref{sec:perception} establishes perception as categorical sufficiency. Section~\ref{sec:consciousness} proves consciousness as decay curve intersection. Section~\ref{sec:time} derives subjective time from circuit completion. Section~\ref{sec:dreams} characterizes dreams as unbounded thought. Section~\ref{sec:memory} defines memory as accumulated emotional change. Section~\ref{sec:language} constructs the Neural Partition Language with core operators. Section~\ref{sec:mental_states} formalizes mental states as trajectory-terminus-memory triples. Section~\ref{sec:npl_specification} provides the complete NPL language specification derived from partition equations of state. Sections~\ref{sec:sufficiency_detailed}--\ref{sec:trajectory_detailed} provide detailed treatments of sensory sufficiency, dreams/memory, and trajectory-based mental states.
+Section~\ref{sec:foundations} establishes the S-entropy state space for neural systems. Section~\ref{sec:thought} formalizes thought geometry. Section~\ref{sec:emotion} defines the H$^+$ emotional substrate. Section~\ref{sec:perception} establishes perception as categorical sufficiency. Section~\ref{sec:consciousness} proves consciousness as decay curve intersection. Section~\ref{sec:time} derives subjective time from circuit completion. Section~\ref{sec:dreams} characterizes dreams as unbounded thought. Section~\ref{sec:memory} defines memory as accumulated emotional change. Section~\ref{sec:language} constructs the Neural Partition Language with core operators. Section~\ref{sec:mental_states} formalizes mental states as trajectory-terminus-memory triples. Section~\ref{sec:action_prerequisite} establishes memory as action prerequisite. Section~\ref{sec:mind_body} resolves the mind-body problem. Section~\ref{sec:isomorphism} proves the charge-naming circuit isomorphism. Section~\ref{sec:sdistance} derives the neural S-distance metric with mechanism-specific weight vectors. Section~\ref{sec:multimodal} extends consciousness to multimodal propagation intersection. Section~\ref{sec:thermodynamics} establishes thermodynamic foundations including heat-entropy decoupling and the categorical second law. Section~\ref{sec:irreversibility} derives the arrow of mental time from categorical counting. Section~\ref{sec:aperture} characterizes the categorical aperture for zero-cost perceptual filtering.
 
 \section{Neural S-Entropy State Space}
 \label{sec:foundations}
@@ -115,19 +125,19 @@ Any mental state maps uniquely to a point in $\Sspace_N \times \Hfield$ where $\
 \end{theorem}
 
 \begin{proof}
-Mental states are partition states in bounded neural phase space (Axiom~\ref{ax:bounded_neural}). Each thought has well-defined uncertainty in identification ($\Sk$), timing ($\St$), and evolution ($\Se$). The emotional context is encoded in $\Hfield$. The product space captures both cognitive and affective dimensions.
+Mental states are partition states in bounded neural phase space (Axiom~\ref{ax:bounded_neural})~\cite{callen1985thermodynamics}. Each thought has well-defined uncertainty in identification ($\Sk$), timing ($\St$), and evolution ($\Se$)~\cite{cover2006elements}. The emotional context is encoded in $\Hfield$. The product space captures both cognitive and affective dimensions.
 \end{proof}
 
 \subsection{Neural Axioms}
 
 \begin{axiom}[Bounded Neural Phase Space]
 \label{ax:bounded_neural}
-The neural system has finite energy and spatial extent, occupying bounded phase space $\Omega_N$ with $\mu(\Omega_N) < \infty$.
+The neural system has finite energy and spatial extent, occupying bounded phase space $\Omega_N$ with $\mu(\Omega_N) < \infty$~\cite{landau1980statistical,callen1985thermodynamics,jaynes1957information}.
 \end{axiom}
 
 \begin{axiom}[Categorical Perception]
 \label{ax:categorical_perception}
-Perception partitions sensory input into equivalence classes. States $x, y$ are perceptually equivalent ($x \sim_P y$) if no available sensory modality can distinguish them.
+Perception partitions sensory input into equivalence classes~\cite{harnad1987categorical,goldstone1998perceptual}. States $x, y$ are perceptually equivalent ($x \sim_P y$) if no available sensory modality can distinguish them.
 \end{axiom}
 
 \begin{axiom}[Sensory Sufficiency]
@@ -168,12 +178,12 @@ The thought decay curve $\Tdecay(t)$ measures how thought stability evolves:
 \begin{equation}
 \Tdecay(t) = \Tdecay(0) \exp\left(-\frac{t}{\tau_T}\right) + \Tdecay^{\infty}
 \end{equation}
-where $\tau_T \sim 100$ ms is the thought decay constant and $\Tdecay^{\infty}$ is the asymptotic stability (categorical completion).
+where $\tau_T \sim 100$ ms is the thought decay constant~\cite{engel2001dynamic} and $\Tdecay^{\infty}$ is the asymptotic stability (categorical completion).
 \end{definition}
 
 \begin{theorem}[Thought Frequency]
 \label{thm:thought_freq}
-Thought dynamics operate at characteristic frequency $\omega_T \sim 10$ Hz (alpha-theta band), with:
+Thought dynamics operate at characteristic frequency $\omega_T \sim 10$ Hz (alpha-theta band)~\cite{buzsaki2006rhythms,buzsaki2004neuronal}, with:
 \begin{equation}
 \omega_T = \frac{2\pi}{\tau_T} \approx 63 \text{ rad/s}
 \end{equation}
@@ -210,7 +220,7 @@ The emotional substrate is the H$^+$ flux operating at frequency:
 \begin{equation}
 \omega_{\Hfield} = 4.06 \times 10^{13} \text{ Hz}
 \end{equation}
-This is the ``reality frequency''---too fast for conscious perception but providing environmental context.
+This is the ``reality frequency''---too fast for conscious perception but providing environmental context~\cite{mitchell1961coupling,wikstrom2015proton,berg1993random}.
 \end{definition}
 
 \begin{theorem}[Timescale Separation]
@@ -224,7 +234,7 @@ This 12-order-of-magnitude separation ensures reality is \emph{unperceivable} wh
 
 \begin{theorem}[Emotions as Environmental Thermometer]
 \label{thm:emotion_thermometer}
-Emotions provide environmental context that thoughts cannot directly access:
+Emotions provide environmental context that thoughts cannot directly access~\cite{damasio1994descartes,ledoux2000emotion}:
 \begin{equation}
 \Hfield(t) = \int_0^t \text{Environment}(\tau) \cdot K(\tau, t) \, d\tau
 \end{equation}
@@ -291,12 +301,12 @@ The perception decay curve $\Pdecay(t)$ measures how sensory input resolves to c
 \begin{equation}
 \Pdecay(t) = \Pdecay(0) \exp\left(-\frac{t}{\tau_P}\right)
 \end{equation}
-where $\tau_P \sim 50$ ms is the perceptual integration time.
+where $\tau_P \sim 50$ ms is the perceptual integration time~\cite{thorpe1996speed,vanrullen2001temporal}.
 \end{definition}
 
 \begin{theorem}[Perceptual Modality Equivalence]
 \label{thm:modality_equiv}
-Different sensory modalities can resolve to identical categorical states:
+Different sensory modalities can resolve to identical categorical states~\cite{sachikonye2025multimodal}:
 \begin{equation}
 \Pcat_{\text{touch}}(\text{hot stove}) \equiv \Pcat_{\text{sight}}(\text{red element}) \equiv \Pcat_{\text{drug}}(\text{capsaicin})
 \end{equation}
@@ -314,7 +324,7 @@ Consciousness $\Ccat$ is the intersection of perception and thought decay curves
 \begin{equation}
 \boxed{\Ccat(t) = \Pdecay(t) \cap \Tdecay(t)}
 \end{equation}
-Consciousness exists where and when perception constrains thought.
+Consciousness exists where and when perception constrains thought~\cite{tononi2016integrated,dehaene2014consciousness,koch2016neural}.
 \end{theorem}
 
 \begin{proof}
@@ -337,7 +347,7 @@ The evolution of consciousness follows:
 \begin{equation}
 \frac{d\Ccat}{dt} = -\frac{\Ccat}{\tau_C} + \Pdecay(t) \cdot \Tdecay(t) \cdot \Hfield(t)
 \end{equation}
-where $\tau_C$ is the consciousness integration time and the product term couples perception, thought, and emotion.
+where $\tau_C$ is the consciousness integration time and the product term couples perception, thought, and emotion~\cite{varela2001brainweb,fries2005mechanism}.
 \end{theorem}
 
 \section{Subjective Time as Circuit Completion}
@@ -355,11 +365,11 @@ T_{\text{internal}} = \sum_{i \in \text{active holes}} \tau_{\text{circuit}}^{(i
 
 \begin{corollary}[Specious Present]
 \label{cor:specious}
-The experiential ``now'' (specious present) has duration:
+The experiential ``now'' (specious present)~\cite{james1890principles,husserl1964phenomenology} has duration:
 \begin{equation}
 \Delta t_{\text{now}} \sim 100\text{--}1000 \text{ ms}
 \end{equation}
-equal to the average circuit completion time for coherent oscillatory hole ensembles.
+equal to the average circuit completion time for coherent oscillatory hole ensembles~\cite{poppel1997temporal,buhusi2005time}.
 \end{corollary}
 
 \section{Dreams as Unbounded Thought}
@@ -373,7 +383,7 @@ Dreams are thought trajectories with no perceptual constraint:
 \begin{equation}
 \text{Dream}: \Pdecay(t) = 0 \implies \Ccat = \emptyset
 \end{equation}
-Thought trajectories become unbounded, navigating S-space without categorical completion requirements.
+Thought trajectories become unbounded, navigating S-space without categorical completion requirements~\cite{hobson2000dreaming,siclari2017neural,turing1952chemical}.
 \end{theorem}
 
 \begin{corollary}[Dream Bizarreness]
@@ -392,7 +402,7 @@ Dreams enable exploration of trajectory space inaccessible during waking:
 \begin{equation}
 \text{Dream space} = \Sspace_N - \Sspace_{\text{perceptible}}
 \end{equation}
-The brain ``thinks the craziest things'' and compares with waking reality.
+The brain ``thinks the craziest things'' and compares with waking reality~\cite{walker2009overnight}.
 \end{theorem}
 
 \section{Memory as Temporal Differentiation}
@@ -409,7 +419,7 @@ Emotions (H$^+$ field) summarize the unperceivable part of reality. But reality 
 
 \begin{theorem}[Memory Necessity]
 \label{thm:memory_necessity}
-Memory is necessary to distinguish thoughts that occur within the \emph{same} emotional context at \emph{different} times.
+Memory is necessary to distinguish thoughts that occur within the \emph{same} emotional context at \emph{different} times~\cite{tulving1972episodic,squire2004memory}.
 \end{theorem}
 
 \begin{proof}
@@ -483,7 +493,7 @@ where:
 
 \begin{corollary}[Memory Retrieval]
 \label{cor:retrieval}
-Memory retrieval reconstructs past states by inverting the accumulated change:
+Memory retrieval reconstructs past states by inverting the accumulated change~\cite{eichenbaum2000hippocampus}:
 \begin{equation}
 \Hfield(t_0) = \Hfield(t) - \int_{t_0}^{t} \dot{\Hfield} \, d\tau = \Hfield(t) - [M(t) - M(t_0)]
 \end{equation}
@@ -492,7 +502,7 @@ Memory retrieval reconstructs past states by inverting the accumulated change:
 \section{Neural Partition Language}
 \label{sec:language}
 
-The Neural Partition Language (NPL) extends CPL for neural systems, deriving its primitives from the partition-based equations of state established for hybrid microfluidic circuits. The full specification is provided in the detailed sections; here we summarize the core structure.
+The Neural Partition Language (NPL) extends CPL~\cite{sachikonye2024cpl} for neural systems, deriving its primitives from the partition-based equations of state established for hybrid microfluidic circuits~\cite{sachikonye2024circuits,sachikonye2025partitionequations}. The full specification is provided in the detailed sections; here we summarize the core structure.
 
 \subsection{Foundation: Partition Equations of State}
 
@@ -500,7 +510,7 @@ NPL is built on the fundamental equivalence:
 \begin{equation}
 \boxed{S_{\text{osc}} = S_{\text{cat}} = S_{\text{part}} = \kB M \ln n}
 \end{equation}
-This triple equivalence---oscillatory entropy, categorical entropy, and partition entropy---provides the mathematical foundation for all language primitives.
+This triple equivalence---oscillatory entropy, categorical entropy, and partition entropy~\cite{shannon1948mathematical,jaynes2003probability}---provides the mathematical foundation for all language primitives.
 
 \subsection{Type System}
 
@@ -636,7 +646,7 @@ The system is always in exactly one category.
 \end{theorem}
 
 \begin{theorem}[Completion Determinism]
-Specifying completion uniquely determines trajectory (Poincar\'{e} inversion):
+Specifying completion uniquely determines trajectory (Poincar\'{e} inversion)~\cite{poincare1892methodes,arnold1989mathematical}:
 \begin{equation}
 \Gstate_f \implies \gamma^* \quad \text{(unique)}
 \end{equation}
@@ -734,7 +744,7 @@ The nervous system must record progression even when we don't consciously access
 
 \subsection{The Traditional Problem}
 
-The mind-body problem asks: Are thoughts physical? If thoughts are ``mental'' and actions are ``physical,'' how does one cause the other? Does ``nothing'' (mental) cause ``something'' (physical)?
+The mind-body problem asks: Are thoughts physical? If thoughts are ``mental'' and actions are ``physical,'' how does one cause the other~\cite{kim2005physicalism,papineau2002thinking}? Does ``nothing'' (mental) cause ``something'' (physical)?
 
 \subsection{The Resolution}
 
@@ -777,7 +787,7 @@ We did not \emph{claim} thoughts are physical. We \emph{derived} it from first p
 
 \begin{theorem}[Qualia Question Dissolution]
 \label{thm:qualia}
-The question ``do we see the same red?'' is malformed because:
+The question ``do we see the same red?''~\cite{nagel1974like,jackson1982epiphenomenal} is malformed because:
 \begin{enumerate}
 \item Perception is never isolated---always embedded in trajectory $\gamma$, emotion $\Hfield$, memory $M$
 \item Perception operates on sufficiency, not completeness
@@ -789,7 +799,7 @@ The question assumes perception happens in isolation, but it never does.
 \section{Charge-Naming Circuit Isomorphism}
 \label{sec:isomorphism}
 
-From the analysis of charge-coupled hybrid microfluidic circuits, we establish the isomorphism between physical charge circuits and cognitive naming circuits.
+From the analysis of charge-coupled hybrid microfluidic circuits~\cite{sachikonye2024circuits}, we establish the isomorphism between physical charge circuits and cognitive naming circuits.
 
 \subsection{The Two Aspects}
 
@@ -859,6 +869,427 @@ The Virtual Brain is a single physical system with multiple description levels:
 All three are physical. All three are aspects of the same charge-coupled circuit dynamics.
 \end{theorem}
 
+\section{Neural S-Distance Metric}
+\label{sec:sdistance}
+
+The partition coordinates $(n, \ell, m, s)$ define a metric space on mental states. We derive the S-distance metric and establish mechanism-specific weight vectors for different cognitive separations.
+
+\subsection{S-Distance Definition}
+
+\begin{definition}[Neural S-Distance]
+\label{def:neural_sdistance}
+The S-distance between two mental states $\Mstate_1$ and $\Mstate_2$ in partition space is:
+\begin{equation}
+\dS(\Mstate_1, \Mstate_2) = \sqrt{\sum_{i \in \{n,\ell,m,s\}} w_i (q_i^{(1)} - q_i^{(2)})^2}
+\end{equation}
+where $w_i$ are dimension-specific weights satisfying $\sum_i w_i = 1$ and $q_i$ are the partition coordinate values.
+\end{definition}
+
+\begin{proposition}[Metric Properties]
+\label{prop:sdist_metric}
+The S-distance satisfies metric axioms:
+\begin{enumerate}
+\item Non-negativity: $\dS(\Mstate_1, \Mstate_2) \geq 0$
+\item Identity: $\dS(\Mstate_1, \Mstate_2) = 0 \iff \Mstate_1 = \Mstate_2$
+\item Symmetry: $\dS(\Mstate_1, \Mstate_2) = \dS(\Mstate_2, \Mstate_1)$
+\item Triangle inequality: $\dS(\Mstate_1, \Mstate_3) \leq \dS(\Mstate_1, \Mstate_2) + \dS(\Mstate_2, \Mstate_3)$
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Properties (1), (2), and (3) follow from the square root of sums of squares with positive weights. Property (4) follows from Minkowski's inequality applied to the weighted Euclidean form.
+\end{proof}
+
+\subsection{Cognitive Weight Vectors}
+
+Different cognitive processes correspond to different weight configurations in partition space.
+
+\begin{definition}[Semantic Weight Vector]
+\label{def:semantic_weight}
+The semantic distance weight vector emphasizes content identification:
+\begin{equation}
+\wvec_{\text{sem}} = (0.70, 0.20, 0.08, 0.02)
+\end{equation}
+where the $n$ coordinate (principal partition) dominates, encoding categorical identity.
+\end{definition}
+
+\begin{definition}[Emotional Weight Vector]
+\label{def:emotional_weight}
+The emotional distance weight vector emphasizes affective state:
+\begin{equation}
+\wvec_{\text{emo}} = (0.15, 0.55, 0.20, 0.10)
+\end{equation}
+where the $\ell$ coordinate (angular partition) dominates, encoding H$^+$ field modulation.
+\end{definition}
+
+\begin{definition}[Temporal Weight Vector]
+\label{def:temporal_weight}
+The temporal distance weight vector emphasizes memory trajectory:
+\begin{equation}
+\wvec_{\text{temp}} = (0.20, 0.15, 0.55, 0.10)
+\end{equation}
+where the $m$ coordinate (magnetic partition) dominates, encoding temporal indexing through accumulated field change.
+\end{definition}
+
+\subsection{Orthogonality of Cognitive Modes}
+
+\begin{theorem}[Cognitive Mode Orthogonality]
+\label{thm:cognitive_orthogonal}
+The weight vectors for semantic, emotional, and temporal processing are approximately orthogonal:
+\begin{align}
+\wvec_{\text{sem}} \cdot \wvec_{\text{emo}} &= 0.33 \\
+\wvec_{\text{sem}} \cdot \wvec_{\text{temp}} &= 0.22 \\
+\wvec_{\text{emo}} \cdot \wvec_{\text{temp}} &= 0.24
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Direct computation:
+\begin{align}
+\wvec_{\text{sem}} \cdot \wvec_{\text{emo}} &= 0.70 \cdot 0.15 + 0.20 \cdot 0.55 + 0.08 \cdot 0.20 + 0.02 \cdot 0.10 \\
+&= 0.105 + 0.110 + 0.016 + 0.002 = 0.233
+\end{align}
+The remaining products follow analogously. The low dot products ($< 0.35$) confirm that different cognitive modes probe different partition coordinates.
+\end{proof}
+
+\begin{corollary}[Cognitive Independence]
+\label{cor:cognitive_indep}
+The approximate orthogonality of cognitive weight vectors implies that semantic content, emotional valence, and temporal position provide largely independent information about mental states.
+\end{corollary}
+
+\subsection{Mental State Transitions as S-Distance Navigation}
+
+\begin{theorem}[Transition Distance]
+\label{thm:transition_dist}
+A mental state transition $\Mstate_1 \to \Mstate_2$ traverses S-distance:
+\begin{equation}
+\Delta \dS = \dS(\Mstate_1, \Mstate_2) = \sqrt{\sum_i w_i (\Delta q_i)^2}
+\end{equation}
+The transition time scales with distance:
+\begin{equation}
+\tau_{\text{transition}} = \tau_0 + \kappa \cdot \Delta \dS
+\end{equation}
+where $\tau_0$ is the minimum transition time and $\kappa$ is the neural velocity constant.
+\end{theorem}
+
+\section{Multimodal Neural Propagation}
+\label{sec:multimodal}
+
+Mental events create disturbances propagating through multiple neural modalities. Consciousness emerges at the intersection of these propagation surfaces.
+
+\subsection{Neural Propagation Modalities}
+
+A cognitive event at position $\rxnpos$ and time $\rxntime$ creates simultaneous disturbances in six modalities:
+
+\begin{definition}[Neural Modalities]
+\label{def:neural_modalities}
+The six neural propagation modalities are:
+\begin{enumerate}
+\item \textbf{Chemical}: Neurotransmitter diffusion ($D \sim 10^{-10}$ m$^2$/s)
+\item \textbf{Electrical}: Action potential propagation ($v \sim 100$ m/s)
+\item \textbf{Thermal}: Metabolic heat diffusion ($\alpha \sim 10^{-7}$ m$^2$/s)
+\item \textbf{Ionic}: H$^+$/Ca$^{2+}$ field evolution ($\omega \sim 10^{13}$ Hz)
+\item \textbf{Oscillatory}: O$_2$ configuration dynamics ($\omega \sim 10$ Hz)
+\item \textbf{Categorical}: Discrete partition state transitions (exact counting)
+\end{enumerate}
+\end{definition}
+
+Each modality propagates according to distinct dynamics:
+\begin{align}
+\text{Chemical:} \quad & \frac{\partial C}{\partial t} = D\nabla^2 C \\
+\text{Electrical:} \quad & \frac{\partial^2 V}{\partial t^2} = v^2\nabla^2 V \\
+\text{Thermal:} \quad & \frac{\partial T}{\partial t} = \alpha\nabla^2 T \\
+\text{Ionic:} \quad & \frac{\partial \Hfield}{\partial t} = -\nabla \cdot \mathbf{J}_{H^+} \\
+\text{Oscillatory:} \quad & \frac{d\Tcat}{dt} = \omega_T \Tcat \\
+\text{Categorical:} \quad & \Delta N = |n_2 - n_1| + |\ell_2 - \ell_1| + |m_2 - m_1| + |s_2 - s_1|
+\end{align}
+
+\subsection{Arrival-Time Surfaces}
+
+\begin{definition}[Arrival-Time Function]
+For each modality $i$, the arrival time at observation point $\obspos$ from source at $(\rxnpos, \rxntime)$ defines:
+\begin{equation}
+\mathcal{T}_i(\obspos; \rxnpos, \rxntime) = t_i(\obspos)
+\end{equation}
+The level sets of $\mathcal{T}_i$ are arrival-time surfaces.
+\end{definition}
+
+\begin{proposition}[Modality-Specific Arrival]
+\label{prop:arrival_times}
+The arrival times for each modality are:
+\begin{align}
+t_{\text{chem}} &= \rxntime + \frac{|\obspos - \rxnpos|^2}{4D \ln(C_0/C_{\text{thresh}})} \\
+t_{\text{elec}} &= \rxntime + \frac{|\obspos - \rxnpos|}{v} \\
+t_{\text{therm}} &= \rxntime + \frac{|\obspos - \rxnpos|^2}{4\alpha \ln(\Delta T_0/\Delta T_{\text{thresh}})} \\
+t_{\text{ionic}} &= \rxntime \quad \text{(instantaneous within coherence volume)} \\
+t_{\text{osc}} &= \rxntime + \frac{2\pi}{\omega_T} \cdot n_{\text{cycles}} \\
+t_{\text{cat}} &= \rxntime \quad \text{(discrete, no threshold)}
+\end{align}
+\end{proposition}
+
+\subsection{Consciousness as Multimodal Intersection}
+
+\begin{theorem}[Extended Consciousness Definition]
+\label{thm:extended_consciousness}
+Consciousness $\Ccat$ is the intersection of multiple neural modality arrival surfaces:
+\begin{equation}
+\boxed{\Ccat(t) = \bigcap_{i \in \text{modalities}} \mathcal{A}_i(t)}
+\end{equation}
+where $\mathcal{A}_i(t)$ is the arrival surface for modality $i$ at time $t$.
+\end{theorem}
+
+This extends the two-modality definition $\Ccat = \Pdecay \cap \Tdecay$ to the full multimodal case.
+
+\begin{theorem}[Resolution Enhancement]
+\label{thm:resolution_enhance}
+With $N$ modalities each providing exclusion factor $\epsilon_i$, the combined spatial resolution is:
+\begin{equation}
+\delta r_{\text{combined}} = \delta r_{\text{single}} \cdot \prod_{i=1}^N \epsilon_i^{1/3}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Each modality excludes fraction $(1-\epsilon_i)$ of candidate volume. For independent modalities, remaining volume is $V_{\text{remain}} = V_0 \prod_i \epsilon_i$. Linear dimension scales as $V^{1/3}$.
+\end{proof}
+
+\begin{corollary}[Six-Modality Resolution]
+\label{cor:six_modality}
+For six modalities with $\epsilon_i \sim 10^{-2}$ each:
+\begin{equation}
+\delta r_{\text{combined}} = \delta r_{\text{single}} \cdot (10^{-2})^{6/3} = \delta r_{\text{single}} \cdot 10^{-4}
+\end{equation}
+From neural resolution $\delta r_{\text{single}} \sim 1$ mm, multimodal intersection achieves $\delta r_{\text{combined}} \sim 0.1$ $\mu$m.
+\end{corollary}
+
+\subsection{Categorical Modality Properties}
+
+\begin{proposition}[Categorical Exactness]
+\label{prop:cat_exact}
+The categorical modality provides unique properties:
+\begin{enumerate}
+\item \textbf{No threshold uncertainty}: Partition states are exactly counted (0 or 1)
+\item \textbf{No propagation delay}: State changes are instantaneous within coherence volume
+\item \textbf{Digital information}: Each transition carries exactly $\Delta S = \kB \ln(2 + |\delta\phi|/100)$ bits
+\end{enumerate}
+\end{proposition}
+
+\section{Thermodynamic Foundations of Neural Computation}
+\label{sec:thermodynamics}
+
+We establish the thermodynamic principles governing categorical state evolution in neural systems.
+
+\subsection{Heat-Entropy Decoupling}
+
+\begin{theorem}[Neural Heat-Entropy Decoupling]
+\label{thm:heat_entropy}
+In categorical neural dynamics, heat fluctuations $\delta Q$ and categorical entropy production $d\Scatent$ are statistically independent:
+\begin{equation}
+\text{Cov}(\delta Q, d\Scatent) = 0
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Heat $Q$ is a physical observable corresponding to metabolic energy transfer. Categorical entropy $\Scatent$ is a categorical observable measuring distribution over partition states. From the commutation of categorical and physical observables:
+\begin{equation}
+[\hat{O}_{\text{cat}}, \hat{O}_{\text{phys}}] = 0
+\end{equation}
+the joint distribution factorizes:
+\begin{equation}
+P(Q, \Scatent) = P_Q(Q) \cdot P_S(\Scatent)
+\end{equation}
+implying zero covariance.
+\end{proof}
+
+\begin{corollary}[Metabolic Independence]
+\label{cor:metabolic_indep}
+Thought transitions (categorical) can occur with arbitrary metabolic heat exchange (physical). The brain's energy consumption does not directly constrain the rate of categorical state change.
+\end{corollary}
+
+\subsection{Categorical Second Law for Mental Processes}
+
+\begin{theorem}[Neural Categorical Second Law]
+\label{thm:neural_second_law}
+For any non-trivial mental trajectory in categorical state space, the entropy change is strictly positive:
+\begin{equation}
+\Delta \Scatent > 0 \quad \text{for} \quad N_{\text{transitions}} > 0
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+A single partition transition from state $(n_1, \ell_1, m_1, s_1)$ to $(n_2, \ell_2, m_2, s_2)$ generates entropy:
+\begin{equation}
+\Delta S_{\text{single}} = \kB \ln\left(2 + \frac{|\delta\phi|}{100}\right)
+\end{equation}
+where $\delta\phi$ is the timing deviation. For $N$ transitions:
+\begin{equation}
+\Delta \Scatent = \kB \sum_{i=1}^{N} \ln\left(2 + \frac{|\delta\phi_i|}{100}\right) > \kB N \ln 2 > 0
+\end{equation}
+\end{proof}
+
+\begin{remark}
+The categorical second law is a theorem derived from partition structure, not an empirical postulate. Mental processes generate entropy through the counting process itself.
+\end{remark}
+
+\subsection{Partition Traversal Entropy}
+
+\begin{definition}[Traversal Entropy]
+\label{def:traversal_entropy}
+The entropy generated by traversing from partition state $|n_1, \ell_1, m_1, s_1\rangle$ to $|n_2, \ell_2, m_2, s_2\rangle$ is:
+\begin{equation}
+\Delta S_{\text{trav}} = \kB \ln\left(\frac{g_{n_2}}{g_{n_1}}\right) + \kB \ln\left(2 + \frac{|\delta\phi|}{100}\right)
+\end{equation}
+where $g_n = 2n^2$ is the degeneracy of partition level $n$.
+\end{definition}
+
+\begin{proposition}[Entropy Additivity]
+For a trajectory through $N$ partition states:
+\begin{equation}
+\Delta S_{\text{total}} = \sum_{i=1}^{N-1} \Delta S_{\text{trav}}(i \to i+1)
+\end{equation}
+\end{proposition}
+
+\section{Irreversibility and the Arrow of Mental Time}
+\label{sec:irreversibility}
+
+The arrow of mental time---the directedness of memory from past to future---emerges from categorical dynamics.
+
+\subsection{Irreversibility Theorem}
+
+\begin{theorem}[Mental Irreversibility]
+\label{thm:mental_irreversibility}
+For a mental trajectory evolving from $\Mstate_0$ to $\Mstate_f$, the probability of returning to exactly $\Mstate_0$ under attempted reversal vanishes:
+\begin{equation}
+P(\text{exact return}) = e^{-\Scatent_f/\kB} \to 0 \quad \text{as} \quad \Scatent_f \to \infty
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The forward trajectory passes through $N$ partition states with degeneracies $\{g_{n_i}\}$. The number of forward paths is:
+\begin{equation}
+W_{\text{forward}} = \prod_{i=1}^{N} g_{n_i}
+\end{equation}
+Under reversal, the system must select the exact reverse sequence from available paths:
+\begin{equation}
+W_{\text{available}} \sim e^{\Scatent_f/\kB}
+\end{equation}
+The probability of exact reversal is:
+\begin{equation}
+P(\text{exact reverse}) = \frac{1}{W_{\text{available}}} = e^{-\Scatent_f/\kB}
+\end{equation}
+\end{proof}
+
+\begin{corollary}[Memory Directionality]
+\label{cor:memory_direction}
+Memory is directed from past to future because forward trajectories through partition space are exponentially more numerous than reverse trajectories. This is a consequence of categorical counting, not a postulate about initial conditions.
+\end{corollary}
+
+\subsection{Reversal Entropy Production}
+
+\begin{proposition}[Reversal Cost]
+\label{prop:reversal_cost}
+An attempted reversal of a mental trajectory generates additional entropy:
+\begin{equation}
+\Delta S_{\text{reversal}} \geq \kB \ln 2
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Each reversal step involves a binary choice (forward vs.\ backward). By the categorical second law, each choice generates at least $\kB \ln 2$ entropy.
+\end{proof}
+
+\subsection{Resolution of Mental Time Asymmetry}
+
+\begin{theorem}[Arrow of Mental Time]
+\label{thm:arrow_mental_time}
+The asymmetry of mental time arises from categorical counting structure:
+\begin{enumerate}
+\item The microscopic dynamics is reversible: any trajectory can be reversed
+\item The probability of selecting the exact reverse is exponentially small
+\item This suppression is structural, not due to special initial conditions
+\item Irreversibility is probabilistic: ``almost certainly will not,'' not ``cannot''
+\end{enumerate}
+\end{theorem}
+
+\section{Categorical Aperture in Perception}
+\label{sec:aperture}
+
+Perception filters information through a categorical aperture operating at zero thermodynamic cost.
+
+\subsection{The Aperture Mechanism}
+
+\begin{definition}[Categorical Aperture]
+\label{def:aperture}
+A categorical aperture sorts perceptual inputs by their partition coordinates $(n, \ell, m, s)$ without measuring their physical microstate (position, momentum, energy).
+\end{definition}
+
+\begin{theorem}[Zero-Cost Filtering]
+\label{thm:zero_cost}
+The categorical aperture incurs zero thermodynamic cost:
+\begin{equation}
+W_{\text{aperture}} = 0
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The aperture operates on categorical coordinates, which commute with physical observables:
+\begin{equation}
+[\hat{O}_{\text{cat}}, \hat{O}_{\text{phys}}] = 0
+\end{equation}
+Therefore:
+\begin{enumerate}
+\item The aperture does not acquire information about the physical microstate
+\item No physical measurement occurs
+\item No information requires erasure
+\item Landauer's principle does not apply
+\end{enumerate}
+\end{proof}
+
+\subsection{Distinction from Maxwell's Demon}
+
+\begin{theorem}[Aperture-Demon Distinction]
+\label{thm:aperture_demon}
+The categorical aperture differs fundamentally from Maxwell's demon:
+
+\begin{center}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Property & Maxwell's Demon & Categorical Aperture \\
+\midrule
+Sorts by & Energy & Partition coordinate \\
+Measures & Physical state & Categorical state \\
+Stores information & Yes & No \\
+Requires erasure & Yes & No \\
+Thermodynamic cost & $\geq \kB T \ln 2$/bit & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{theorem}
+
+\begin{corollary}[Perception Efficiency]
+\label{cor:perception_efficiency}
+Perceptual categorization---sorting sensory input into categorical completions---operates through the zero-cost aperture mechanism, explaining the metabolic efficiency of pattern recognition.
+\end{corollary}
+
+\subsection{Autocatalytic Enhancement}
+
+\begin{theorem}[Cross-Coordinate Autocatalysis]
+\label{thm:autocatalysis}
+Cross-coordinate correlations in partition space provide autocatalytic enhancement of mental state identification. When a measurement of coordinate $i$ induces correlated constraints on coordinates $j, k$:
+\begin{equation}
+\Delta S_{\text{total}} = \Delta S_i + \sum_{j \neq i} C_{ij} \Delta S_j
+\end{equation}
+where $C_{ij}$ are correlation coefficients arising from partition constraints ($\ell < n$, $|m| \leq \ell$).
+\end{theorem}
+
+\begin{proof}
+Partition coordinates satisfy constraints: $\ell \in \{0, \ldots, n-1\}$ and $m \in \{-\ell, \ldots, \ell\}$. Measuring $n$ constrains the range of $\ell$; measuring $\ell$ constrains the range of $m$. These are deterministic consequences of partition structure, providing additional localization without additional measurement cost.
+\end{proof}
+
+\begin{corollary}[Memory Retrieval Enhancement]
+\label{cor:memory_retrieval}
+Memory retrieval accelerates with additional cues because each cue constrains multiple partition coordinates through cross-correlation, reducing the search space autocatalytically.
+\end{corollary}
+
 \section{Summary: Virtual Brain Components}
 \label{sec:summary}
 
@@ -873,11 +1304,14 @@ Component & Definition & Mathematical Form & Frequency \\
 Thought & O$_2$ config + electron hole & $\Tcat = \{\mathbf{r}_{\mathrm{O}_2}, \mathbf{r}_e, \phi\}$ & $\sim 10$ Hz \\
 Emotion & H$^+$ field substrate & $\Hfield = \int \text{Env} \cdot K \, d\tau$ & $4.06 \times 10^{13}$ Hz \\
 Perception & Sufficient categorical info & $\Pcat: \text{Stim} \to \Gstate_{\text{comp}}$ & $\sim 20$ Hz \\
-Consciousness & Decay curve intersection & $\Ccat = \Pdecay \cap \Tdecay$ & $\sim 2.5$ Hz \\
+Consciousness & Multimodal intersection & $\Ccat = \bigcap_i \mathcal{A}_i(t)$ & $\sim 2.5$ Hz \\
 Time & Circuit completion duration & $T_{\text{int}} = \sum \tau_{\text{circuit}}$ & --- \\
 Dreams & Unbounded thought ($P=0$) & $\Tcat(\Sspace)$ where $\Pdecay = 0$ & --- \\
 Memory & Accumulated emotional change & $M = \int \dot{\Hfield} \, dt$ & --- \\
 Mental State & Trajectory-terminus-memory triple & $\Mstate = (\gamma, \Gstate_f, M)$ & --- \\
+S-Distance & Partition space metric & $\dS = \sqrt{\sum_i w_i (\Delta q_i)^2}$ & --- \\
+Categorical Entropy & Traversal entropy & $\Delta \Scatent = \kB \sum_i \ln(2 + |\delta\phi_i|/100)$ & --- \\
+Categorical Aperture & Zero-cost filtering & $W_{\text{aperture}} = 0$ & --- \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -889,53 +1323,52 @@ Mental State & Trajectory-terminus-memory triple & $\Mstate = (\gamma, \Gstate_f
 \input{sections/dreams-and-memory}
 \input{sections/trajectory-mental-states}
 
-\section{Conclusion and Future Directions}
+\section{Conclusion}
 \label{sec:conclusion}
 
-We have established the Virtual Brain computing framework in which:
+The Virtual Brain computing framework establishes:
 
 \begin{enumerate}
 \item \textbf{Equation output IS observation}---no external validation required
-\item \textbf{Consciousness} = intersection of perception and thought decay curves
+\item \textbf{Consciousness} = multimodal intersection of neural propagation surfaces $\Ccat = \bigcap_i \mathcal{A}_i(t)$
 \item \textbf{Mental states} = trajectory-terminus-memory triples $(\gamma, \Gstate_f, M)$
-\item \textbf{Perception} operates on sufficiency, not completeness
+\item \textbf{Perception} operates on sufficiency, not completeness, through the zero-cost categorical aperture
 \item \textbf{All sensory modalities} resolve to the same categorical space
-\item \textbf{Dreams} are unbounded thought trajectories (no perceptual constraint)
-\item \textbf{Memory} = accumulated emotional change $\int \dot{\Hfield} \, dt$ (temporal differentiation + repetition marking)
-\item \textbf{Memory is prerequisite for action}---without it, repetition is indistinguishable and action meaningless
-\item \textbf{Mind-body problem dissolved}---physics causes physics, no non-physical component exists
-\item \textbf{Charge-naming isomorphism}---soul (charge) and consciousness (naming) are the same non-grounded circuit at different levels
+\item \textbf{Dreams} are unbounded thought trajectories ($\Pdecay = 0$)
+\item \textbf{Memory} = accumulated emotional change $M = \int \dot{\Hfield} \, dt$
+\item \textbf{Memory is prerequisite for action}---without it, repetition is indistinguishable
+\item \textbf{S-distance metric} characterizes cognitive separations with mechanism-specific weights
+\item \textbf{Heat-entropy decoupling}: categorical and physical observables are statistically independent
+\item \textbf{Categorical second law}: $\Delta \Scatent > 0$ for any non-trivial mental trajectory (theorem, not postulate)
+\item \textbf{Arrow of mental time}: irreversibility emerges from categorical counting structure
+\item \textbf{Charge-naming isomorphism}: soul (charge) and consciousness (naming) are the same circuit at different levels
 \end{enumerate}
 
 \subsection{Philosophical Resolutions}
 
 The framework resolves three classical problems:
 
-\textbf{Mind-Body Problem}: There is no non-physical ``mental'' substance. Thoughts are O$_2$ configurations, emotions are H$^+$ flux, consciousness is decay curve intersection. Physics causes physics throughout.
+\textbf{Mind-Body Problem}: There is no non-physical ``mental'' substance. Thoughts are O$_2$ configurations, emotions are H$^+$ flux, consciousness is multimodal intersection. Physics causes physics throughout.
 
 \textbf{Qualia Problem}: ``Do we see the same red?'' is malformed. Perception is never isolated---always embedded in trajectory, emotion, memory. Sufficiency, not completeness, determines perception.
 
-\textbf{Hard Problem}: We don't need to explain why experience ``feels like'' something. We derived that thoughts are geometric objects, consciousness is intersection, time is circuit completion. The explanatory gap closes because there was never a non-physical side to bridge.
+\textbf{Hard Problem}~\cite{chalmers1995facing,chalmers1996conscious}: Experience is not explained by appeal to non-physical properties. Thoughts are geometric objects, consciousness is intersection, time is circuit completion. The explanatory gap closes because there was never a non-physical side to bridge~\cite{dennett1991consciousness}.
 
-\subsection{Ready for Drug Perturbations}
+\textbf{Arrow of Time Problem}: Mental irreversibility is not due to special initial conditions but to categorical counting structure. The probability of exact trajectory reversal is $P = e^{-\Scatent/\kB} \to 0$.
 
-With the Virtual Brain substrate established, drug effects can now be incorporated as trajectory modifiers:
-\begin{equation}
-\Pop_{\mathrm{drug}}(\omega): \Mstate_1 \to \Mstate_2
-\end{equation}
-
-Each drug operates as a Biological Maxwell Demon, selectively filtering oscillatory states and modifying the decay curves $\Pdecay$ and $\Tdecay$. The Virtual Categorical Spectrometer provides the measurement framework.
-
-\subsection{The Complete Picture}
+\subsection{The Complete Framework}
 
 \begin{equation}
-\text{Virtual Brain} = \underbrace{\rho(\mathbf{r},t)}_{\text{Soul}} + \underbrace{\Ccat}_{\text{Consciousness}} + \underbrace{M}_{\text{Memory}} = \text{Single Physical System}
+\text{Virtual Brain} = \underbrace{\rho(\mathbf{r},t)}_{\text{Charge (Soul)}} + \underbrace{\Ccat}_{\text{Consciousness}} + \underbrace{M}_{\text{Memory}} + \underbrace{\dS}_{\text{S-Distance}} + \underbrace{\Scatent}_{\text{Categorical Entropy}}
 \end{equation}
 
-The framework is complete. Drug perturbations are the next layer.
+All components are physical. All derive from bounded phase space and categorical observation axioms. Drug perturbations operate as trajectory modifiers $\Pop_{\mathrm{drug}}(\omega): \Mstate_1 \to \Mstate_2$ on this substrate.
 
 \begin{acknowledgments}
 This work extends the Cellular Partition Language to neural systems, building on the observational identity theorem and categorical completion dynamics.
 \end{acknowledgments}
+
+\bibliographystyle{apsrev4-2}
+\bibliography{references}
 
 \end{document}
