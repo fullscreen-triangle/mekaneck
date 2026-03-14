@@ -1,13 +1,12 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
+import "katex/dist/katex.min.css";
 import { AnimatePresence } from "framer-motion";
-// pages/_app.js
 import { Montserrat } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-// If loading a variable font, you don't need to specify the font weight
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-mont" });
 
 export default function App({ Component, pageProps }) {
@@ -18,9 +17,14 @@ export default function App({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <title>Neural Partition Language | A Variational Framework for Consciousness</title>
+        <meta
+          name="description"
+          content="A unified variational principle for neural dynamics across all operational regimes, from thermodynamic axioms to a single Lagrangian equation."
+        />
       </Head>
       <main
-        className={`${montserrat.variable} font-mont  bg-light dark:bg-dark w-full min-h-screen h-full`}
+        className={`${montserrat.variable} font-mont bg-light dark:bg-dark w-full min-h-screen h-full`}
       >
         <Navbar />
         <AnimatePresence initial={false} mode="wait">

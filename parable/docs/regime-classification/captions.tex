@@ -1,0 +1,68 @@
+% Captions for Regime Classification paper figures
+% Include via \input{captions.tex} in the main document
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_1_kuramoto_sync.png}
+    \caption{\textbf{Kuramoto Synchronization Dynamics.}
+    (\textbf{A}) Three-dimensional surface of the order parameter $R(K, t)$ for $N = 100$ oscillators with Gaussian natural frequency distribution ($\sigma_\omega = 2.0$). The surface reveals a sharp transition from incoherence ($R \approx 0$) to partial synchronization as coupling strength $K$ exceeds the critical threshold $K_c = 2\sigma_\omega / \pi \approx 1.27$, with coherence building progressively over the $20$\,s integration window.
+    (\textbf{B}) Time evolution of $R(t)$ at four representative coupling strengths ($K = 0.5, 1.5, 3.0, 5.0$). Subcritical coupling ($K = 0.5$) yields fluctuations around $R \approx 1/\sqrt{N}$; supercritical values produce monotonic convergence to a steady-state $R_\infty > 0$.
+    (\textbf{C}) Final order parameter $R_\infty$ versus normalized coupling $K/K_c$, with points colored by regime classification. The characteristic mean-field bifurcation is visible at $K/K_c = 1$, with the transition sharpening for larger populations.
+    (\textbf{D}) Phase coherence matrices $\cos(\theta_i - \theta_j)$ for a $10$-oscillator subset at $K = 0.5$ (left, turbulent) and $K = 5.0$ (right, coherent). The turbulent regime shows uncorrelated phases (uniform matrix), while the coherent regime exhibits near-uniform positive coherence across all oscillator pairs.}
+    \label{fig:kuramoto_sync}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_2_five_regimes.png}
+    \caption{\textbf{Five Operational Regimes.}
+    (\textbf{A}) Three-dimensional surface of the structural factor $S(R, \sigma^2) = R \exp(-\sigma^2 / 2\pi^2)$ over the full $(R, \sigma^2)$ domain. The surface encodes the joint dependence of macroscopic order on both the Kuramoto order parameter and the phase variance, with the five regime boundaries arising as level sets.
+    (\textbf{B}) Decomposition of the structural factor into coherent ($S_\mathrm{coh} = R^2$), turbulent ($S_\mathrm{turb} = (1-R)^2$), and synchronization ($S_\mathrm{sync} = 4R(1-R)$) components as functions of $R$. Vertical bands mark the regime boundaries at $R = 0.2, 0.4, 0.6, 0.8$, showing the dominance transitions between components.
+    (\textbf{C}) Mean order parameter $\bar{R}$ per sleep stage from synthetic EEG validation. N3 slow-wave sleep exhibits the highest synchronization ($\bar{R} = 0.71$), consistent with delta-dominated cortical dynamics, while REM shows the lowest ($\bar{R} = 0.31$), reflecting desynchronized activity.
+    (\textbf{D}) Regime map in the $(R, \sigma^2)$ plane with five color-coded regions (turbulent, aperture-dominated, cascade, coherent, phase-locked). Sleep stage positions are overlaid as scatter points, confirming that physiological states occupy distinct regime territories.}
+    \label{fig:five_regimes}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_3_sleep_architecture.png}
+    \caption{\textbf{Sleep Architecture as Regime Sequence.}
+    (\textbf{A}) Three-dimensional scatter plot of $500$ synthetic epochs in $(R_\mathrm{power}, R_\mathrm{Hilbert}, \mathrm{stage})$ space, colored by sleep stage. The five stages form separable clusters along the $R$ axes, with N3 and REM occupying opposite extremes of the synchronization spectrum.
+    (\textbf{B}) Violin plots of $R$ distributions per sleep stage, showing median values and distributional spread. The ordering $R_\mathrm{N3} > R_\mathrm{W} > R_\mathrm{N1} > R_\mathrm{N2} > R_\mathrm{REM}$ is preserved across epochs, with N2 exhibiting broader variance due to spindle-induced spectral complexity.
+    (\textbf{C}) Simulated $8$-hour hypnogram with continuous $R(t)$ trace overlaid on stage-colored background regions. The cyclic alternation between high-$R$ (N3) and low-$R$ (REM) epochs reproduces the ultradian rhythm with ${\sim}90$\,min cycle period, demonstrating that sleep architecture maps onto a periodic trajectory through the regime space.
+    (\textbf{D}) Normalized band-power heatmap (delta, theta, alpha, beta, gamma) per sleep stage. The dominant delta power in N3 ($55\%$) and elevated theta in REM ($30\%$) correspond to the regime classification, linking spectral content directly to the order parameter.}
+    \label{fig:sleep_architecture}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_4_critical_coupling.png}
+    \caption{\textbf{Critical Coupling and Phase Transitions.}
+    (\textbf{A}) Three-dimensional surface $R_\infty(K, \sigma_\omega)$ computed from Kuramoto simulations across a grid of coupling strengths and frequency dispersions ($N = 60$ oscillators). The ridge at $K = K_c(\sigma_\omega) = 2\sigma_\omega/\pi$ marks the synchronization phase boundary, with the transition sharpening at lower frequency heterogeneity.
+    (\textbf{B}) Finite-size scaling of $R$ versus $K/K_c$ for population sizes $N = 50, 100, 200, 500$. The transition becomes progressively steeper with increasing $N$, approaching the mean-field discontinuity in the thermodynamic limit. The vertical dashed line marks $K/K_c = 1$.
+    (\textbf{C}) Predicted versus measured critical coupling $K_c$ across five frequency dispersions ($\sigma_\omega = 1$--$5$). Points cluster along the identity line, confirming the analytical prediction $K_c = 2\sigma_\omega / \pi$ for Gaussian frequency distributions with mean error below $15\%$.
+    (\textbf{D}) Mean-field phase portrait $\dot{R}$ versus $R$ for subcritical ($K < K_c$), critical ($K = K_c$), and supercritical ($K > K_c$) coupling. The subcritical case has a single stable fixed point at $R = 0$; the supercritical case exhibits a stable fixed point at $R^* > 0$, demonstrating the pitchfork bifurcation structure.}
+    \label{fig:critical_coupling}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_5_consciousness_window.png}
+    \caption{\textbf{Consciousness Window and Temporal Dynamics.}
+    (\textbf{A}) Three-dimensional surface of the consciousness duration $C(\tau_P, \tau_T) = 2\tau_P \tau_T / (\tau_P + \tau_T) \cdot \exp\!\bigl(-|\tau_T - \tau_P|/(\tau_P + \tau_T)\bigr)$ as a function of perception and thought decay timescales. The maximum lies along $\tau_P \approx \tau_T$, reflecting the requirement for temporal overlap between perception and thought processes.
+    (\textbf{B}) Temporal window of consciousness defined by the intersection of the perception decay curve $P(t) = e^{-t/\tau_P}$ and the thought formation--decay curve $T(t)$, with $\tau_P = 50$\,ms and $\tau_T = 100$\,ms. The shaded region $\Delta t_C$ represents the interval during which both processes exceed threshold, yielding a consciousness window of ${\sim}80$\,ms consistent with empirical estimates.
+    (\textbf{C}) Heatmap of internal-to-objective time ratio $T_\mathrm{int}/T_\mathrm{obj}$ as a function of circuit timescale $\tau_\mathrm{circuit}$ and number of active partition holes $n_\mathrm{holes}$. Contour lines reveal that subjective temporal dilation increases with hole multiplicity and decreases with circuit speed.
+    (\textbf{D}) Time perception distortion across four pharmacological classes. Stimulants produce $+15\%$ temporal compression (events feel slower), depressants $-23\%$ dilation, psychedelics show high variance ($\pm 50\%$), and anesthetics produce near-complete temporal collapse ($-100\%$), mapping each drug class to a distinct perturbation of the consciousness window.}
+    \label{fig:consciousness_window}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_6_variance_free_energy.png}
+    \caption{\textbf{Variance Minimization and Free Energy.}
+    (\textbf{A}) Three-dimensional surface of the free energy functional $F(\sigma^2, T) = k_B T \sigma^2$ with the therapeutic floor curve $\sigma^2_\mathrm{floor}(T)$ traced in orange. The surface demonstrates that physiological temperature constrains the minimum achievable phase variance, establishing a thermodynamic lower bound on neural noise.
+    (\textbf{B}) Log-log plot of the variance floor $\sigma^2_\mathrm{min}$ versus coupling strength $K$, confirming the predicted scaling $\sigma^2_\mathrm{min} \propto K^{-1}$ (slope $= -1$). The shaded therapeutic window ($K \in [2, 8]$) demarcates the clinically relevant coupling range where pharmacological modulation operates.
+    (\textbf{C}) Power dissipation $P = K\sigma^2 \exp(-K\sigma^2)$ versus phase variance for four coupling strengths ($K = 0.5, 1.0, 2.0, 5.0$). Each curve exhibits a single peak at $\sigma^2 = 1/K$, with stronger coupling shifting the optimal operating point to lower variance. Dots mark the peak locations.
+    (\textbf{D}) Free energy landscape $F(S_k, S_e)$ in the knowledge--energy entropy plane, with gradient descent arrows indicating the direction of thermodynamic relaxation. The single basin of attraction near $(S_k, S_e) \approx (1.2, 0.8)$ represents the equilibrium attractor toward which neural dynamics are driven by free energy minimization.}
+    \label{fig:variance_free_energy}
+\end{figure*}

@@ -49,15 +49,18 @@
 \newcommand{\kuncat}{k_{\mathrm{uncat}}}
 \newcommand{\kcat}{k_{\mathrm{cat}}}
 \newcommand{\KM}{K_{\mathrm{M}}}
-\newcommand{\real}{\mathbb{R}}
+
 
 % =============================================================================
-\title{\textbf{Geometric Apertures in Hybrid Microfluidic Circuits:\\
-Zero-Work Selectivity from Categorical Constraints}}
+\title{\textbf{On the Consequences of Geometric Aperture Traversal in Hybrid Microfluidic Circuits:\\
+Aperture Selectivity from Categorical Constraints}}
 
-\author{Kundai Sachikonye\\
-\textit{Technical University of Munich}\\
-\texttt{kundai.sachikonye@tum.de}}
+\author{
+Kundai Farai Sachikonye\\
+AIMe Registry for Artificial Intelligence\\
+\texttt{kundai.sachikonye@bitspark.com}
+}
+
 
 \date{\today}
 
@@ -413,6 +416,18 @@ where $\alpha \geq 1$ depends on the geometric specificity
 of the aperture and the reduction in configurational entropy
 of the transition state~\cite{Wolfenden2001,BarEven2011}.
 
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_1_aperture_fields.png}
+    \caption{\textbf{Aperture Field Configurations.}
+    (\textbf{A}) Three-dimensional monopole field magnitude $|E| \propto 1/r^2$ in the $(r\sin\theta, r\cos\theta)$ plane, representing single-target selectivity characteristic of SSRIs such as escitalopram. The radially symmetric falloff reflects the isotropic binding profile of a drug with one dominant receptor interaction.
+    (\textbf{B}) Dipole field $|E| \propto \sqrt{4\cos^2\theta + \sin^2\theta}/r^3$, representing dual-target selectivity typical of SNRIs. The angular anisotropy encodes the preferential binding axis between two receptor sites (e.g., SERT and NET for duloxetine), with the steeper radial decay ($r^{-3}$) reflecting the higher-order constraint.
+    (\textbf{C}) Quadrupole field $|E| \propto |3\cos^2\theta - 1|/r^4$, representing the broad multi-target profile of TCAs such as amitriptyline. The nodal surface at $\theta = \arccos(1/\sqrt{3})$ and rapid $r^{-4}$ decay produce a complex spatial selectivity pattern spanning five or more receptor types.
+    (\textbf{D}) Heatmap of the phase space restriction coefficient $\alpha$ across aperture types (monopole, dipole, quadrupole) and drug classes (SSRI, SNRI, TCA). Higher $\alpha$ indicates greater phase space accessibility; the systematic decrease from monopole-SSRI to quadrupole-TCA confirms that higher-order apertures impose progressively tighter topological constraints on the accessible state space.}
+    \label{fig:aperture_fields}
+\end{figure*}
+
 % =============================================================================
 \section{Drug Action as Structural Factor Modification}\label{sec:drugaction}
 
@@ -453,6 +468,17 @@ Three mechanisms of structural factor modification exist:
         transition in the synchronization order
         parameter~\cite{Strogatz2000}.
 \end{enumerate}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_6_structural_factor.png}
+    \caption{\textbf{Structural Factor and Therapeutic Landscape.}
+    (\textbf{A}) Three-dimensional surface of the structural factor change $\Delta S(R_\mathrm{pre}, R_\mathrm{post}) = S(R_\mathrm{post}) - S(R_\mathrm{pre})$ where $S(R) = 1/(1 - R + \epsilon)$. The surface is antisymmetric about the diagonal $R_\mathrm{pre} = R_\mathrm{post}$, with the steepest gradients occurring near $R \to 1$ where small improvements in coherence yield large structural factor gains.
+    (\textbf{B}) Structural factor $S(R)$ versus order parameter $R$, showing the divergent growth as $R \to 1$. Annotated positions mark the depressed state ($R \approx 0.3$, turbulent regime) and healthy baseline ($R \approx 0.95$, coherent regime). The nonlinear shape explains why initial therapeutic gains are modest while full remission requires disproportionately large coupling increases.
+    (\textbf{C}) Combination therapy contour plot showing the effective coupling increment $\Delta K_\mathrm{comb} = \sqrt{\Delta K_1^2 + \Delta K_2^2 + 0.5 \Delta K_1 \Delta K_2}$ as a function of two concurrent drug contributions. The highlighted contour at $\Delta K_\mathrm{comb} = K_c = 16$ marks the critical threshold for regime transition, revealing that synergistic combinations can achieve coherence at individually sub-threshold doses.
+    (\textbf{D}) Scatter plot of five neuropsychiatric conditions (depression, anxiety, schizophrenia, mania, epilepsy) in the $(R_\mathrm{baseline}, \Delta K_\mathrm{required})$ plane. Depression requires the largest coupling correction from low $R$; mania and epilepsy, characterized by pathological hypersynchrony ($R > 0.95$), require coupling reduction rather than enhancement.}
+    \label{fig:structural_factor}
+\end{figure*}
 
 % =============================================================================
 \section{Regime Transition Pathways}\label{sec:regimes}
@@ -515,6 +541,18 @@ connectivity~\cite{Petri2014} reflect aperture reconfiguration.
 \textbf{Anesthetics}: Drive $R \to 0$ by decoupling oscillator
 populations, achieving a turbulent regime
 intentionally~\cite{Mashour2004,Alkire2008}.
+
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_3_regime_transition.png}
+    \caption{\textbf{Regime Transition Dynamics.}
+    (\textbf{A}) Three-dimensional Kuramoto surface $R(K, \sigma_\omega)$ computed from $N = 80$ oscillator simulations across efficacy and frequency dispersion axes. The synchronization threshold manifests as a sharp ridge, with higher $\sigma_\omega$ requiring proportionally greater coupling to achieve coherence.
+    (\textbf{B}) Order parameter $R$ versus drug efficacy with filled background regions denoting the four traversed regimes: turbulent ($R < 0.3$, red), aperture-dominated ($0.3 \leq R < 0.5$, purple), cascade ($0.5 \leq R < 0.8$, green), and coherent ($R \geq 0.8$, cyan). The $S$-shaped transition curve demonstrates that therapeutic efficacy drives a continuous regime traversal from pathological turbulence to healthy coherence.
+    (\textbf{C}) Scatter plot of $K/K_c$ versus $R_\mathrm{final}$ for the $10$-point efficacy titration from the pharmacology validation. Vertical dashed lines mark regime boundaries at $K/K_c = 1.0, 2.0, 3.5$. The nonlinear acceleration of $R$ beyond $K/K_c = 2$ reflects the cooperative nature of the synchronization transition.
+    (\textbf{D}) Phase diagram in the $(K/K_c, \sigma_\omega)$ plane showing the coherence probability as a filled contour. Three representative drug positions (fluoxetine, venlafaxine, amitriptyline) are marked, illustrating how different aperture types access distinct regions of the phase space.}
+    \label{fig:regime_transition}
+\end{figure*}
 
 \subsection{Cross-Modal Therapeutic Equivalence}
 
@@ -642,6 +680,17 @@ Enzymes processing substrates with high partition depth
 from the diffusion limit, consistent with their moderate
 $\kcat/\KM$ values~\cite{BarEven2011,Kanehisa2000}.
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_4_enzyme_catalysis.png}
+    \caption{\textbf{Enzyme Catalysis and Partition Depth.}
+    (\textbf{A}) Three-dimensional scatter of $12$ enzymes in the $(\log_{10}(k_\mathrm{cat}/K_m), d_\mathrm{cat}, \mathrm{MW})$ space, colored by enzyme family (metalloenzyme, hydrolase, heme, isomerase, transferase, dehydrogenase) with point size scaled by $k_\mathrm{cat}^{0.15}$. The distribution reveals a continuous landscape from diffusion-limited catalysts (superoxide dismutase, upper left) to slow, deep-partition enzymes (lysozyme, lower right).
+    (\textbf{B}) Partition depth $d_\mathrm{cat} = \log_2(\mathrm{atoms} + 1)$ versus catalytic efficiency $\log_{10}(k_\mathrm{cat}/K_m)$ with linear regression. The negative slope confirms the predicted anti-correlation: enzymes with simpler substrates (low $d_\mathrm{cat}$) achieve higher catalytic efficiency. The vertical dashed line marks the diffusion limit at $10^8$\,M$^{-1}$s$^{-1}$.
+    (\textbf{C}) Mean partition depth $\bar{d}_\mathrm{cat}$ by enzyme family. Hydrolases and transferases show elevated depth reflecting their engagement with structurally complex substrates, while metalloenzymes operate at lower depth on small-molecule substrates.
+    (\textbf{D}) Correlation matrix of the triple equivalence coordinates $S_\mathrm{part}$, $S_\mathrm{cat}$, $S_\mathrm{osc}$ derived from partition depth, catalytic efficiency, and turnover frequency respectively. The strong off-diagonal correlations ($|r| > 0.7$) support the triple equivalence $S_\mathrm{osc} = S_\mathrm{cat} = S_\mathrm{part}$.}
+    \label{fig:enzyme_catalysis}
+\end{figure*}
+
 % =============================================================================
 \section{Computational Validation}\label{sec:validation}
 
@@ -723,6 +772,17 @@ SSRIs (predicted 2.8 weeks, observed 2--4 weeks),
 SNRIs (predicted 2.3 weeks, observed 2--3 weeks),
 TCAs (predicted 2.5 weeks, observed 2--4 weeks),
 ketamine (predicted 4 hours, observed 2--24 hours).
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_5_cross_modal.png}
+    \caption{\textbf{Cross-Modal Equivalence and Onset Delay.}
+    (\textbf{A}) Three-dimensional scatter of $11$ antidepressants in the (response rate, onset weeks, number of targets) space, colored by drug class. The clustering of response rates near $0.60$--$0.64$ regardless of target count or onset delay provides three-dimensional evidence for the cross-modal equivalence principle.
+    (\textbf{B}) Violin plots of response rates by drug class (SSRI, SNRI, TCA), with horizontal dashed line at $60\%$. The means and medians of all three classes converge within $2$ percentage points, with the low cross-class variance ($\sigma_\mathrm{cross} = 0.005$) confirming that the structural factor, not the aperture type, determines therapeutic efficacy.
+    (\textbf{C}) Predicted versus reported onset delay (weeks) for all $11$ drugs. Points near the identity line indicate accurate prediction by the model $T_\mathrm{onset} = \tau_\mathrm{adapt} \cdot f(n_\mathrm{targets})$, with mean absolute error of $1.96$ weeks. TCAs show systematically longer onset due to their higher target multiplicity.
+    (\textbf{D}) Hill dose-response curves for the three aperture orders: monopole ($n_H = 1$, SSRI-like), dipole ($n_H = 2$, SNRI-like), and quadrupole ($n_H = 4$, TCA-like), all with $\mathrm{EC}_{50} = 10$. The steepening of the sigmoid with increasing Hill coefficient reflects the cooperative binding dynamics of higher-order apertures.}
+    \label{fig:cross_modal}
+\end{figure*}
 
 \subsubsection{Hill Coefficient Correlation}
 
@@ -882,6 +942,19 @@ regime transitions~\cite{Hille2001}.
 amphetamine) increase catecholaminergic coupling, driving
 a turbulent-to-coherent transition in attentional circuits.
 
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel_2_drug_binding.png}
+    \caption{\textbf{Drug Binding Profiles.}
+    (\textbf{A}) Three-dimensional bar chart of $\log_{10}(K_i)$ values for $11$ antidepressants across $7$ receptor targets (SERT, NET, DAT, 5-HT$_{2C}$, mACh, H$_1$, $\alpha_1$), colored by drug class (SSRI blue, SNRI green, TCA purple). The sparse binding pattern of SSRIs contrasts with the dense multi-receptor engagement of TCAs, directly visualizing the aperture multiplicity.
+    (\textbf{B}) Selectivity ratio (second-strongest $K_i$ / primary $K_i$) versus number of functional targets, with point size proportional to clinical response rate. SSRIs cluster at high selectivity with few targets; TCAs occupy the low-selectivity, many-target corner. The comparable point sizes across all drugs reflect the ${\sim}60\%$ response rate convergence.
+    (\textbf{C}) Polar radar profiles of normalized binding affinity ($1/K_i$) at SERT, NET, and DAT for three representative drugs: escitalopram (SSRI, monopole), duloxetine (SNRI, dipole), and amitriptyline (TCA, quadrupole). The progressive broadening of the radar profile directly visualizes the aperture order transition.
+    (\textbf{D}) Clinical response rates for all $11$ drugs grouped by class. The horizontal dashed line at $60\%$ marks the cross-modal convergence prediction. All drugs fall within a narrow band ($59$--$64\%$), confirming that response rates are determined by the structural factor rather than the specific aperture configuration.}
+    \label{fig:drug_binding}
+\end{figure*}
+
+
 % =============================================================================
 \section{Discussion}\label{sec:discussion}
 
@@ -982,9 +1055,10 @@ opening new avenues for rational drug design, microfluidic
 engineering, and personalized psychiatry.
 
 % =============================================================================
-\section*{Acknowledgments}
-The author thanks the Technical University of Munich for
-institutional support.
+\section*{Data Availability}
+%==============================================================================
+
+Source code (Rust and Python), validation datasets, and examples are available at \url{https://github.com/fullscreen-triangle/mekaneck}.
 
 % =============================================================================
 \bibliographystyle{unsrtnat}

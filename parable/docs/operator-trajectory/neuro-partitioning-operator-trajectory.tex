@@ -51,23 +51,22 @@
 
 \title{Operator Trajectories in Neural Partition Space:\\A Formal Language for Bounded Phase-Space Computing}
 
-\author{Kundai Sachikonye\\
-\textit{Technical University of Munich}\\
-\texttt{kundai.sachikonye@tum.de}}
+\author{
+Kundai Farai Sachikonye\\
+AIMe Registry for Artificial Intelligence\\
+\texttt{kundai.sachikonye@bitspark.com}
+}
 
 \date{\today}
 
-\twocolumn[
-\begin{@twocolumnfalse}
 \maketitle
+
 
 \begin{abstract}
 We develop the \emph{Neural Partition Language and Computing} framework from three axioms: bounded phase space ($\mu(\Omega) < \infty$), no null state (oscillation from categorical necessity), and finite observational resolution ($\delta > 0$). From these axioms we derive partition coordinates $(n, \ell, m, s)$ with shell capacity $C(n) = 2n^2$, and prove the \emph{Triple Equivalence Theorem}: oscillatory, categorical, and partition entropies coincide as $\Sosc = \Scat = \Spart = \kB M \ln n$. The S-entropy coordinate space $(\Sk, \St, \Se) \in [0,1]^3$ provides a navigation metric with ternary trisection yielding $O(\log_3 N)$ search complexity---a 37\% reduction over binary search. We introduce \emph{trajectory-terminus-memory triples} $\Mstate = (\gamma, \Gstate_f, M)$ as complete system descriptors and prove the \emph{Trajectory Non-Identity Theorem}: different paths to the same terminus yield different system states. \emph{Poincar\'{e} Computing} inverts the standard computational paradigm by specifying completion conditions (terminus) and deriving trajectories backward, with applications to drug design and treatment planning. We define the \emph{Pharmacological Neural Partition Language} (pNPL), a typed operator algebra comprising circuit types, pharmacological types, and observable types, with operators for aperture installation, regime classification, coupling modulation, frequency matching, and variance minimization. The free energy $F = \kB T \cdot \sigma^2(\phi)$ defines a therapeutic floor $\sigma^2_{\min} = \kB T / K_{\mathrm{coupling}}$. A five-level frequency hierarchy spanning 18 orders of magnitude connects H$^+$ dynamics ($4.06 \times 10^{13}$ Hz) to behavioral timescales through adiabatic decoupling. Consciousness emerges as the intersection of decay curves $C(t) = \Pdecay \cap \Tdecay$. All 10 validation claims of the pNPL type system pass, including $C(n) = 2n^2$ verification, S-entropy triangle inequality (0 violations in 500 tests), synchronization onset at $K_c = 2\sigma/\pi$, and variance scaling $\sigma^2_{\min} \propto 1/K$ with unit slope in log-log.
 \end{abstract}
 
-\vspace{1em}
-\end{@twocolumnfalse}
-]
+
 
 %% ============================================================
 %% SECTION 1: INTRODUCTION
@@ -291,6 +290,17 @@ Using the identity $\sum_{k=1}^n k^2 = n(n+1)(2n+1)/6$:
 $N(n) = 2 \sum_{k=1}^n k^2 = 2 \cdot \frac{n(n+1)(2n+1)}{6} = \frac{n(n+1)(2n+1)}{3}$.
 \end{proof}
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel1_partition_coordinate_space.png}
+    \caption{\textbf{Partition Coordinate Space.}
+    (\textbf{A}) Three-dimensional scatter of all valid partition states $(n, \ell, m)$ for principal quantum numbers $n = 1$--$5$, with each spin degeneracy ($s = \pm\tfrac{1}{2}$) plotted separately. Point color encodes $n$ and size scales with $|m| + 1$. The discrete lattice structure visualizes the $C(n) = 2n^2$ capacity formula: the $n = 5$ shell contains $50$ states spanning $\ell = 0$--$4$ and $m = -4$--$+4$.
+    (\textbf{B}) Partition capacity $C(n) = 2n^2$ as bar heights for $n = 1$--$10$, with the continuous $2n^2$ curve overlaid (dashed). Orange markers highlight the seven levels validated against explicit state enumeration, where $C_\mathrm{formula} = C_\mathrm{enumerated}$ for all $n$.
+    (\textbf{C}) Three-dimensional surface of the partition depth $M(K, k) = K \log_3 k$ as a function of the number of hierarchical levels $K$ and branching factor $k$. The surface demonstrates that depth grows logarithmically in branching but linearly in levels, establishing the resource scaling for the type system.
+    (\textbf{D}) State density heatmap for the $n = 5$ shell in the $(\ell, m)$ plane. Each occupied cell has degeneracy $2$ (spin), with the triangular occupancy pattern $|m| \leq \ell$ clearly visible. Unoccupied cells ($\ell < |m|$) appear as zero, confirming the angular momentum selection rule.}
+    \label{fig:partition_coordinate_space}
+\end{figure*}
+
 \subsection{S-Entropy Coordinate Space}
 
 \begin{definition}[S-Entropy Coordinates]
@@ -419,6 +429,18 @@ For generic $\dot{\Hfield}$, the M-equivalence class $[\gamma]_M$ has measure ze
 \begin{proof}
 The memory functional $M[\gamma] = \int_0^T \dot{\Hfield}[\gamma(t)]\,dt$ is a real-valued functional on the infinite-dimensional space of paths. For generic (non-degenerate) $\dot{\Hfield}$, the level sets $M^{-1}(c)$ are codimension-1 submanifolds, hence measure zero.
 \end{proof}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel3_trajectory_terminus_memory.png}
+    \caption{\textbf{Trajectory-Terminus-Memory Triples.}
+    (\textbf{A}) Two three-dimensional trajectories $\gamma_1$ (blue) and $\gamma_2$ (red) converging to a common terminus $\Gamma_f$ (gold star) in the $(S_k, S_t, S_e)$ space. Despite originating from different pathological states, both trajectories arrive at the same therapeutic fixed point, demonstrating the backward-determination principle: the terminus constrains the trajectory, not vice versa.
+    (\textbf{B}) Accumulated memory $M(t) = \int_0^t \|\dot{\gamma}(\tau)\| \, d\tau$ for both trajectories. Trajectory $\gamma_2$ accumulates more total memory (longer path length) due to its more circuitous route through S-entropy space, while both converge to finite values at $t = 1$. Horizontal dashed lines mark the final memory $M(1)$ for each path.
+    (\textbf{C}) Scatter of $50$ simulated trajectory endpoints in the $(S_k, S_e)$ plane, colored by accumulated memory $M$. The clustering near the terminus region $(0.25$--$0.55, 0.2$--$0.5)$ with variable memory values confirms that distinct therapeutic histories can converge to similar outcomes with different memory footprints.
+    (\textbf{D}) Poincar\'{e} near-return distance $\|\gamma(t) - \gamma(0)\|$ over extended time ($t = 0$--$50$). The quasi-periodic oscillations with secular drift demonstrate that the trajectory does not return exactly to its origin, consistent with the irreversibility of memory accumulation in the partition framework.}
+    \label{fig:trajectory_terminus_memory}
+\end{figure*}
+
 
 %% ============================================================
 %% SECTION 5: POINCARE COMPUTING
@@ -764,6 +786,17 @@ For $K > K_c$, the \texttt{sync} regime is a fixed point of $\textsc{Modulate\_K
 In the \texttt{sync} regime, $R \geq 0.8$. Increasing coupling ($\Delta K > 0$) can only increase or maintain the order parameter (by the monotonicity of the Kuramoto order parameter in coupling strength~\cite{strogatz2000kuramoto}). Therefore $R' \geq R \geq 0.8$, and the regime remains \texttt{sync}.
 \end{proof}
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel4_operator_composition_drug.png}
+    \caption{\textbf{Operator Composition and Drug Action.}
+    (\textbf{A}) Three-dimensional trajectory in (step, $R$, $\sigma^2$) space for a $200$-step simulation with drug application at step $100$ (red triangle). Color encodes regime classification: turbulent (red), aperture-dominated (orange), cascade (green), coherent (cyan), phase-locked (blue). The trajectory shows the system ascending from the turbulent manifold ($R \approx 0.13$, high variance) through successive regimes to phase-locked coherence ($R = 0.999$).
+    (\textbf{B}) Order parameter $R(t)$ over $200$ operator steps with regime-colored background bands. The vertical dashed line at step $100$ marks the drug operator application (APERTURE $\circ$ REGIME $\circ$ COUPLE). The pre-drug turbulent baseline ($R = 0.135$) transitions through all five regimes, reaching $R = 0.999$ post-drug, validating the operator composition sequence.
+    (\textbf{C}) Heatmap of the post-drug order parameter $R_\mathrm{post}$ as a function of pre-drug state $R_\mathrm{pre}$ and structural factor modification $\Delta S$. The color gradient from low (dark) to high (bright) $R_\mathrm{post}$ shows that larger $\Delta S$ corrections are required to achieve coherence from deeper turbulent states.
+    (\textbf{D}) Bar chart of regime distribution across $1001$ uniformly sampled $R$ values: turbulent ($301$), aperture-dominated ($200$), cascade ($299$), coherent ($150$), phase-locked ($51$). The monotonically decreasing count toward higher regimes reflects the progressive narrowing of each regime's $R$-interval.}
+    \label{fig:operator_composition}
+\end{figure*}
+
 %% ============================================================
 %% SECTION 8: FREQUENCY MATCHING AND TIMESCALE HIERARCHY
 %% ============================================================
@@ -839,6 +872,17 @@ where $\eta < 1$ is the gear efficiency~\cite{nicholls2013bioenergetics}.
 The gear network is a chain of coupled oscillator populations at successively different frequencies~\cite{buzsaki2006rhythms}. Each stage amplifies by a factor $g_i$, with total gain $G = \prod_i g_i$. The maximum gain is bounded by the frequency ratio between levels (otherwise energy conservation is violated), reduced by the efficiency factor $\eta$ accounting for dissipative losses at each stage~\cite{seifert2012stochastic}.
 \end{proof}
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel6_frequency_hierarchy.png}
+    \caption{\textbf{Frequency Hierarchy and Consciousness.}
+    (\textbf{A}) Three-dimensional gear cascade surface showing $\log_{10}(f)$ as a function of hierarchical level and input frequency $\log_{10}(f_\mathrm{in})$ for three representative input frequencies ($10^{13}$, $10^{10}$, $10^{6}$\,Hz). The surface demonstrates the systematic frequency reduction across eight cascade levels, from molecular vibrations (${\sim}10^{13}$\,Hz) down to behavioral timescales (${\sim}1$\,Hz), implementing the partition gear mechanism.
+    (\textbf{B}) Timescale hierarchy spanning $18$ orders of magnitude on a logarithmic axis: proton tunneling $\tau_\rho \sim 10^{-15}$\,s, hydrogen bond dynamics $\tau_{\mathrm{H}^+} \sim 10^{-14}$\,s, configurational changes $\tau_\mathrm{config} \sim 0.1$\,s, state transitions $\tau_\mathrm{state} \sim 1$\,s, and drug action $\tau_\mathrm{drug} \sim 10^3$\,s. Each bar represents a distinct level of the partition hierarchy.
+    (\textbf{C}) Consciousness as decay curve intersection: perception decay $P(t) = e^{-t/50}$ (blue) and thought decay $T(t) = e^{-t/100}$ (red) with the shaded consciousness window (purple) defined as the region where both amplitudes exceed threshold ($0.2$). The window duration $\Delta t_C \approx 80$\,ms corresponds to the empirically observed minimum integration time for conscious perception.
+    (\textbf{D}) Adiabatic coupling matrix showing $\log_{10}$ timescale ratios between all pairs of hierarchical levels. The block structure reveals three natural groupings: quantum ($\tau_\rho$, $\tau_{\mathrm{H}^+}$), mesoscopic ($\tau_\mathrm{config}$, $\tau_\mathrm{state}$), and macroscopic ($\tau_\mathrm{drug}$), with the adiabatic separation between groups (${\sim}10^{13}$) justifying the Born--Oppenheimer-like factorization of the partition wavefunction.}
+    \label{fig:frequency_hierarchy}
+\end{figure*}
+
 %% ============================================================
 %% SECTION 9: VARIANCE MINIMIZATION
 %% ============================================================
@@ -904,6 +948,17 @@ where $\gamma_{\mathrm{relax}}$ is the relaxation rate.
 The variance relaxes toward thermal equilibrium at rate $\gamma_{\mathrm{relax}}$: $\dot{\sigma}^2 = \gamma_{\mathrm{relax}}(\sigma^2_{\mathrm{thermal}} - \sigma^2)$. To maintain $\sigma^2 < \sigma^2_{\mathrm{thermal}}$ at steady state requires continuously removing the entropy produced by thermal fluctuations. The power is $P = T \dot{S} = T \cdot \kB \gamma_{\mathrm{relax}} (\sigma^2_{\mathrm{thermal}} - \sigma^2) = \gamma_{\mathrm{relax}} \kB T (\sigma^2_{\mathrm{thermal}} - \sigma^2)$.
 \end{proof}
 
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel5_synchronization_onset.png}
+    \caption{\textbf{Synchronization Onset and Critical Coupling.}
+    (\textbf{A}) Three-dimensional Kuramoto surface $R(K, \sigma_\omega)$ for $N = 50$ oscillators across coupling strengths $K = 0$--$10$ and five frequency dispersions $\sigma_\omega = 0.5, 1.0, 2.0, 4.0, 8.0$. The synchronization ridge confirms the linear scaling $K_c \propto \sigma_\omega$.
+    (\textbf{B}) Grouped bar chart comparing $R_\mathrm{below}$, $R_\mathrm{at}$, and $R_\mathrm{above}$ the predicted critical coupling $K_c = 2\sigma_\omega / \pi$ for each of the five frequency conditions. In all cases, $R_\mathrm{above} > R_\mathrm{at} > R_\mathrm{below}$, confirming that the analytical $K_c$ correctly identifies the synchronization onset.
+    (\textbf{C}) Critical coupling $K_c$ versus frequency dispersion $\sigma_\omega$ with the theoretical prediction $K_c = 2\sigma_\omega / \pi$ overlaid (dashed red line). The five validated conditions lie along the prediction line, confirming the mean-field result for Lorentzian-equivalent Gaussian distributions.
+    (\textbf{D}) Log-log plot of variance floor $\sigma^2_\mathrm{min}$ versus coupling $K$ with slope $= -1$ (validated), confirming the thermodynamic bound $\sigma^2_\mathrm{min} = k_B T / K$. The horizontal dashed line marks $k_B T = 4.28 \times 10^{-21}$\,J at body temperature ($T = 310$\,K), establishing the absolute lower limit of phase noise.}
+    \label{fig:synchronization_onset}
+\end{figure*}
+
 %% ============================================================
 %% SECTION 10: COMPUTATIONAL VALIDATION
 %% ============================================================
@@ -947,6 +1002,17 @@ For randomly sampled triples $(\Scoord_1, \Scoord_2, \Scoord_3) \in [0,1]^{3 \ti
 \noindent\textbf{Claim 3: S-entropy distances bounded by $\sqrt{3}$.}
 
 All 500 sampled pairs satisfy $\dS \leq \sqrt{3}$, consistent with Proposition~\ref{prop:sbound}.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/panel2_s_entropy_coordinate_space.png}
+    \caption{\textbf{S-Entropy Coordinate Space.}
+    (\textbf{A}) Three-dimensional scatter of $1000$ uniformly sampled points in the S-entropy unit cube $(S_k, S_t, S_e) \in [0,1]^3$, colored by Euclidean magnitude $\|\mathbf{S}\|$. The maximum observed distance $d_\mathrm{max} = 1.348$ remains below the theoretical bound $\sqrt{3} \approx 1.732$, and zero triangle inequality violations confirm the metric space structure.
+    (\textbf{B}) Three-dimensional therapeutic trajectory from a high-entropy initial state $(0.8, 0.2, 0.9)$ to a low-entropy terminus $(0.3, 0.5, 0.4)$, colored by progression parameter $t \in [0, 1]$. The curved path with sinusoidal perturbations represents a realistic drug-induced trajectory through S-entropy space, with the red circle marking the pathological origin and the gold star the therapeutic target.
+    (\textbf{C}) Pairwise distance matrix $d(S_i, S_j)$ for $20$ sampled S-entropy points, computed using the Euclidean metric on $[0,1]^3$. The block-diagonal structure reveals natural clustering of nearby states, supporting the use of distance-based regime classification.
+    (\textbf{D}) Temperature field $T(S_k, S_e) = T_0 \exp(S_e - 0.5)$ as a filled contour in the knowledge--energy entropy plane ($T_0 = 310$\,K). Contour lines at $10$\,K intervals show the exponential dependence on energy entropy, connecting the abstract S-entropy coordinates to measurable thermodynamic quantities.}
+    \label{fig:s_entropy_space}
+\end{figure*}
 
 \subsection{Regime Classification}
 

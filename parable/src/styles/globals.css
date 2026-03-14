@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply antialiased;
+  }
+  ::selection {
+    @apply bg-primary/20 text-primary;
+  }
+}
+
+@layer components {
+  .section-heading {
+    @apply text-4xl font-bold text-dark dark:text-light mb-4 md:text-3xl sm:text-2xl;
+  }
+  .section-subheading {
+    @apply text-lg text-muted dark:text-muted mb-8 max-w-2xl md:text-base;
+  }
+  .card {
+    @apply bg-surfaceLight dark:bg-surface border border-dark/5 dark:border-light/10 rounded-2xl p-8 transition-all duration-300;
+  }
+  .card:hover {
+    @apply shadow-glow dark:shadow-glow border-primary/20 dark:border-primaryDark/20;
+  }
+  .equation-block {
+    @apply my-6 p-4 bg-dark/[0.02] dark:bg-light/[0.03] rounded-lg overflow-x-auto text-center;
+  }
+  .regime-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+}
+
+/* KaTeX overrides */
+.katex-display {
+  margin: 1em 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.katex {
+  font-size: 1.05em !important;
+}

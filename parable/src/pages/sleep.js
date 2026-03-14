@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-export default function Projects() {
+export default function Sleep() {
   const router = useRouter();
-  useEffect(() => { router.replace("/"); }, [router]);
+  useEffect(() => { router.replace("/regimes"); }, [router]);
   return null;
 }
