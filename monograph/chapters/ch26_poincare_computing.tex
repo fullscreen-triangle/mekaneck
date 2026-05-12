@@ -1,0 +1,10 @@
+\chapter{Poincaré Computing: Trajectory Completion}
+\label{ch:poincare}
+
+\papernote{Source paper: \emph{Poincaré Computing: Trajectory Completion in Ternary S-Entropy Space} --- \texttt{docs/biochemical-trajectory-computing/}}
+
+\begin{chapterabstract}
+Classical computing simulates trajectories forward from initial conditions at exponential cost. Poincaré computing inverts this: trajectories are completed backward from observed termini through categorical constraints, at linear cost $O(k)$ versus $O(e^{kT})$. The key insight is the position-trajectory duality: in ternary $S$-entropy space, the address \emph{is} the path. Three computational primitives (Project, Complete, Compose) replace the Boolean gate set. Enzymatic validation through carbonic anhydrase II demonstrates that biological catalysis already implements Poincaré computing---nature discovered this paradigm three billion years before computer science.
+\end{chapterabstract}
+
+\input{../docs/biochemical-trajectory-computing/biochemical-trajectory-computing.tex}

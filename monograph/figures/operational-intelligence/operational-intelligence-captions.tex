@@ -1,0 +1,57 @@
+% Detailed publication captions for the five validation panels of
+% the Operational Intelligence manuscript.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_1.png}
+    \caption{\textbf{Foundations of the Intelligent Agent.}
+    (\textbf{A})~Floor positivity across receivers: the floor $\beta(\mathcal{R})$ on the linear $y$-axis versus knowledge framework size $|\mathcal{K}|$ on the log $x$-axis ($2$ to $1024$), ten receivers connected by a line. The floor decreases monotonically with $|\mathcal{K}|$ but remains strictly positive at every tested size; the crimson dashed reference at $\beta=0$ is forbidden by Theorem~\ref{thm:floor} (Floor Positivity). The shaded region highlights that $\beta>0$ for every realised receiver.
+    (\textbf{B})~Cell-disjointness criterion: bar chart of cell-overlap counts on the linear $y$-axis ($0$ to $5$) for $50$ random aperture pairs on the $x$-axis. Seagreen bars (zero overlap) indicate cell-disjoint pairs admissible under Theorem~\ref{thm:t1} (Extension Admissibility); orange bars (positive overlap) indicate inadmissible pairs that would violate cell-uniqueness. The disjoint count gives the proportion of pairs satisfying the admissibility criterion.
+    (\textbf{C})~Receiver Uncertainty Principle: scatter of $\sigma_Y$ on the log $y$-axis versus $\sigma_K$ on the log $x$-axis, $100$ random methodologies. Steelblue points represent measured products; the crimson curve traces the saturating bound $\sigma_K\sigma_Y=\hbar=2.0$. All measured products lie at or above the bound; zero violations. Empirical content of Theorem~\ref{thm:uncertainty} (Receiver Uncertainty Principle): conjugate dispersions cannot simultaneously be small.
+    (\textbf{D})~Three-dimensional surface of the uncertainty product $\sigma_K\cdot\sigma_Y$ over $(\sigma_K,\sigma_Y)\in[0.2,5]^{2}$, $25\times 25$ grid, viridis colourmap. The crimson contour at $\hbar=2$ traces the saturating curve. The surface lies above the contour everywhere on its interior, geometrically realising Theorem~\ref{thm:uncertainty}: the agent's phase-space cell of area $\hbar_{\mathsf{A}}=\beta\tau$ is the minimum admissible region in conjugate dispersion space.}
+    \label{fig:panel1-foundations}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_2.png}
+    \caption{\textbf{The Intelligence Cycle: Construction and Action Phases.}
+    (\textbf{A})~Construction-phase necessity: required $\sigma_K$ on the log $y$-axis versus $\sigma_Y$ on the log $x$-axis ($10^{-5}$ to $10^{0}$), $50$ values. The required dispersion follows $\sigma_K=\hbar/\sigma_Y$ (steelblue line, $\hbar=2$); the seagreen-shaded region shows where the inequality is satisfied. As $\sigma_Y\to 0$, the required $\sigma_K$ diverges, confirming Theorem~\ref{thm:t2} (Construction-Phase Necessity): knowledge framework extension can occur only during phases in which action commitment is suspended.
+    (\textbf{B})~Phase alternation timeline: $\sigma_K$ (steelblue) and $\sigma_Y$ (orange) on the linear $y$-axis versus time on the linear $x$-axis ($0$ to $5$ cycles). The two signals are anti-phase: when $\sigma_K$ is high (construction phase), $\sigma_Y$ is low; when $\sigma_K$ is low (action phase), $\sigma_Y$ is high. The signals never overlap, confirming Theorem~\ref{thm:t3} (Cycle Necessity): construction and action phases are mutually exclusive.
+    (\textbf{C})~Healthy activity ratio: intelligence proxy on the linear $y$-axis versus $A_{\rm con}/A_{\rm act}$ on the linear $x$-axis ($0.4$ to $1.4$). The peak at $\sqrt{0.95}\approx 0.975$ (crimson dashed) corresponds to the healthy reference operating ratio (the substrate-neutral analogue of the dream-thought activity ratio in biological agents). Deviations on either side reduce intelligence.
+    (\textbf{D})~Three-dimensional cycle trajectory in $(\sigma_K,\sigma_Y,t)$ space, $200$ points along a sinusoidal cycle. Steelblue segments mark construction phases (high $\sigma_K$, low $\sigma_Y$); orange segments mark action phases (low $\sigma_K$, high $\sigma_Y$). The trajectory traces a closed orbit that never enters the simultaneously-high quadrant, geometrically realising the cycle alternation property.}
+    \label{fig:panel2-cycle}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_3.png}
+    \caption{\textbf{The Intelligence Index.}
+    (\textbf{A})~Index factor decomposition: bar chart of three factors $(A_{\rm con}/A_{\rm act},\;T_{\rm con}/T_{\rm ref},\;\kappa)$ on the linear $x$-axis for four agent types --- healthy (seagreen), construction-deficient P1 (crimson), construction-deprived P3 (orange), perceptually decoupled P4 (purple). Each phenotype shows depression in exactly one factor with the others preserved, illustrating Theorem~\ref{thm:t7} (Failure-Mode Classification): each phenotype has a distinctive signature in factor space.
+    (\textbf{B})~Index sensitivity to perceptual coupling: intelligence index $\mathcal{I}$ on the linear $y$-axis versus $\kappa$ on the linear $x$-axis ($0$ to $1$). The relationship is exactly linear (steelblue), as predicted by Theorem~\ref{thm:t4} (Intelligence Index): $\mathcal{I}$ is the product of three independent factors. The crimson dashed line at the healthy index level $\sqrt{0.95}\approx 0.975$ provides the reference.
+    (\textbf{C})~Population distribution: histogram of normalised intelligence index $\mathcal{I}$ across $100$ simulated agents with random factor values drawn from healthy distributions. The distribution centres tightly around $1$ (crimson dashed reference) with spread reflecting individual variation. Demonstrates that the index is well-defined and stable across populations.
+    (\textbf{D})~Three-dimensional surface of $\mathcal{I}$ over $(A_{\rm con}/A_{\rm act},\;T_{\rm con}/T_{\rm ref})$ at fixed $\kappa=1$, $25\times 25$ grid, viridis colourmap. The bilinear surface shows that the index is monotone in each factor; the maximum lies at the upper-right corner where both factors are large. The surface is bounded above by the agent's metabolic and temporal constraints (Theorem~\ref{thm:t6}, Intelligence Floor).}
+    \label{fig:panel3-index}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_4.png}
+    \caption{\textbf{Collective Intelligence and Federations.}
+    (\textbf{A})~Federation index growth: composite intelligence $\mathcal{I}$ on the linear $y$-axis versus federation size $n$ on the linear $x$-axis ($1$ to $20$), four curves for individual intelligence levels $\{0.3, 0.5, 0.7, 0.9\}$. Each curve approaches $1$ as $n$ grows, with the rate of approach controlled by the individual level. Empirical content of Theorem~\ref{thm:t5} (Collective Intelligence): federations of intelligent agents achieve higher composite intelligence than any single agent.
+    (\textbf{B})~Aperture-sharing matrix: $8\times 8$ matrix indicating which agent pairs share apertures (green=share, white=disjoint), constructed with $4$ shared-aperture agents and $4$ disjoint-aperture agents. The block structure (top-left $4\times 4$ all green; rest mostly white) confirms Theorem~\ref{thm:t5}: only agents with structurally compatible apertures can phase-lock.
+    (\textbf{C})~Phase-locking gain: composite intelligence (steelblue) and theoretical upper bound $1-(1-\mathcal{I})^n$ (crimson dashed) on the linear $y$-axis versus federation size $n$ on the linear $x$-axis ($2$ to $10$), with individual level $\mathcal{I}_{\rm indiv}=0.5$ (orange dotted reference). The two curves coincide, confirming that synchronised federations achieve the parallel-composition upper bound exactly.
+    (\textbf{D})~Three-dimensional composite-index surface over $(n_{\rm agents},\mathcal{I}_{\rm indiv})$, $10\times 20$ grid, viridis colourmap. The surface saturates near $1$ for large $n$ and high $\mathcal{I}_{\rm indiv}$; at low individual levels and small $n$ the composite remains low. The saturation behaviour visualises the diminishing returns of adding more agents to a high-intelligence federation.}
+    \label{fig:panel4-collective}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_5.png}
+    \caption{\textbf{Intelligence Floor and the Six Failure-Mode Phenotypes.}
+    (\textbf{A})~Six failure-mode phenotypes: bar chart of intelligence index $\mathcal{I}$ on the linear $y$-axis for the healthy reference (seagreen) and the six failure phenotypes P1--P6 (varying colours) on the $x$-axis. The healthy reference at $\mathcal{I}=1$ (black dashed) provides the baseline. P1 (construction-deficient), P3 (construction-deprived), and P4 (perceptually decoupled) all show depressed indices; P2 (hyper-constructive) shows elevated index without proportional gain; P5 and P6 show distinct patterns of cycle disruption. Empirical content of Theorem~\ref{thm:t7} (Failure-Mode Classification).
+    (\textbf{B})~Intelligence ceiling: ceiling $1/\beta$ on the linear $y$-axis versus $|\mathcal{K}|$ on the log $x$-axis ($10$ to $10^{6}$). The ceiling grows but remains finite at every tested framework size, confirming Theorem~\ref{thm:t6} (Intelligence Floor): there is no maximally intelligent agent. The supremum $\mathcal{I}\to\infty$ would require $\beta\to 0$, forbidden by floor positivity.
+    (\textbf{C})~Phenotype factor signatures: bar chart of three factors $(A_{\rm con}/A_{\rm act}, T_{\rm con}/T_{\rm ref}, \kappa)$ for the healthy reference (seagreen) and four phenotypes (P1, P2, P3, P4). Each phenotype has a unique factor signature, confirming the classification's distinctness. The black dotted reference at $1$ provides the healthy baseline.
+    (\textbf{D})~Three-dimensional clustering of phenotypes in factor space: scatter of $30$ agents per phenotype in the $(A_{\rm con}/A_{\rm act}, T_{\rm con}/T_{\rm ref}, \kappa)$ space. The four clusters (healthy, P1, P3, P4) occupy distinct regions of the factor space, with no overlap, confirming that the phenotype classification is well-separated and the index decomposition is operationally diagnostic.}
+    \label{fig:panel5-floor-phenotypes}
+\end{figure*}

@@ -1,0 +1,57 @@
+% Detailed publication captions for the five validation panels of
+% the Synchronised Agent Coordination manuscript.
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_1.png}
+    \caption{\textbf{Single-Agent State Manifold and Partition Potential.}
+    (\textbf{A})~Synchronisation potential $V_{\rm sync}(R; K) = (K_c - K)R^2/2 + KR^4/4$ on the linear $y$-axis versus the internal Kuramoto order parameter $R\in[0,1]$ on the linear $x$-axis, for three coupling regimes: subcritical ($K=0.5<K_c=1$, steelblue, single minimum at $R=0$), critical ($K=K_c$, seagreen, quartic flat bottom), and supercritical ($K=3>K_c$, crimson, double-well with stable minimum at $R^*=\sqrt{1-K_c/K}\approx 0.816$). The pitchfork bifurcation at $K=K_c$ is the universal mechanism underlying all regime transitions. Empirical content of Theorem~\ref{thm:five-regimes} (Five-regime classification) and Proposition~\ref{prop:bif} (Bifurcation at $K=K_c$).
+    (\textbf{B})~Variance-floor potential $V_{\rm var}(\sigma^2; T, K) = k_B T \sigma^2 + k_B T/(K\sigma^2)$ on the linear $y$-axis versus phase variance $\sigma^2$ on the linear $x$-axis, for three coupling strengths $K\in\{1,2,4\}$. Each curve has a unique minimum at $\sigma^2_{\min}=\sqrt{1/K}$ (vertical dashed lines), confirming Proposition~\ref{prop:varfloor} (Variance floor). Higher coupling $K$ produces lower variance floor.
+    (\textbf{C})~Variance floor scaling on log-log axes: $\sigma^2_{\min}$ versus $K$, six measurement points (steelblue), with theoretical line $\sigma^2_{\min}=k_BT/K$ (crimson). Slope is exactly $-1$ on log-log axes, confirming the analytical prediction. Experiment E05 reports relative error $1.11\times 10^{-16}$.
+    (\textbf{D})~Three-dimensional surface of the partition potential $\Phi(R,\sigma^2)=V_{\rm sync}+V_{\rm var}+V_{\rm SF}+V_{\rm ent}$ over $(R,\sigma^2)\in[0.05,0.95]\times[0.1,1.5]$, $25\times 25$ grid, viridis colourmap, fixed $K=2$, $K_c=0.5$, $S$-entropy $\Svec=(0.5,0.5,0.5)$. The global minimum lies at $(R^*,\sigma^2_{\min})=(0.866,0.707)$ (the coherent regime); the surface rises sharply at low $\sigma^2$ (variance-floor barrier) and at $R=0$ (turbulent saddle).}
+    \label{fig:panel1-state}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_2.png}
+    \caption{\textbf{Five Operational Regimes and Bifurcation.}
+    (\textbf{A})~Bifurcation diagram: stable order parameter $R^*=\sqrt{1-K_c/K}$ on the linear $y$-axis versus coupling $K$ on the linear $x$-axis ($0$ to $5$), with $K_c=1.0$ (crimson dashed). For $K<K_c$, $R^*=0$ (incoherence); for $K>K_c$, $R^*$ rises continuously, asymptoting to $1$ as $K\to\infty$. The classical Kuramoto pitchfork.
+    (\textbf{B})~Five-regime partition of the $R$-axis: filled regions colour-coded by regime (turbulent crimson, $R<0.3$; aperture-dominated darkorange, $0.3\le R<0.5$; cascade gold, $0.5\le R<0.8$; coherent seagreen, $0.8\le R<0.95$; phase-locked steelblue, $R\ge 0.95$). Vertical dashed lines mark the four regime boundaries. Visualises the regime classification of Theorem~\ref{thm:five-regimes}.
+    (\textbf{C})~Regime distribution under uniform sampling: bar chart of regime occupancy across $1000$ uniform samples of $R\in[0,1]$. The three middle regimes occupy intervals of width $0.2$, $0.3$, and $0.15$ respectively, while turbulent and phase-locked occupy widths $0.3$ and $0.05$. The bar heights are exactly proportional to the interval widths.
+    (\textbf{D})~Three-dimensional saddle landscape of $V_{\rm sync}(R,K)$ over $(R,K)\in[0,1]\times[0.1,4]$, $50\times 50$ grid, viridis colourmap. The bifurcation ridge at $K=K_c=1$ is clearly visible: below $K_c$ the surface has a single trough at $R=0$; above $K_c$ a double-well structure emerges with stable minima at $R^*$. Each regime corresponds to a distinct basin or saddle of $V_{\rm sync}$.}
+    \label{fig:panel2-regimes}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_3.png}
+    \caption{\textbf{Ensemble Kuramoto and Five Coordination Regimes.}
+    (\textbf{A})~Ensemble Kuramoto order parameter $R_{\rm ens}$ on the linear $y$-axis versus uniform individual order parameter $R_i$ on the linear $x$-axis ($0$ to $1$), for an ensemble of $n=10$ agents with phases evenly distributed in $[0,\pi]$. The four regime boundaries are marked (crimson dashed). The relationship is monotonic but sub-linear because of partial phase cancellation. Empirical content of Theorem~\ref{thm:ens-five}.
+    (\textbf{B})~Synchronisation onset: $R_{\rm ens}$ vs inter-agent coupling $K$ for natural-frequency spread $\sigma_\omega=1$ ($K_c^{\rm ens}=2/\pi\approx 0.637$). Below $K_c$ (crimson dashed), $R_{\rm ens}=0$ (no synchronisation); above $K_c$, $R_{\rm ens}$ rises sharply, crossing the phase-lock threshold $0.95$ (steelblue dashed) at $K\approx 6.4$. Empirical content of Theorem~\ref{thm:critical-coupling}.
+    (\textbf{C})~Phase distribution effect: bar chart comparing $R_{\rm ens}$ for two phase distributions across ensemble sizes $n\in\{2,3,4,5,6,8\}$. Crimson bars (uniform phase distribution): $R_{\rm ens}$ is small or zero, despite each agent having internal $R_i=1$. Seagreen bars (aligned phases): $R_{\rm ens}=1$. Demonstrates the hierarchical independence of \Cref{rem:nested}: high $R_i$ does not imply high $R_{\rm ens}$.
+    (\textbf{D})~Three-dimensional phase diagram: predicted $R_{\rm ens}$ over $(n_{\rm agents},\sigma_\omega)\in\{2,\dots,10\}\times[0.1,2.0]$ with fixed coupling $K=2$. The surface (viridis) shows that synchronisation strength decreases with frequency spread $\sigma_\omega$ (more diverse agents harder to synchronise) and is approximately independent of agent count when $K$ is fixed.}
+    \label{fig:panel3-ensemble}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_4.png}
+    \caption{\textbf{Synchronisation as Partition Extinction.}
+    (\textbf{A})~Inter-agent partition lag $\tau_p$ on the linear $y$-axis versus normalised temperature $T/T_c$ on the linear $x$-axis ($0.5$ to $2.5$), with critical temperature $T_c=1$ (crimson dashed). Above $T_c$, $\tau_p>0$ (positive partition lag, agents distinguishable). Below $T_c$, $\tau_p\equiv 0$ (partition extinction, agents categorically indistinguishable). The seagreen-shaded region indicates the partition-extinct phase. The discontinuous drop at $T=T_c$ is the signature of partition extinction. Empirical content of Theorem~\ref{thm:sync} (Synchronisation as Partition Extinction).
+    (\textbf{B})~Coordination friction (per-iteration $S$-loss to inter-agent disagreement) on the linear $y$-axis versus ensemble Kuramoto order parameter $R_{\rm ens}$ on the linear $x$-axis ($0.1$ to $1.0$). Friction is positive for $R_{\rm ens}<0.95$ and drops discontinuously to zero at $R_{\rm ens}=0.95$ (crimson dashed). The discontinuity confirms the binary nature of the phase-lock transition: there is no intermediate state with small but positive friction.
+    (\textbf{C})~Synchronisation tension $\theta(\agent_i,\agent_j)$ on the linear $y$-axis versus decoder-distance proxy on the linear $x$-axis ($0$ to $2$). The relationship is linear (steelblue) with phase-lock occurring at $\theta=0$ (seagreen dashed). Decoder-distance is proportional to internal-state difference plus aperture-class difference; phase-lock requires both to be zero.
+    (\textbf{D})~Three-dimensional comparison of composite floor surfaces over $(n_{\rm agents},f_{\rm per-agent})\in\{2,\dots,10\}\times[0.5,5]$. Lower surface (viridis): independent agents under parallel composition, $\Sfloor(\Compose)=\prod f_i/\Sigma^{n-1}$ (decreases with $n$). Upper surface (plasma): synchronised agents, $\Sfloor=\Sfloor(\agent_1)$ (constant in $n$). The two surfaces meet only at $n=1$; for $n\ge 2$ independent composition is strictly lower (more agents help) but synchronised composition is constant (more agents add no further benefit, but also no friction).}
+    \label{fig:panel4-sync}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{validation/figures/panel_5.png}
+    \caption{\textbf{Aperture Sharing and Memory Compatibility.}
+    (\textbf{A})~Aperture multipole patterns: angular field magnitude in the $(x,y)$ plane for monopole ($\ell=0$, isotropic, steelblue), dipole ($\ell=1$, two lobes, seagreen), and quadrupole ($\ell=2$, four lobes, darkorange). Each multipole order corresponds to a distinct categorical filtering geometry as defined in \Cref{def:aper}. Phase-lock requires shared multipole order.
+    (\textbf{B})~Aperture sharing matrix for a $5$-agent phase-locked ensemble (all dipole apertures $\ell=1$): green entries indicate isomorphism between agent $i$ and agent $j$ apertures. The matrix is uniformly green, confirming Theorem~\ref{thm:aper-share}: phase-locked agents share apertures pairwise.
+    (\textbf{C})~Memory traces $M(t)=\int_0^t\dot{H}^+\dd t'$ for four phase-locked agents processing a common $H^+$-field with small ($\sigma=0.02$) per-agent noise. The four trajectories are nearly indistinguishable, demonstrating Theorem~\ref{thm:mem-compat}: phase-locked agents have memory traces congruent within tolerance $\eps_{\rm mem}$. Coordinated teams ``remember the same things'' as a consequence of synchronisation, not as a prerequisite.
+    (\textbf{D})~Three-dimensional synchronisation phase diagram: stable order parameter $R^*=\sqrt{1-K_c/K}$ over $(K,\sigma_\omega)\in[0.1,4]\times[0.1,2.0]$, $25\times 25$ grid, viridis colourmap. The surface rises with coupling $K$ (synchronisation strengthens) and falls with frequency spread $\sigma_\omega$ (heterogeneity hinders synchronisation). The surface is zero on the line $K=K_c=2\sigma_\omega/\pi$ (the critical-coupling locus); above this line synchronisation is possible.}
+    \label{fig:panel5-aperture-memory}
+\end{figure*}

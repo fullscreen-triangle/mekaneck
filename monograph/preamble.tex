@@ -1,0 +1,197 @@
+%% ============================================================
+%% UNIFIED PREAMBLE — Categorical Geometry of Consciousness
+%% ============================================================
+
+%% --- Encoding & Fonts ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+%% --- Page Layout ---
+\usepackage[
+  a4paper,
+  top=2.5cm, bottom=2.5cm,
+  inner=3cm, outer=2.5cm,
+  headheight=15pt
+]{geometry}
+\usepackage{emptypage}
+
+%% --- Mathematics ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{physics}
+\usepackage{siunitx}
+\usepackage{bm}
+
+%% --- Theorem Environments (unified numbering by chapter) ---
+\usepackage{amsthm}
+\usepackage{thmtools}
+
+\declaretheoremstyle[
+  spaceabove=8pt, spacebelow=8pt,
+  headfont=\normalfont\bfseries\sffamily,
+  notefont=\normalfont\mdseries,
+  notebraces={(}{)},
+  bodyfont=\normalfont,
+  postheadspace=1em,
+]{thmstyle}
+
+\declaretheoremstyle[
+  spaceabove=8pt, spacebelow=8pt,
+  headfont=\normalfont\bfseries\sffamily,
+  notefont=\normalfont\mdseries,
+  notebraces={(}{)},
+  bodyfont=\normalfont\itshape,
+  postheadspace=1em,
+]{defstyle}
+
+\declaretheoremstyle[
+  spaceabove=4pt, spacebelow=4pt,
+  headfont=\normalfont\itshape,
+  bodyfont=\normalfont,
+  postheadspace=1em,
+]{remarkstyle}
+
+\declaretheorem[style=thmstyle, numberwithin=chapter, name=Theorem]{theorem}
+\declaretheorem[style=thmstyle, sibling=theorem, name=Lemma]{lemma}
+\declaretheorem[style=thmstyle, sibling=theorem, name=Corollary]{corollary}
+\declaretheorem[style=thmstyle, sibling=theorem, name=Proposition]{proposition}
+\declaretheorem[style=thmstyle, sibling=theorem, name=Principle]{principle}
+\declaretheorem[style=thmstyle, sibling=theorem, name=Axiom]{axiom}
+\declaretheorem[style=defstyle,  sibling=theorem, name=Definition]{definition}
+\declaretheorem[style=remarkstyle, sibling=theorem, name=Remark]{remark}
+\declaretheorem[style=remarkstyle, sibling=theorem, name=Example]{example}
+\declaretheorem[style=remarkstyle, sibling=theorem, name=Observation]{observation}
+
+%% --- Graphics & Figures ---
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\graphicspath{
+  {../docs/}
+  {../mekaneck/docs/}
+  {../blindhorse/docs/}
+  {../parable/docs/}
+}
+
+%% --- Tables ---
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+
+%% --- Algorithms ---
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%% --- Drawing ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, decorations.pathmorphing, patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+%% --- Colours ---
+\usepackage{xcolor}
+\definecolor{themeblue}{RGB}{0,70,140}
+\definecolor{themegray}{RGB}{100,100,100}
+\definecolor{theorembg}{RGB}{240,246,255}
+\definecolor{defbg}{RGB}{255,248,240}
+
+%% --- Headers & Footers ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\sffamily\thepage\quad\textbar\quad\nouppercase{\leftmark}}
+\fancyhead[RO]{\small\sffamily\nouppercase{\rightmark}\quad\textbar\quad\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%% --- Chapter Style ---
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\sffamily\color{themeblue}}
+  {\chaptertitlename\ \thechapter}
+  {20pt}
+  {\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\sffamily\color{themeblue}}
+  {\thesection}
+  {1em}
+  {}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\sffamily}
+  {\thesubsection}
+  {1em}
+  {}
+
+%% --- Table of Contents ---
+\usepackage{tocloft}
+\setcounter{tocdepth}{2}
+
+%% --- Bibliography ---
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none,
+  maxbibnames=10,
+  isbn=false,
+  doi=true,
+  url=false
+]{biblatex}
+
+%% --- Cross-references & Links ---
+\usepackage[
+  colorlinks=true,
+  linkcolor=themeblue,
+  citecolor=themeblue,
+  urlcolor=themeblue,
+  bookmarks=true,
+  bookmarksnumbered=true,
+  pdftitle={Categorical Geometry of Consciousness},
+  pdfauthor={Kundai Farai Sachikonye},
+  pdfsubject={Mathematical Theory of Consciousness},
+]{hyperref}
+\usepackage[noabbrev, capitalise]{cleveref}
+
+%% --- Index ---
+\usepackage{makeidx}
+\makeindex
+
+%% --- Epigraphs ---
+\usepackage{epigraph}
+\setlength{\epigraphwidth}{0.6\textwidth}
+\setlength{\epigraphrule}{0pt}
+
+%% --- Chapter abstract environment ---
+\newenvironment{chapterabstract}{%
+  \begin{quote}
+  \small\itshape
+}{%
+  \end{quote}
+  \vspace{1em}
+}
+
+%% --- Source paper note (attribution within chapters) ---
+\newcommand{\papernote}[1]{%
+  \begin{flushright}
+    \small\sffamily\color{themegray}
+    \textit{Based on:} #1
+  \end{flushright}
+  \vspace{0.5em}
+}
+
+%% --- Core notation shorthands ---
+\newcommand{\Hplus}{\mathrm{H}^{+}}
+\newcommand{\Otwo}{\mathrm{O}_{2}}
+\newcommand{\Sentropy}{S_{\mathrm{osc}}}
+\newcommand{\Scat}{S_{\mathrm{cat}}}
+\newcommand{\Spart}{S_{\mathrm{part}}}
+\newcommand{\kB}{k_{\mathrm{B}}}
+\newcommand{\BMD}{\mathrm{BMD}}
+\newcommand{\partcoord}{(n,\ell,m,s)}
+\newcommand{\tripleequiv}{S_{\mathrm{osc}} = S_{\mathrm{cat}} = S_{\mathrm{part}} = \kB M \ln n}
+\newcommand{\NOW}{t^{*}}
