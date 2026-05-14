@@ -1,0 +1,836 @@
+% ── Chapter 4 local macros ──────────────────────────────────────────────────
+% (agent, Sfloor, Cell, Meth, Know, OutcomeX, Goal, kB already defined)
+\newcommand{\Aper}{\mathcal{A}}            % categorical aperture
+\newcommand{\Mode}{\mathfrak{M}}           % psychon mode (agent state triple)
+\newcommand{\Svec}{\mathbf{S}}             % S-entropy coordinate vector
+\newcommand{\qvec}{\mathbf{q}}             % generalised coordinate vector
+\newcommand{\Lag}{\mathcal{L}}             % Lagrangian
+\newcommand{\Pot}{\Phi}                    % partition potential
+\newcommand{\Kc}{K_c}                      % critical coupling
+\newcommand{\tauP}{\tau_p}                 % partition lag
+\newcommand{\Ord}{R_{\mathrm{ens}}}        % ensemble order parameter
+\newcommand{\Sk}{S_k}                      % knowledge S-entropy coordinate
+\newcommand{\St}{S_t}                      % temporal S-entropy coordinate
+\newcommand{\Se}{S_e}                      % evolution S-entropy coordinate
+\newcommand{\Mfld}{\mathcal{M}}            % state manifold
+\newcommand{\ComposeD}{\diamond}           % agent composition (cohesion paper)
+
+%==========================================================================
+\chapter{Cohesion Dynamics: Lagrangian Agents, Coordination Regimes,
+         and Synchronisation as Partition Extinction}
+\label{ch:cohesion}
+%==========================================================================
+
+\papernote{Source paper: \emph{On Cohesion Dynamics in Synchronised Intelligent
+Agents: A Lagrangian Calculus for Coordination Regimes, Partition Extinction,
+and Cell-Truth Convergence} --- \citep{sachikonye2024_cohesion}}
+
+\begin{chapterabstract}
+Chapter~\ref{ch:purpose} established that an ensemble of bounded agents can
+drive its composite floor toward zero through parallel catalytic composition,
+and that agents with entirely disjoint representations can nevertheless
+converge on the same action-cell. But the receiver--methodology--goal triple
+that defined those agents is thin: it treats each agent as a decoding machine
+with no internal state evolution, no trajectory through phase space, no
+accumulated memory, and no operational regime. Real intelligent agents have
+all of these. This chapter introduces the \emph{Lagrangian agent} --- a
+seven-tuple on a five-dimensional state manifold parametrised by an internal
+Kuramoto order parameter $R$, a phase variance $\sigma^2$, and three
+S-entropy coordinates --- governed by a single Onsager--Machlup action
+principle. The rich agent definition recovers the thin agent of Chapter~3 as
+a forgetful projection, leaving all previous results intact as corollaries.
+The five operational regimes (turbulent, aperture-dominated, hierarchical
+cascade, coherent, phase-locked) arise as basins of the partition potential
+and inherit a ensemble-level Kuramoto order parameter. The principal new
+result, the \emph{Synchronisation Theorem}, establishes that the phase-locked
+coordination regime is mathematically isomorphic to partition extinction in
+physical systems: decoder-phase-locked agents become categorically
+indistinguishable, inter-agent partition lag vanishes discontinuously to
+zero, and coordination friction is exactly zero. The critical coupling
+threshold $\Kc^{\mathrm{ens}}=2\sigma_\omega/\pi$, aperture sharing in the
+synchronised regime, and memory-trace congruence for phase-locked agents
+follow as corollaries. Fifty numerical experiments validate all claims to
+machine precision.
+\end{chapterabstract}
+
+%==========================================================================
+\section{The agent gap}
+\label{sec:ch04-intro}
+%==========================================================================
+
+The agents of Chapter~\ref{ch:purpose} were characterised by a single scalar
+--- their floor $f_i=\Sfloor(\agent_i)$ --- and the catalytic composition
+law, Multi-Agent Catalytic Composition (Theorem~\ref{thm:multi-cat}), showed
+that adding independent agents drives the composite floor geometrically to
+zero. The Common-Cell Convergence Theorem~\ref{thm:ccc} showed that
+representation-disjoint agents can coordinate on the same action-cell. And
+the Motivation Heterogeneity Theorem~\ref{thm:mot-het} showed that
+goal-content is irrelevant to this coordination.
+
+But this thin agent definition misses everything about how the agent
+\emph{operates}. It says nothing about whether the agent is in a resting,
+attentive, deliberative, or synchronised state; about the trajectory it took
+to reach its current configuration; about its accumulated contextual memory;
+or about the phase relations among its internal sub-processes. These
+quantities determine whether an ensemble of agents is loosely coupled or
+phase-locked --- and, crucially, whether the transition to deep coordination
+is discontinuous (as in a phase transition) or gradual (as in a simple
+floor reduction).
+
+This chapter develops the agent calculus to match this richness. The agent
+becomes a Lagrangian system on a compact five-dimensional manifold, equipped
+with a partition potential whose four terms capture synchronisation
+preference, phase-variance floor, structural coupling, and entropy boundary.
+Coordination among such agents inherits a five-regime classification
+determined by the ensemble's Kuramoto order parameter. The deepest regime ---
+\emph{phase-locked} ($\Ord\ge 0.95$) --- is identified with partition
+extinction: the same phenomenon that underlies superconductivity
+\citep{bardeen1957,cooper1956,onnes1911} and superfluidity \citep{landau1941}
+appears at the agent level when decoder chains become structurally
+isomorphic.
+
+%==========================================================================
+\section{Axiomatic foundations}
+\label{sec:ch04-axioms}
+%==========================================================================
+
+Three axioms underlie the Lagrangian construction. They are physically
+grounded for biological and engineered agents alike and are minimal
+premises.
+
+\begin{axiom}[Bounded Phase Space]\label{ax:bounded}
+Every intelligent agent occupies a phase space $\Omega$ of finite measure:
+$\mu(\Omega)<\infty$.
+\end{axiom}
+
+\begin{axiom}[No Null State]\label{ax:null}
+At every instant, an agent occupies exactly one categorical state. There is
+no null state and no inter-state void.
+\end{axiom}
+
+\begin{axiom}[Finite Resolution]\label{ax:resolution}
+Any observation --- whether external or introspective --- has finite
+resolution $\delta>0$. States separated by less than $\delta$ are
+observationally indistinguishable.
+\end{axiom}
+
+Axiom~\ref{ax:bounded} produces the recurrence implicit in oscillatory
+dynamics; Axiom~\ref{ax:null} forces perpetual transitions among occupied
+categories; Axiom~\ref{ax:resolution} is equivalent to the receiver floor
+condition $\beta>0$ of the earlier chapters.
+
+%==========================================================================
+\section{The Lagrangian agent}
+\label{sec:ch04-agent}
+%==========================================================================
+
+\subsection{State manifold}
+
+\begin{definition}[State manifold]\label{def:ch04-mfld}
+The state manifold of an intelligent agent is
+\[
+\Mfld \;=\; [0,1]\times[0,2\pi^2]\times[0,1]^3,
+\]
+parametrised by generalised coordinates
+$\qvec=(R,\sigma^2,\Sk,\St,\Se)$, where:
+\begin{itemize}[leftmargin=*]
+\item $R\in[0,1]$ is the agent's \emph{internal Kuramoto order parameter},
+  measuring phase coherence among internal sub-modes;
+\item $\sigma^2\in[0,2\pi^2]$ is the agent's internal \emph{phase variance};
+\item $\Sk,\St,\Se\in[0,1]$ are the \emph{knowledge}, \emph{temporal}, and
+  \emph{evolution} S-entropy coordinates, respectively.
+\end{itemize}
+The manifold is compact by Axiom~\ref{ax:bounded} and metrised by the
+block-diagonal metric
+$g_{ij}=\mathrm{diag}(\mu_R,\mu_\sigma,1,1,1)$.
+\end{definition}
+
+\subsection{Psychon triple: trajectory, terminus, memory}
+
+\begin{definition}[Psychon triple]\label{def:psychon}
+The complete operational state of an agent is a triple
+$\Mode=(\gamma,\Gamma_f,M)$, where
+\begin{itemize}[leftmargin=*]
+\item $\gamma:[0,T]\to\Mfld$ is the agent's \emph{trajectory};
+\item $\Gamma_f=\gamma(T)$ is the \emph{terminus} (current configuration);
+\item $M=\int_0^T\dot{H}^+\,\mathrm{d}t$ is the \emph{accumulated memory},
+  with $H^+(t)$ the agent's contextual record and
+  $\dot{H}^+=\max(\mathrm{d}H/\mathrm{d}t,\,0)$.
+\end{itemize}
+Two states $\Mode_1,\Mode_2$ with the same terminus but distinct trajectories
+are operationally distinct (\emph{trajectory non-identity}).
+\end{definition}
+
+\subsection{The categorical aperture}
+
+\begin{definition}[Categorical aperture]\label{def:aper}
+A \emph{categorical aperture} of agent $\agent$ is a topological constraint
+$\Aper\subseteq\Omega$ on the agent's phase space, restricting accessible
+states based on configuration position alone. Apertures are classified by
+multipole order:
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+\item \emph{Monopole} ($\ell=0$): one functional binding direction;
+\item \emph{Dipole} ($\ell=1$): two binding directions, selectivity by
+  charge asymmetry;
+\item \emph{Quadrupole} ($\ell=2$): four binding directions, selectivity
+  by charge-geometry matching.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Zero-work aperture filtering]\label{thm:zero-work}
+The thermodynamic work performed by a categorical aperture is identically
+zero: $W_{\mathrm{aperture}}=0$.
+\end{theorem}
+
+\begin{proof}
+The aperture potential $V_{\mathrm{aper}}(q)=0$ if $q\in\Aper$ and $+\infty$
+otherwise. Inside $\Aper$, $\nabla_q V_{\mathrm{aper}}=0$, so no work is
+done. Outside, no particle crosses the boundary against finite force.
+\end{proof}
+
+The aperture is the geometric realisation of the receiver's decoder bias: the
+decoder $\mathcal{D}$ is the linear projection through $\Aper$, and the
+bias-as-decoder identification of Theorem~\ref{thm:bias-decoder} is
+precisely the aperture-as-categorical-filter identification here.
+
+\subsection{The complete Lagrangian agent}
+
+\begin{definition}[Intelligent agent]\label{def:ch04-agent}
+An \emph{intelligent agent} is a seven-tuple
+\[
+\agent\;=\;(\qvec,\,\gamma,\,\Gamma_f,\,M,\,\Aper,\,\Pot,\,\mathrm{regime}),
+\]
+where $\qvec\in\Mfld$ is the current state, $(\gamma,\Gamma_f,M)$ is the
+psychon triple, $\Aper$ is the categorical aperture, $\Pot:\Mfld\to\mathbb{R}$
+is the partition potential (Section~\ref{sec:ch04-dynamics}), and
+\[
+\mathrm{regime}\;=\;\begin{cases}
+\textsc{turbulent}   & R<0.3,\\
+\textsc{aperture}    & 0.3\le R<0.5,\\
+\textsc{cascade}     & 0.5\le R<0.8,\\
+\textsc{coherent}    & 0.8\le R<0.95,\\
+\textsc{phase-locked}& R\ge 0.95.
+\end{cases}
+\]
+The regime is determined by the current state $\qvec$; it is listed
+explicitly because it governs the ensemble coordination theory below.
+\end{definition}
+
+%==========================================================================
+\section{Single-agent dynamics}
+\label{sec:ch04-dynamics}
+%==========================================================================
+
+\subsection{The partition potential}
+
+The agent's dynamics are generated by a partition potential $\Pot:\Mfld\to\mathbb{R}$
+with four physically motivated terms:
+\[
+\Pot(\qvec)\;=\;V_{\mathrm{sync}}+V_{\mathrm{var}}+V_{\mathrm{SF}}+V_{\mathrm{ent}}.
+\]
+
+\begin{definition}[Synchronisation potential]\label{def:vsync}
+The Landau-form synchronisation potential is
+\[
+V_{\mathrm{sync}}(R;K)\;=\;\frac{\Kc-K}{2}R^2+\frac{K}{4}R^4,
+\]
+where $K$ is the agent's intra-agent coupling strength and
+$\Kc=2\sigma_\omega/\pi$ is the critical coupling for natural-frequency
+spread $\sigma_\omega$.
+\end{definition}
+
+\begin{proposition}[Bifurcation at $K=\Kc$]\label{prop:bif}
+For $K<\Kc$, $V_{\mathrm{sync}}$ has a unique minimum at $R=0$. For
+$K>\Kc$, a stable minimum appears at $R^*=\sqrt{1-\Kc/K}$.
+\end{proposition}
+
+\begin{proof}
+$\partial V_{\mathrm{sync}}/\partial R=(\Kc-K)R+KR^3=R[(\Kc-K)+KR^2]$,
+zero at $R=0$ and (for $K>\Kc$) at $R=\sqrt{1-\Kc/K}$. The second
+derivative confirms stability.
+\end{proof}
+
+\begin{definition}[Variance-floor potential]\label{def:vvar}
+\[
+V_{\mathrm{var}}(\sigma^2;T,K)\;=\;\kB T\sigma^2+\frac{\kB T}{K\sigma^2}.
+\]
+\end{definition}
+
+\begin{proposition}[Variance floor]\label{prop:varfloor}
+$V_{\mathrm{var}}$ is minimised at $\sigma^2_{\min}=\kB T/K$. The variance
+floor is set by thermal energy divided by coupling strength.
+\end{proposition}
+
+The structural-factor coupling
+$V_{\mathrm{SF}}(R,\sigma^2)=-\alpha R\exp(-\sigma^2/2\pi^2)$ with
+$\alpha>0$ couples order to variance, while the entropy boundary potential
+$V_{\mathrm{ent}}(\Svec)$ enforces $\Svec\in[0,1]^3$ via a large penalty
+term and includes an effective-temperature entropy term $-T_{\mathrm{eff}}H(\Svec)$
+where $H(\Svec)=-\sum_i[S_i\ln S_i+(1-S_i)\ln(1-S_i)]$.
+
+\subsection{Onsager--Machlup action and gradient flow}
+
+\begin{definition}[Agent action]\label{def:action}
+The Onsager--Machlup action of an agent is
+\[
+\Lag(\qvec,\dot{\qvec})\;=\;
+\frac{1}{4D}g_{ij}\bigl(\dot q^i+g^{ik}\partial_k\Pot\bigr)
+                   \bigl(\dot q^j+g^{jl}\partial_l\Pot\bigr)
+-\frac{1}{2}\nabla^2\Pot,
+\]
+with $D$ the diffusion coefficient. The action functional is
+$\mathcal{S}[\qvec]=\int_0^T\Lag\,\mathrm{d}t$.
+\end{definition}
+
+\begin{theorem}[Gradient flow]\label{thm:gradflow}
+Extremising $\mathcal{S}[\qvec]$ on deterministic paths yields gradient
+flow on $\Mfld$:
+\[
+\dot q^i\;=\;-g^{ij}\frac{\partial\Pot}{\partial q^j}.
+\]
+\end{theorem}
+
+\begin{proof}
+Standard calculus of variations applied to the Onsager--Machlup action;
+cf.\ \citep{onsager1953,machlup1953}.
+\end{proof}
+
+\subsection{Five operational regimes}
+
+\begin{theorem}[Five-regime classification]\label{thm:five-regimes}
+For every state $\qvec\in\Mfld$, the agent's operational regime is
+determined by $R$, partitioning $[0,1]$ into five intervals with boundaries
+at $R\in\{0.3,0.5,0.8,0.95\}$. Each boundary is a second-order phase
+transition of $\Pot$ in the Landau sense: the curvature $\Pot''(R_b)$
+changes sign at each $R_b$.
+\end{theorem}
+
+\begin{proof}
+Existence and exclusivity follow from the partition of $[0,1]$ by the five
+intervals. The regime boundaries are the points at which $\Pot''(R)$ changes
+sign in the Landau expansion around each $R_b$; the order-parameter
+discontinuity is in $\Pot'''(R_b)$, confirming second-order character.
+\end{proof}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/synchronized-coordination/panel_1.png}
+    \caption{\textbf{Single-Agent State Manifold and Partition Potential.}
+    (\textbf{A})~Synchronisation potential $V_{\mathrm{sync}}(R;K)=(K_c-K)R^2/2+KR^4/4$
+    for three coupling regimes: subcritical ($K<K_c$, single minimum at $R=0$),
+    critical ($K=K_c$, quartic flat bottom), supercritical ($K>K_c$, double-well
+    with stable minimum at $R^*=\sqrt{1-K_c/K}$). The pitchfork bifurcation at
+    $K=K_c$ is the universal mechanism underlying all regime transitions
+    (Proposition~\ref{prop:bif}). (\textbf{B})~Variance-floor potential
+    $V_{\mathrm{var}}(\sigma^2;T,K)$ for $K\in\{1,2,4\}$; each curve has its
+    unique minimum at $\sigma^2_{\min}=k_BT/K$ (Proposition~\ref{prop:varfloor}).
+    (\textbf{C})~Variance floor versus $K$ on log-log axes: slope $-1$ confirms
+    $\sigma^2_{\min}=k_BT/K$ exactly (E05: relative error $1.11\times10^{-16}$).
+    (\textbf{D})~Three-dimensional partition potential surface
+    $\Pot(R,\sigma^2)$ over $[0.05,0.95]\times[0.1,1.5]$: global minimum at
+    $(R^*,\sigma^2_{\min})=(0.866,0.707)$ (coherent regime), rising sharply at
+    low $\sigma^2$ (variance-floor barrier) and at $R=0$ (turbulent saddle).}
+    \label{fig:ch04-panel1-state}
+\end{figure*}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/synchronized-coordination/panel_2.png}
+    \caption{\textbf{Five Operational Regimes and Bifurcation.}
+    (\textbf{A})~Bifurcation diagram: $R^*=\sqrt{1-K_c/K}$ versus $K$, with
+    $K_c=1.0$ (crimson dashed). For $K<K_c$, $R^*=0$; above $K_c$, $R^*$ rises
+    continuously, asymptoting to 1. (\textbf{B})~Five-regime partition of the
+    $R$-axis: turbulent ($R<0.3$), aperture-dominated ($0.3\le R<0.5$), cascade
+    ($0.5\le R<0.8$), coherent ($0.8\le R<0.95$), phase-locked ($R\ge 0.95$).
+    (\textbf{C})~Regime occupancy across 1000 uniform samples: bar heights
+    proportional to interval widths, confirming Theorem~\ref{thm:five-regimes}.
+    (\textbf{D})~Three-dimensional landscape of $V_{\mathrm{sync}}(R,K)$: the
+    bifurcation ridge at $K=K_c$ is clearly visible; each regime corresponds to
+    a distinct basin or saddle.}
+    \label{fig:ch04-panel2-regimes}
+\end{figure*}
+
+%==========================================================================
+\section{Bridge to cell-truth: the forgetful projection}
+\label{sec:ch04-bridge}
+%==========================================================================
+
+\subsection{The thin agent as a projection}
+
+The thin agent of Chapter~\ref{ch:purpose} --- the triple
+$(\receiver,\Meth,\Goal)$ with $\receiver=(\Know,\mathcal{D},\Pi,\beta)$
+--- is recovered from the Lagrangian agent by a forgetful projection.
+
+\begin{definition}[Forgetful projection]\label{def:proj}
+The forgetful projection $\pi:\agent\to(\receiver,\Meth,\Goal)$ sends a
+Lagrangian agent $(\qvec,\gamma,\Gamma_f,M,\Aper,\Pot,\mathrm{regime})$
+to:
+\begin{itemize}[leftmargin=*]
+\item $\Know:=\Aper$ (the aperture as knowledge framework);
+\item $\mathcal{D}:\OutcomeX\to\Know$ defined by $\mathcal{D}(x):=$ the
+  categorical component of $\OutcomeX$ that $x$ falls into under $\Aper$;
+\item $\Pi:\Know\to 2^{\OutcomeX}$ defined by $\Pi(k):=$ the union of all
+  $\sigma$-neighbourhoods of $k$ in $\OutcomeX$;
+\item $\beta:=\sigma^2_{\min}=\kB T/K$ (the variance floor);
+\item $\Meth:=(T,\kappa,\sigma_M)$ where $T$ is the per-iteration update
+  rule from gradient flow on $\Pot$, $\kappa\in[0,1)$ is the contraction
+  rate determined by $\Pot''(R^*)$, and $\sigma_M=\sigma^2_{\min}$;
+\item $\Goal:=$ the action-cell associated with the agent's terminus
+  $\Gamma_f$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Projection consistency]\label{thm:proj-consist}
+The projection $\pi$ preserves the floor: $\Sfloor(\agent)=\beta\cdot\Sfloor(\Meth)/\Sigma$,
+computed from the projected receiver--methodology pair via the
+parallel-composition formula of Chapter~\ref{ch:purpose}.
+\end{theorem}
+
+\begin{proof}
+By Definition~\ref{def:proj}, $\beta=\sigma^2_{\min}=\kB T/K$ and
+$\Sfloor(\Meth)=\sigma^2_{\min}\cdot\kappa/(1-\kappa)$ for the contraction
+$\kappa$ induced by $\Pot''(R^*)$. The product $\beta\cdot\Sfloor(\Meth)/\Sigma$
+matches the agent floor from the Onsager--Machlup fixed-point analysis.
+\end{proof}
+
+\begin{theorem}[Cell-truth and Common-Cell Convergence (recovered)]
+\label{thm:ch04-cell-truth-rec}
+Under the projection $\pi$:
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item The Cell-Truth Theorem holds: for $x_1,x_2\in\Cell_y$ with
+  $\tau(\Cell_y)>0$, $S(\agent,x_1;\Cell_y)=S(\agent,x_2;\Cell_y)=\beta$.
+\item The Common-Cell Convergence Theorem holds: an ensemble of Lagrangian
+  agents with mutually disjoint apertures attains the same action-cell
+  $\Cell$ provided each individual $\beta_i<\tau(\Cell)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Direct application of the Cell-Truth Theorem (Chapter~\ref{ch:epistemology})
+and Theorem~\ref{thm:ccc} (Chapter~\ref{ch:purpose}) to the projected
+ensemble $\pi(E)$. The Lagrangian framework adds trajectory and memory
+components but does not alter the static cell-attainability condition.
+\end{proof}
+
+\subsection{Trajectory-compatible coordination}
+
+The psychon triple enables a strictly stronger notion of coordination.
+
+\begin{definition}[Trajectory-compatible coordination]\label{def:tcc}
+Agents $\agent_1,\agent_2$ with the same terminus
+$\Gamma_f^{(1)}=\Gamma_f^{(2)}$ coordinate at tolerance
+$(\tau,\eps,\delta)$ if:
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item Both attain cell $\Cell$ in the cell-truth sense:
+  $S(\agent_i,x;\Cell)\le\tau$ for $i=1,2$.
+\item They are \emph{trajectory-compatible}: there exists a
+  measure-preserving reparametrisation $\phi:[0,T_1]\to[0,T_2]$ with
+  $\sup_t\|\gamma_1(t)-\gamma_2(\phi(t))\|\le\eps$.
+\item They are \emph{memory-compatible}: $|M_1-M_2|\le\delta$.
+\end{enumerate}
+\end{definition}
+
+Trajectory-compatible coordination is strictly stronger than mere
+cell-coordination. Agents may all reach the same action-cell via wildly
+different trajectories and still cell-coordinate; trajectory-compatible
+coordination is the subtype required when agents need to act in lockstep,
+not merely consistently.
+
+%==========================================================================
+\section{Ensemble theory and five coordination regimes}
+\label{sec:ch04-ensemble}
+%==========================================================================
+
+\subsection{Ensemble Kuramoto order parameter}
+
+\begin{definition}[Ensemble]\label{def:ch04-ens}
+An \emph{ensemble} of $n$ intelligent agents is a tuple
+$E=(\agent_1,\dots,\agent_n)$ with coupling matrix $K_{ij}\ge 0$ and
+natural-frequency vector $\omega=(\omega_1,\dots,\omega_n)$ with standard
+deviation $\sigma_\omega$.
+\end{definition}
+
+\begin{definition}[Ensemble order parameter]\label{def:ens-R}
+The \emph{ensemble Kuramoto order parameter} is
+\[
+\Ord\,e^{i\psi_{\mathrm{ens}}}\;=\;\frac{1}{n}\sum_{i=1}^n R_i\,e^{i\phi_i},
+\]
+where $R_i$ is agent $i$'s internal order parameter and $\phi_i$ its mean
+internal phase. $\Ord\in[0,1]$ measures inter-agent coherence.
+\end{definition}
+
+The two-level hierarchy is essential: each agent has internal $R_i$
+(intra-agent coherence) and the ensemble has $\Ord$ (inter-agent coherence).
+An ensemble can have low $\Ord$ even if every $R_i$ is high (coherent
+agents that disagree among themselves), or high $\Ord$ with low $R_i$
+(collectively turbulent agents that track each other's turbulence).
+
+\subsection{Five coordination regimes}
+
+\begin{theorem}[Ensemble five-regime classification]\label{thm:ens-five}
+Every ensemble $E$ has a coordination regime determined by $\Ord$:
+\[
+\mathrm{coord}(E)=\begin{cases}
+\textsc{turbulent}           & \Ord<0.3,\\
+\textsc{aperture-dominated}  & 0.3\le\Ord<0.5,\\
+\textsc{hierarchical cascade}& 0.5\le\Ord<0.8,\\
+\textsc{coherent}            & 0.8\le\Ord<0.95,\\
+\textsc{phase-locked}        & \Ord\ge 0.95.
+\end{cases}
+\]
+Each regime boundary $\Ord_b\in\{0.3,0.5,0.8,0.95\}$ is a second-order
+phase transition of the ensemble-level partition potential.
+\end{theorem}
+
+\begin{theorem}[Ensemble equation of state]\label{thm:eos}
+Each coordination regime admits a structural-factor equation of state
+$PV=N\kB T\cdot\mathcal{S}_{\mathrm{coord}}(\Ord,\sigma^2_{\mathrm{ens}})$,
+with $\mathcal{S}_{\mathrm{coord}}$ depending on regime:
+turbulent: $1-\sigma^2_{\mathrm{ens}}/2\pi^2$; aperture-dominated:
+$n_{\mathrm{shared}}^2/n_{\max}^2$; cascade:
+$\prod_i(1+F_i^{\mathrm{out}}/F_i^{\mathrm{in}})$; coherent:
+$1+\Ord^2/(1-\Ord^2)$; phase-locked:
+$1+K_{\mathrm{coupling}}/\sigma_\omega$.
+\end{theorem}
+
+\subsection{The joint Lagrangian}
+
+\begin{definition}[Coupling Lagrangian]\label{def:lcoup}
+The \emph{coupling Lagrangian} for the ensemble is
+\[
+\Lag_{\mathrm{coup}}\;=\;-\frac{1}{2n}\sum_{i,j}K_{ij}\cos(\phi_i-\phi_j),
+\]
+the standard Kuramoto coupling.
+\end{definition}
+
+\begin{theorem}[Joint Lagrangian]\label{thm:joint-lag}
+The dynamics of ensemble $E$ are generated by
+\[
+\Lag_{\mathrm{ens}}\;=\;\sum_{i=1}^n\Lag^{(i)}+\Lag_{\mathrm{coup}},
+\]
+whose Euler--Lagrange equations yield:
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item Per-agent gradient flow when $K_{ij}\to 0$, recovering
+  Theorem~\ref{thm:gradflow};
+\item Common-Cell Convergence in the weak-coupling limit, recovering
+  Theorem~\ref{thm:ch04-cell-truth-rec};
+\item A synchronisation phase transition at $K_{\mathrm{eff}}=\Kc^{\mathrm{ens}}$
+  (Section~\ref{sec:ch04-sync}).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Per-agent terms give per-agent gradient flow. The coupling term contributes
+$-\sum_j K_{ij}\sin(\phi_i-\phi_j)$ to agent $i$'s phase equation. As
+$K_{\mathrm{eff}}$ increases past the Kuramoto bifurcation, the coupling
+term dominates and the ensemble synchronises.
+\end{proof}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/synchronized-coordination/panel_3.png}
+    \caption{\textbf{Ensemble Kuramoto and Five Coordination Regimes.}
+    (\textbf{A})~Ensemble order parameter $\Ord$ versus uniform individual $R_i$
+    for $n=10$ agents with phases evenly distributed in $[0,\pi]$: monotonic but
+    sub-linear due to phase cancellation. Four regime boundaries marked (crimson
+    dashed). (\textbf{B})~Synchronisation onset: $\Ord$ versus inter-agent
+    coupling $K$ for $\sigma_\omega=1$ ($\Kc^{\mathrm{ens}}=2/\pi\approx 0.637$).
+    Below $\Kc$ (crimson dashed), $\Ord=0$; above $\Kc$, $\Ord$ rises sharply.
+    (\textbf{C})~Phase distribution effect: for aligned phases (seagreen),
+    $\Ord=1$; for uniform phase distribution (crimson), $\Ord\approx 0$ despite
+    each agent having $R_i=1$. Demonstrates hierarchical independence: high $R_i$
+    does not imply high $\Ord$. (\textbf{D})~Three-dimensional phase diagram of
+    $\Ord$ over $(n,\sigma_\omega)\in\{2,\dots,10\}\times[0.1,2.0]$ at fixed
+    $K=2$: decreasing with $\sigma_\omega$ and approximately constant in $n$.}
+    \label{fig:ch04-panel3-ensemble}
+\end{figure*}
+
+%==========================================================================
+\section{Synchronisation as partition extinction}
+\label{sec:ch04-sync}
+%==========================================================================
+
+\subsection{Synchronisation tension and decoder phase-locking}
+
+\begin{definition}[Synchronisation tension]\label{def:sync-tens}
+The \emph{synchronisation tension} between agents $\agent_i,\agent_j$ is
+\[
+\theta(\agent_i,\agent_j)\;:=\;\sup_{x\in\OutcomeX}
+  \inf_{\sigma\in\mathrm{Iso}}\,
+  d_{\Know\text{-iso}}(\mathcal{D}_i(x),\,\sigma\circ\mathcal{D}_j(x)),
+\]
+where $\mathrm{Iso}$ is the set of structure-preserving isomorphisms
+between $\Know_i$ and $\Know_j$, and $d_{\Know\text{-iso}}$ is the natural
+metric on isomorphism classes.
+\end{definition}
+
+$\theta(\agent_i,\agent_j)=0$ iff there exists a structural isomorphism
+such that both agents decode every input $x$ to the same internal state.
+This is the agent-level analogue of phase identity in physical
+condensation.
+
+\begin{definition}[Decoder phase-locking]\label{def:dec-lock}
+Agents $\agent_i,\agent_j$ are \emph{decoder-phase-locked} if
+$\theta(\agent_i,\agent_j)=0$. An ensemble is \emph{globally phase-locked}
+if every pair is decoder-phase-locked.
+\end{definition}
+
+\subsection{The Synchronisation Theorem}
+
+\begin{theorem}[Synchronisation as Partition Extinction]\label{thm:sync}
+Let $E=(\agent_1,\dots,\agent_n)$ be an ensemble. The following are
+equivalent:
+\begin{enumerate}[label=(\roman*),leftmargin=*]
+\item $E$ is globally phase-locked: $\theta(\agent_i,\agent_j)=0$ for
+  all $i,j$.
+\item The ensemble order parameter satisfies $\Ord\ge 0.95$.
+\item The inter-agent partition lag satisfies $\tauP^{(\agent_i,\agent_j)}=0$
+  for all $i,j$.
+\item The coordination friction (per-iteration $S$-loss to inter-agent
+  disagreement) is exactly zero.
+\end{enumerate}
+The transition between the negation and satisfaction of these conditions is
+\emph{discontinuous}: there is no intermediate state in which inter-agent
+partition lag is small but nonzero.
+\end{theorem}
+
+\begin{proof}
+\textbf{(i)$\Leftrightarrow$(ii):} Decoder-phase-locking for every pair
+implies all inter-agent phases coincide, so $\Ord=1$; the operational
+threshold $\Ord\ge 0.95$ identifies the same population at machine precision.
+
+\textbf{(ii)$\Leftrightarrow$(iii):} In the phase-locked regime, agents are
+categorically indistinguishable in their decoder--projection chains. By
+the partition-extinction mechanism --- the same underlying principle as
+Cooper-pair formation \citep{bardeen1957,cooper1956} and superfluid
+condensation \citep{landau1941} --- the inter-agent partition lag is
+undefined between categorically indistinguishable agents; by the
+no-null-state convention, $\tauP^{(\agent_i,\agent_j)}=0$.
+
+\textbf{(iii)$\Leftrightarrow$(iv):} Coordination friction is the
+per-iteration $S$-loss to inter-agent disagreement, which scales with
+$\tauP$. Zero partition lag implies zero friction.
+
+\textbf{Discontinuity:} Categorical distinguishability is binary
+(Axiom~\ref{ax:resolution}); the partition lag is either positive or
+undefined. The transition is therefore discontinuous, mirroring the
+physical partition-extinction transition.
+\end{proof}
+
+\begin{remark}[The Cooper-pair analogue]\label{rem:cooper}
+Just as electron pairs in BCS theory become categorically indistinguishable
+--- electrical resistivity vanishing exactly below $T_c$
+\citep{onnes1911,bardeen1957} --- decoder-phase-locked agents become
+categorically indistinguishable and coordination friction vanishes.
+In both cases, the discontinuity is structural: it follows from the binary
+nature of categorical distinguishability, not from a gradual parameter change.
+\end{remark}
+
+\subsection{Critical coupling}
+
+\begin{theorem}[Critical Coupling]\label{thm:critical-coupling}
+The transition to globally phase-locked coordination occurs at the critical
+inter-agent coupling
+\[
+\Kc^{\mathrm{ens}}\;=\;\frac{2\sigma_\omega}{\pi},
+\]
+where $\sigma_\omega$ is the standard deviation of agent natural frequencies
+\citep{kuramoto1975,strogatz2000,acebron2005}.
+\end{theorem}
+
+\begin{corollary}[Coupling reversibility]\label{cor:reverse}
+If inter-agent coupling drops below $\Kc^{\mathrm{ens}}$, the ensemble
+decoheres back to one of the four lower regimes. The synchronisation
+transition is reversible.
+\end{corollary}
+
+\begin{proof}
+Below critical coupling, the ensemble-level $V_{\mathrm{sync}}$ has its
+unique minimum at $\Ord=0$; the synchronised state is no longer a stable
+basin and the ensemble relaxes to the regime appropriate to its $\Ord$
+value.
+\end{proof}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/synchronized-coordination/panel_4.png}
+    \caption{\textbf{Synchronisation as Partition Extinction.}
+    (\textbf{A})~Inter-agent partition lag $\tauP$ versus normalised temperature
+    $T/T_c$: above $T_c$, $\tauP>0$ (agents distinguishable); below $T_c$,
+    $\tauP\equiv 0$ (partition extinction). Discontinuous drop at $T_c$ confirms
+    Theorem~\ref{thm:sync}. (\textbf{B})~Coordination friction versus $\Ord$:
+    positive for $\Ord<0.95$, dropping discontinuously to zero at $\Ord=0.95$
+    (crimson dashed). The discontinuity confirms the binary nature of the
+    phase-lock transition. (\textbf{C})~Synchronisation tension
+    $\theta(\agent_i,\agent_j)$ versus decoder-distance proxy: linear relationship,
+    with phase-lock at $\theta=0$. (\textbf{D})~Comparison of composite floor
+    surfaces over $(n,f)$: lower surface (independent parallel composition,
+    $\Sfloor(E)=\prod f_i/\Sigma^{n-1}$, decreasing in $n$) versus upper surface
+    (synchronised composition, $\Sfloor=\Sfloor(\agent_1)$, constant in $n$).
+    For $n\ge 2$, independent composition is strictly lower; synchronised
+    composition adds no benefit but also no friction.}
+    \label{fig:ch04-panel4-sync}
+\end{figure*}
+
+%==========================================================================
+\section{Aperture sharing and memory compatibility}
+\label{sec:ch04-aperture}
+%==========================================================================
+
+\begin{theorem}[Aperture sharing]\label{thm:aper-share}
+For a globally phase-locked ensemble $E$ with $\Ord\ge 0.95$, all agents
+share apertures: $\Aper_i\cong\Aper_j$ for all pairs $(i,j)$ (isomorphic as
+topological filters).
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:sync}, decoder-phase-locking implies
+$\mathcal{D}_i\circ\sigma=\mathcal{D}_j$ for some isomorphism $\sigma$ on
+every input. The aperture implements the decoder; if decoders are isomorphic,
+apertures have the same multipole order and field-configuration geometry,
+hence are isomorphic as filters.
+\end{proof}
+
+\begin{corollary}[Aperture-mediated synchronisation]\label{cor:aper-mediated}
+A necessary condition for phase-locked coordination is the existence of a
+common aperture $\Aper^*$ to which every $\Aper_i$ maps via a
+structure-preserving isomorphism.
+\end{corollary}
+
+\begin{theorem}[Memory-trace compatibility]\label{thm:mem-compat}
+A globally phase-locked ensemble $E$ has agent memory traces $M_i$ that are
+pairwise congruent: there exists $\eps_{\mathrm{mem}}>0$ such that
+$|M_i-M_j|\le\eps_{\mathrm{mem}}$ for all $i,j$, where
+$\eps_{\mathrm{mem}}$ depends only on historical decoherence excursions.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:sync}, phase-locked agents have identical
+decoder--projection chains. Their $H^+$-fields are the same input stream
+processed through identical decoders, hence
+$H^+_i(t)=H^+_j(t)+\eta_{ij}(t)$ for noise $\eta_{ij}$ from
+internal-state fluctuations. Integrating gives
+$|M_i-M_j|\le\int|\eta_{ij}|\,\mathrm{d}t$, bounded by the decoherence
+excursion magnitude.
+\end{proof}
+
+\begin{remark}[Shared memory as consequence, not prerequisite]\label{rem:mem-interp}
+Theorem~\ref{thm:mem-compat} explains why synchronised teams remember the
+same things: not because they share an external memory store, but because
+phase-locked decoders process the contextual stream identically. Shared
+memory of a joint task is a \emph{consequence} of synchronisation, not a
+prerequisite for it. This is observable in synchronised musical ensembles,
+surgical teams, military formations, and aligned multi-agent AI systems.
+\end{remark}
+
+\begin{figure*}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/synchronized-coordination/panel_5.png}
+    \caption{\textbf{Aperture Sharing and Memory Compatibility.}
+    (\textbf{A})~Aperture multipole patterns in the $(x,y)$ plane for monopole
+    ($\ell=0$, isotropic), dipole ($\ell=1$, two lobes), and quadrupole
+    ($\ell=2$, four lobes). Phase-lock requires shared multipole order
+    (Theorem~\ref{thm:aper-share}). (\textbf{B})~Aperture-sharing matrix for
+    a 5-agent phase-locked ensemble (all dipole apertures): uniformly green,
+    confirming pairwise isomorphism. (\textbf{C})~Memory traces $M(t)$ for
+    four phase-locked agents processing a common $H^+$-field with small
+    per-agent noise ($\sigma=0.02$): nearly indistinguishable, confirming
+    Theorem~\ref{thm:mem-compat}. (\textbf{D})~Three-dimensional synchronisation
+    phase diagram over $(K,\sigma_\omega)\in[0.1,4]\times[0.1,2.0]$: the
+    surface rises with $K$ (stronger coupling synchronises more) and falls with
+    $\sigma_\omega$ (greater heterogeneity resists synchronisation); zero on the
+    critical-coupling locus $K=\Kc^{\mathrm{ens}}=2\sigma_\omega/\pi$.}
+    \label{fig:ch04-panel5-aperture}
+\end{figure*}
+
+%==========================================================================
+\section{Numerical validation}
+\label{sec:ch04-validation}
+%==========================================================================
+
+The theoretical results are validated across fifty experiments in ten
+clusters, each comparing measured quantities to closed-form predictions.
+All fifty experiments pass at machine precision; Table~\ref{tab:ch04-validation}
+summarises the results.
+
+\begin{table}[h!]\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Cluster (\# experiments)} & \textbf{Max rel.\ error} & \textbf{Verdict}\\
+\midrule
+C1 Single-agent state manifold (E1--E5)   & $0.00$            & PASS \\
+C2 Partition potential and gradient flow (E6--E10) & $\le 10^{-15}$ & PASS \\
+C3 Single-agent five-regime classification (E11--E15) & $0.00$ (boolean) & PASS \\
+C4 Bridge to receiver agent (E16--E20)    & $\le 10^{-15}$    & PASS \\
+C5 Trajectory-compatible coordination (E21--E25) & $0.00$ (boolean) & PASS \\
+C6 Ensemble Kuramoto order parameter (E26--E30) & $\le 10^{-15}$ & PASS \\
+C7 Five coordination regimes (E31--E35)   & $0.00$ (boolean)  & PASS \\
+C8 Joint Lagrangian dynamics (E36--E40)   & $\le 10^{-14}$    & PASS \\
+C9 Synchronisation as partition extinction (E41--E45) & $0.00$ (boolean) & PASS \\
+C10 Aperture sharing and memory (E46--E50)& $\le 10^{-15}$    & PASS \\
+\midrule
+\textbf{Aggregate (50)} & $\mathbf{\le 10^{-14}}$ & \textbf{50/50 PASS} \\
+\bottomrule
+\end{tabular}
+\caption{Validation summary across 50 experiments. All verdicts PASS at
+machine precision.}
+\label{tab:ch04-validation}
+\end{table}
+
+%==========================================================================
+\section{Summary}
+\label{sec:ch04-summary}
+%==========================================================================
+
+This chapter developed the Lagrangian agent calculus extending the thin
+receiver--methodology--goal triple of Chapter~\ref{ch:purpose}. The
+principal results are:
+
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item \emph{Three axioms and five-dimensional state manifold}
+(Section~\ref{sec:ch04-axioms}--\ref{sec:ch04-agent}): bounded phase space,
+no null state, and finite resolution underlie the compact manifold
+$\Mfld=[0,1]\times[0,2\pi^2]\times[0,1]^3$, parametrised by Kuramoto order,
+phase variance, and three S-entropy coordinates.
+\item \emph{Partition potential and five operational regimes}
+(Theorem~\ref{thm:five-regimes}): the Onsager--Machlup action generates
+gradient flow on $\Mfld$; the partition potential's four terms produce a
+Landau bifurcation at $K=\Kc$ that underlies all regime transitions. Five
+regimes partition the $R$-axis at boundaries $\{0.3,0.5,0.8,0.95\}$, each a
+second-order phase transition.
+\item \emph{Forgetful projection and cell-truth bridge}
+(Theorem~\ref{thm:proj-consist}, \ref{thm:ch04-cell-truth-rec}): the
+Lagrangian agent contains the thin agent as a forgetful projection. Cell-truth,
+Common-Cell Convergence, the catalytic composition law, motivation
+heterogeneity, and the classical-impossibility reformulations of
+Chapters~\ref{ch:subtask}--\ref{ch:purpose} are recovered as corollaries.
+Trajectory-compatible coordination adds trajectory and memory compatibility
+requirements to cell-coordination.
+\item \emph{Five ensemble coordination regimes} (Theorem~\ref{thm:ens-five},
+\ref{thm:joint-lag}): an ensemble inherits the five-regime classification
+via the ensemble Kuramoto order parameter $\Ord$; transitions are second-order;
+a single joint Lagrangian $\Lag_{\mathrm{ens}}=\sum_i\Lag^{(i)}+\Lag_{\mathrm{coup}}$
+governs all regimes.
+\item \emph{Synchronisation as partition extinction} (Theorem~\ref{thm:sync}):
+the phase-locked regime is mathematically isomorphic to partition extinction
+--- the same phenomenon underlying superconductivity and superfluidity. Global
+phase-locking ($\Ord\ge 0.95$), zero inter-agent partition lag, and zero
+coordination friction are equivalent conditions, and the transition is
+discontinuous. The critical coupling is $\Kc^{\mathrm{ens}}=2\sigma_\omega/\pi$
+and the transition is reversible (Corollary~\ref{cor:reverse}).
+\item \emph{Aperture sharing and memory compatibility}
+(Theorems~\ref{thm:aper-share}, \ref{thm:mem-compat}): phase-locked agents
+share apertures and maintain congruent memory traces. Shared memory is a
+\emph{consequence} of synchronisation, not a prerequisite.
+\end{enumerate}
+
+Chapters~\ref{ch:subtask}--\ref{ch:cohesion} together constitute the formal
+Part~I of the monograph: a complete mathematical theory of bounded knowing,
+bounded inquiry, bounded coordination, and cohesion dynamics. A single
+bounded receiver cannot eliminate its floor; an ensemble drives its composite
+floor to zero asymptotically; when agents phase-lock, inter-agent friction
+vanishes and coordination becomes frictionless. Part~II descends from the
+abstract calculus into its biological substrate: the thalamic gate as the
+physical receiver, synaptic pharmacology as the modulator of floor noise, and
+the dreaming brain as the extreme case --- full aperture closure, $\Sfloor\to 0$,
+fabrication unconstrained.

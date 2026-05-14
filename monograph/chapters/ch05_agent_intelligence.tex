@@ -1,0 +1,880 @@
+%% ============================================================
+%% Chapter 5 — Operational Intelligence
+%% Source: operational-agent-intelligence.tex
+%% Two-column body layout via multicols; full-width figures between blocks.
+%% ============================================================
+
+%% Objects re-used from Chapters 3–4 (providecommand avoids redefinition errors)
+\providecommand{\receiver}{\mathsf{R}}
+\providecommand{\agent}{\mathcal{A}}
+\providecommand{\Cell}{\mathcal{C}}
+\providecommand{\Sfloor}{S_{\flat}}
+\providecommand{\Mode}{\mathfrak{M}}
+\providecommand{\Mfld}{\mathcal{M}}
+\providecommand{\Pot}{\Phi}
+%% New in ch05
+\newcommand{\KFW}{\mathcal{K}}
+\newcommand{\Iindex}{\mathcal{I}}
+\newcommand{\Acon}{A_{\mathrm{con}}}
+\newcommand{\Aact}{A_{\mathrm{act}}}
+\newcommand{\Tcon}{T_{\mathrm{con}}}
+\newcommand{\hbarA}{\hbar_{\!\mathcal{A}}}
+
+\chapter{Operational Intelligence: Admissibility, Cycle Necessity, and the Intelligence Index}
+\label{ch:intelligence}
+
+\papernote{\citep{sachikonye2024_intelligence}}
+
+\begin{chapterabstract}
+A substrate-neutral operational definition of intelligence is developed for any bounded
+agent. The definition rests on four conditions: cell-disjoint extension of the agent's
+knowledge framework, novel-cell construction, floor reduction on novel cells, and
+synchronisation feasibility with other agents. From the receiver calculus established in
+Chapter~\ref{ch:purpose} --- the residual semantic distance $S(\receiver, x; \Cell)$
+and its irreducible floor $\beta$ --- seven theorems fix what intelligence is, when it
+can occur, how to measure it, why it is bounded, and how its failures classify.
+Extension is admissible iff cell-disjoint~(T1); extension occurs only during phases in
+which the agent's action-space dispersion is suspended, by a Heisenberg-type uncertainty
+inequality on receiver dispersions~(T2); intelligence requires alternation between
+construction and action phases~(T3); the intelligence index $\Iindex(\agent)$, computed
+from per-phase activity ratios, phase-time fractions, and perceptual coupling, is
+positive iff the agent is intelligent~(T4); collective intelligence is precisely
+synchronisation of agents on novel cells via aperture-sharing isomorphisms~(T5); every
+realised agent has finite intelligence index --- there is no maximally intelligent
+agent~(T6); cycle failures admit exactly six distinct phenotypes, each with a closed-form
+signature in $\Iindex$ and its component factors~(T7). Thirty numerical experiments
+verify all claims to machine precision.
+\end{chapterabstract}
+
+%% ============================================================
+%% Block 1 — The substrate-neutral question, axioms, agent
+%% ============================================================
+\begin{multicols}{2}
+
+\section{The substrate-neutral question}
+\label{sec:ch05-intro}
+
+The question \emph{what does it mean to be an intelligent agent?} has been posed for as
+long as agents have been studied. Most answers import substrate-specific assumptions ---
+biological neural circuits, symbolic computation, observable behaviour, evolutionary
+fitness --- that restrict the answer to one kind of agent. The consequence is one notion
+of intelligence for humans, another for animals, another for machines, and no unified
+framework across substrates.
+
+This chapter develops a substrate-neutral definition: a single mathematical statement
+that applies uniformly to biological, computational, and organisational agents, and that
+yields the same operational test regardless of substrate. The definition is built
+entirely from the receiver calculus established in Chapters~\ref{ch:purpose}
+and~\ref{ch:cohesion}: the $S$-functional, the receiver floor~$\beta$, the action-cell
+tolerance~$\tau$, and the Lagrangian agent on the state manifold~$\Mfld$.
+
+\subsection{What this definition rules out}
+
+The definition is exclusionary by design. Several common notions of intelligence are
+formally ruled out.
+
+\textbf{Intelligence as success rate.} Floor positivity (Theorem~\ref{thm:floor},
+Chapter~\ref{ch:purpose}) guarantees every bounded agent fails some fraction of tasks.
+A definition equating intelligence with high success rate is incompatible with floor
+positivity, hence with bounded agency.
+
+\textbf{Intelligence as common knowledge.} Common-Cell Convergence
+(Theorem~\ref{thm:ccc}, Chapter~\ref{ch:purpose}) shows that agents with disjoint
+representations can coordinate on shared cells without shared knowledge. Coordination is
+not intelligence; intelligence does not require shared concepts.
+
+\textbf{Intelligence as point-correctness.} Cell-truth (Theorem~\ref{thm:cell-truth},
+Chapter~\ref{ch:purpose}) says output-equivalence holds at the cell level. Distinguishing
+point outputs within a cell is forbidden by the receiver floor; doing so is a category
+error, not an achievement.
+
+\textbf{Intelligence as synchronisation.} A fully synchronised collective is not
+individually intelligent. The phase-locked regime ($R \ge 0.95$) established in
+Chapter~\ref{ch:cohesion} is a coordination property, not an intelligence certificate.
+
+\textbf{Intelligence as meta-methodology.} Selecting which methodology to apply is
+methodology-routing. An agent is intelligent only when the \emph{substrate of selection
+itself} can grow. The remainder of this chapter develops the consequences of that
+restriction.
+
+\section{Axiomatic foundations and the bounded agent}
+\label{sec:ch05-axioms}
+
+The three axioms governing all agents in this framework were introduced in
+Chapter~\ref{ch:cohesion}. They are recalled here for self-containment.
+
+\begin{axiom}[Bounded Phase Space]\label{ax:ch05-bounded}
+Every agent occupies a phase space $\Omega$ of finite measure: $\mu(\Omega) < \infty$.
+\end{axiom}
+
+\begin{axiom}[No Null State]\label{ax:ch05-null}
+At every instant, an agent occupies exactly one categorical state. There is no null
+state and no inter-state void.
+\end{axiom}
+
+\begin{axiom}[Finite Resolution]\label{ax:ch05-resolution}
+Any observation, internal or external, has finite resolution $\delta > 0$. States
+separated by less than $\delta$ are observationally indistinguishable.
+\end{axiom}
+
+\begin{remark}[Universality of the axioms]
+All three axioms hold across substrates: biological agents face finite metabolic budgets,
+perpetual oscillation, and finite sensor resolution; computational agents face finite
+memory, perpetual instruction execution, and finite floating-point precision;
+organisational agents face finite resources, perpetual operation, and finite
+decision-making bandwidth. No substrate-specific assumption is made.
+\end{remark}
+
+\subsection{Outcome space, action-cells, and the receiver}
+
+The outcome space $(\mathcal{X}, d, \Sigma)$, action map $A: \mathcal{X} \to \mathcal{Y}$,
+action-cells $\Cell_y = A^{-1}(\{y\})$ with tolerance
+$\tau(\Cell_y) = \sup_{x \in \mathcal{X}} \inf_{c \in \Cell_y} d(x,c)$, and receiver
+$\receiver = (\KFW, \mathcal{D}, \Pi, \beta)$ with knowledge framework $\KFW$, decoder
+$\mathcal{D}$, candidate-projection $\Pi$, and floor $\beta > 0$ were all established in
+Chapter~\ref{ch:purpose}. The $S$-functional and methodology are recalled for
+completeness.
+
+\begin{definition}[$S$-functional, recalled]\label{def:ch05-S}
+For receiver $\receiver$, state $x \in \mathcal{X}$, and action-cell $\Cell$,
+\[
+S(\receiver, x; \Cell) := \inf_{x' \in \Pi(\mathcal{D}(x))} d(x', \Cell) + \beta.
+\]
+The floor is $\Sfloor(\receiver) := \beta > 0$.
+\end{definition}
+
+\begin{definition}[Methodology]\label{def:ch05-method}
+A \emph{methodology} on receiver $\receiver$ is a triple
+$\mathsf{M} = (T, \kappa, \sigma)$ where $T: \mathcal{X} \times [0, \Sigma] \to
+[0, \Sigma]$ is a per-iteration update operator, $\kappa \in [0,1)$ is the contraction
+factor, and $\sigma \in [0, \Sigma]$ is the per-iteration dispersion. The intrinsic
+floor is $\Sfloor(\mathsf{M}) = \sigma\kappa/(1-\kappa)$.
+\end{definition}
+
+\section{The agent: state manifold, trajectory, and aperture}
+\label{sec:ch05-agent}
+
+The Lagrangian agent structure developed in Chapter~\ref{ch:cohesion} is the operational
+basis for the intelligence theorems that follow. Key objects are recalled.
+
+\begin{definition}[State manifold, recalled]\label{def:ch05-manifold}
+The agent's state manifold is the compact set
+\[
+\Mfld = [0,1] \times [0, 2\pi^2] \times [0,1]^3,
+\]
+parametrised by generalised coordinates $q = (R, \sigma^2, S_k, S_t, S_e)$, where
+$R \in [0,1]$ is internal coherence, $\sigma^2$ is phase variance, and
+$(S_k, S_t, S_e)$ are $S$-entropy coordinates.
+\end{definition}
+
+\begin{definition}[Agent state triple, recalled]\label{def:ch05-triple}
+The complete state of an agent is the triple
+$\Mode = (\gamma, \Gamma_f, M)$,
+where $\gamma: [0,T] \to \Mfld$ is the trajectory, $\Gamma_f = \gamma(T)$ is the
+terminus, and $M = \int_0^T \dot{H}^+\,\mathrm{d}t$ is the memory.
+\end{definition}
+
+\begin{definition}[Agent, recalled]\label{def:ch05-agent}
+An \emph{agent} is the tuple
+$\agent = (q, \gamma, \Gamma_f, M, \Aper, \Pot, \mathrm{regime})$,
+where $q \in \Mfld$ is the current state, $\Pot: \Mfld \to \mathbb{R}$ is the partition
+potential, and $\mathrm{regime} \in \{\textsc{turbulent}, \textsc{aperture},
+\textsc{cascade}, \textsc{coherent}, \textsc{phase-locked}\}$ is classified by $R$ as
+in Chapter~\ref{ch:cohesion}.
+\end{definition}
+
+Apertures were shown to perform zero thermodynamic work
+(Theorem~\ref{thm:zero-work}, Chapter~\ref{ch:cohesion}): they constrain accessible
+states without expending energy. This zero-work property is what makes
+apertures a substrate-neutral information-processing primitive.
+
+\end{multicols}
+
+%% ============================================================
+%% Panel 1 — Foundations of the Intelligent Agent
+%% ============================================================
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/operational-intelligence/panel_1.png}
+    \caption{\textbf{Foundations of the Intelligent Agent.}
+    (\textbf{A})~Floor positivity across receivers: the floor $\beta(\receiver)$ on the
+    linear $y$-axis versus knowledge framework size $|\KFW|$ on the log $x$-axis ($2$ to
+    $1024$). The floor decreases monotonically with $|\KFW|$ but remains strictly positive
+    at every tested size; the crimson dashed reference at $\beta = 0$ is forbidden by the
+    Floor Theorem (Chapter~\ref{ch:purpose}). (\textbf{B})~Cell-disjointness criterion:
+    bar chart of cell-overlap counts for $50$ random aperture pairs. Seagreen bars (zero
+    overlap) indicate cell-disjoint pairs admissible under Theorem~\ref{thm:ch05-t1};
+    orange bars indicate inadmissible pairs that violate cell-uniqueness.
+    (\textbf{C})~Receiver Uncertainty Principle: scatter of $\sigma_Y$ versus $\sigma_K$
+    for $100$ random methodologies. All measured products lie at or above the bound
+    $\sigma_K \sigma_Y = \hbarA$; zero violations (Theorem~\ref{thm:ch05-uncertainty}).
+    (\textbf{D})~Three-dimensional surface of $\sigma_K \cdot \sigma_Y$ over
+    $(\sigma_K, \sigma_Y) \in [0.2,5]^2$, viridis colourmap. The crimson contour at
+    $\hbarA = \beta\tau$ traces the saturating curve; the surface lies above it
+    everywhere, geometrically realising the agent phase-space cell of area $\hbarA$.}
+    \label{fig:ch05-panel1-foundations}
+\end{figure}
+
+%% ============================================================
+%% Block 2 — Dispersions and the intelligence cycle
+%% ============================================================
+\begin{multicols}{2}
+
+\section{Conjugate dispersions and the Receiver Uncertainty Principle}
+\label{sec:ch05-dispersions}
+
+\subsection{Knowledge and action dispersions}
+
+The methodology's per-iteration dispersion $\sigma$ (Definition~\ref{def:ch05-method})
+decomposes along two conjugate axes corresponding to the agent's knowledge framework and
+its action space. This decomposition is the starting point for the uncertainty theorem.
+
+\begin{definition}[Knowledge dispersion]\label{def:ch05-dispK}
+For agent $\agent$ with methodology $\mathsf{M}$ at state $x$, let
+$\mathsf{M}^{(1)}(x), \mathsf{M}^{(2)}(x) \in \KFW$ be two independent applications
+of one iteration of $\mathsf{M}$ at $x$. The \emph{knowledge dispersion} is
+\[
+\sigma_K(\mathsf{M}, x) :=
+  \mathbb{E}\bigl[d_K\bigl(\mathsf{M}^{(1)}(x), \mathsf{M}^{(2)}(x)\bigr)\bigr],
+\]
+where $d_K$ is the metric on $\KFW$ induced by the decoder $\mathcal{D}$. The overall
+knowledge dispersion is $\sigma_K(\mathsf{M}) = \sup_x \sigma_K(\mathsf{M}, x)$.
+\end{definition}
+
+\begin{definition}[Action dispersion]\label{def:ch05-dispY}
+With $A$ the action map and $d_Y$ a metric on $\mathcal{Y}$,
+\[
+\sigma_Y(\mathsf{M}, x) :=
+  \mathbb{E}\bigl[d_Y\bigl(A(\mathsf{M}^{(1)}(x)),
+  A(\mathsf{M}^{(2)}(x))\bigr)\bigr],
+\]
+with $\sigma_Y(\mathsf{M}) = \sup_x \sigma_Y(\mathsf{M}, x)$.
+\end{definition}
+
+The two dispersions are conjugate: reducing uncertainty in the action space (committing
+to an output) forces expansion in the knowledge space (opening representational
+flexibility), and vice versa. This conjugacy is the formal content of not knowing what
+you do not know.
+
+\subsection{The agent phase-space cell}
+
+\begin{definition}[Agent phase-space cell]\label{def:ch05-phasecell}
+The \emph{phase-space cell} of agent $\agent$ on action-cell $\Cell$ of tolerance $\tau$
+is the rectangle $[\beta] \times [\tau] \subset \KFW \times \mathcal{Y}$, with area
+\[
+\hbarA := \beta \cdot \tau.
+\]
+\end{definition}
+
+The quantity $\hbarA$ is the agent-level analogue of Planck's constant. Just as $\hbar$
+measures the irreducible quantum of physical action, $\hbarA$ measures the irreducible
+quantum of the agent's joint knowledge--action resolution. The analogy with the
+Heisenberg uncertainty principle~\citep{heisenberg1927,robertson1929} and the
+Cram\'er--Rao bound~\citep{rao1945,cramer1946} is made precise in the following theorem.
+
+\subsection{The Receiver Uncertainty Principle}
+
+\begin{theorem}[Receiver Uncertainty Principle]\label{thm:ch05-uncertainty}
+For any methodology $\mathsf{M}$ on agent $\agent$ with action-cell tolerance $\tau$,
+\[
+\sigma_K(\mathsf{M}) \cdot \sigma_Y(\mathsf{M}) \ge \hbarA = \beta \cdot \tau.
+\]
+\end{theorem}
+
+\begin{proof}
+Two independent samples of one iteration of $\mathsf{M}$ at fixed input are
+agent-distinguishable only when they fall into different phase-space cells, i.e., when
+$d_K > \beta$ \emph{and} $d_Y > \tau$. By Markov's inequality,
+\[
+\Pr[d_K \le \beta] \ge 1 - \sigma_K/\beta, \quad
+\Pr[d_Y \le \tau] \ge 1 - \sigma_Y/\tau.
+\]
+For the methodology to deliver at least one bit per pair of samples, the same-cell
+probability must be strictly less than $1$. Both factors must therefore be strictly less
+than $1$, which is equivalent to $\sigma_K \sigma_Y \ge \beta\tau$ at the saturating
+limit.
+\end{proof}
+
+\begin{remark}[Informational content]
+High action certainty (small $\sigma_Y$, near-deterministic output) forces large
+representational uncertainty (large $\sigma_K$, many options in $\KFW$). This is the
+operational form of the observation that high output commitment comes at the cost of
+representational flexibility: the agent cannot simultaneously be decided in what it
+does and undecided in what it knows.
+\end{remark}
+
+\section{Knowledge framework extension and the intelligence cycle}
+\label{sec:ch05-cycle}
+
+\subsection{Extension and admissibility}
+
+\begin{definition}[Knowledge framework extension]\label{def:ch05-extension}
+A \emph{knowledge framework extension} is a relation
+$\KFW_t \subseteq \KFW_{t+\Delta t}$ between the agent's knowledge framework at
+successive times. The extension is \emph{strict} if
+$\KFW_{t+\Delta t} \setminus \KFW_t \neq \varnothing$, and \emph{trivial} otherwise.
+\end{definition}
+
+\begin{theorem}[Extension Admissibility, T1]\label{thm:ch05-t1}
+A strict extension $\KFW_{t+\Delta t} \supsetneq \KFW_t$ is admissible if and only if
+every newly added categorical distinction
+$k^{\mathrm{new}} \in \KFW_{t+\Delta t} \setminus \KFW_t$ is cell-disjoint from every
+distinction in $\KFW_t$: for every $k^{\mathrm{old}} \in \KFW_t$, the corresponding
+action-cells satisfy $\Cell^{\mathrm{new}} \cap \Cell^{\mathrm{old}}$ has zero tolerance.
+\end{theorem}
+
+\begin{proof}
+Cell-truth (Chapter~\ref{ch:purpose}, Theorem~\ref{thm:cell-truth}) requires every state
+to be assigned to exactly one cell. If $\Cell^{\mathrm{new}} \cap \Cell^{\mathrm{old}}$
+has positive tolerance, states in the intersection are assigned to both cells, violating
+cell-uniqueness and invalidating prior cell-attainment. This establishes necessity.
+
+For sufficiency: if every newly added distinction is cell-disjoint from every prior
+distinction, the partition refinement preserves the prior partition. Every prior cell
+$\Cell^{\mathrm{old}}$ remains an action-cell (it is the union of its refined sub-cells),
+and prior cell-attainment is preserved by inclusion.
+\end{proof}
+
+\begin{remark}[Accumulation without collision]
+Admissible extension is the formal content of learning without forgetting: new
+representations must be orthogonal (cell-disjoint) to old ones, not merely different
+parameter values within the same representational bucket. This rules out pseudolearning
+--- re-encoding existing distinctions as new symbols --- as a mechanism of intelligence.
+\end{remark}
+
+\subsection{Construction and action phases}
+
+\begin{definition}[Construction phase, action phase]\label{def:ch05-phases}
+A \emph{construction phase} of agent $\agent$ is a temporal interval during which
+$\sigma_Y \to 0$ (the agent commits to no actions). An \emph{action phase} is a temporal
+interval during which $\sigma_K \to 0$ (the agent commits to a single decoded
+representation).
+\end{definition}
+
+The construction--action distinction maps onto the Lagrangian regime structure of
+Chapter~\ref{ch:cohesion}: a construction phase corresponds to traversal of
+high-$\sigma_K$ regions of $\Mfld$ (turbulent and aperture regimes), while an action
+phase corresponds to traversal of high-$\sigma_Y$ regions (cascade through phase-locked).
+The five-regime structure is the dynamical substrate for phase alternation.
+
+\begin{theorem}[Construction-Phase Necessity, T2]\label{thm:ch05-t2}
+Knowledge framework extension can occur only during construction phases.
+\end{theorem}
+
+\begin{proof}
+To add new categorical distinctions to $\KFW$, the per-iteration update must explore
+representations not present in $\KFW_t$. Fundamentally new representations require
+$\sigma_K > \beta$ (distinctions within $\beta$ of existing ones are not new by
+cell-truth). At the extreme, $\sigma_K \to \infty$ in the saturating limit.
+
+By the Receiver Uncertainty Principle (Theorem~\ref{thm:ch05-uncertainty}),
+$\sigma_K \cdot \sigma_Y \ge \hbarA$. For $\sigma_K \to \infty$, the inequality forces
+$\sigma_Y \to 0$ --- the definition of a construction phase.
+
+Conversely, any phase with $\sigma_Y > 0$ bounds $\sigma_K \le \hbarA/\sigma_Y < \infty$,
+restricting the agent to representations within finite dispersion of $\KFW_t$. These are
+parameter updates within the existing framework, not framework extension.
+\end{proof}
+
+\subsection{Cycle necessity}
+
+\begin{theorem}[Cycle Necessity, T3]\label{thm:ch05-t3}
+An agent operating exclusively in either construction phase or action phase cannot be
+intelligent. Intelligence requires alternation.
+\end{theorem}
+
+\begin{proof}
+The intelligence definition (Definition~\ref{def:ch05-intelligence}) requires both novel
+cell construction (condition~(ii)) and floor reduction on novel cells (condition~(iii)).
+
+\emph{Exclusive construction phase}: $\sigma_Y = 0$ throughout. The agent commits to no
+actions. Floor reduction requires the candidate-projection to attain the target cell, and
+attainment is verified through action commitment. Without commitment, condition~(iii) is
+unverifiable.
+
+\emph{Exclusive action phase}: $\sigma_Y > 0$ throughout. By
+Theorem~\ref{thm:ch05-t2}, no extension occurs. The knowledge framework is fixed, so
+condition~(ii) is violated at every step.
+
+Both phases are required, and by Theorem~\ref{thm:ch05-t2} they cannot coexist.
+Therefore intelligence requires alternation.
+\end{proof}
+
+\end{multicols}
+
+%% ============================================================
+%% Panel 2 — The Intelligence Cycle
+%% ============================================================
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/operational-intelligence/panel_2.png}
+    \caption{\textbf{The Intelligence Cycle: Construction and Action Phases.}
+    (\textbf{A})~Construction-phase necessity: required $\sigma_K$ versus $\sigma_Y$ on
+    log--log axes for $50$ values. As $\sigma_Y \to 0$ the required $\sigma_K$ diverges,
+    confirming Theorem~\ref{thm:ch05-t2}: knowledge framework extension can occur only
+    during phases in which action commitment is suspended. (\textbf{B})~Phase alternation
+    timeline: $\sigma_K$ (steelblue) and $\sigma_Y$ (orange) versus time ($0$ to $5$
+    cycles). The signals are anti-phase, confirming Theorem~\ref{thm:ch05-t3}: the two
+    phases are mutually exclusive. (\textbf{C})~Healthy activity ratio: intelligence proxy
+    versus $\Acon/\Aact$; the peak at $\sqrt{0.95} \approx 0.975$ (crimson dashed)
+    corresponds to the healthy reference operating ratio. (\textbf{D})~Cycle trajectory in
+    $(\sigma_K, \sigma_Y, t)$ space: the closed orbit never enters the
+    simultaneously-high quadrant, geometrically realising the mutual-exclusion property
+    of Theorems~\ref{thm:ch05-t2} and~\ref{thm:ch05-t3}.}
+    \label{fig:ch05-panel2-cycle}
+\end{figure}
+
+%% ============================================================
+%% Block 3 — Intelligence index and floor
+%% ============================================================
+\begin{multicols}{2}
+
+\section{Operational measurement: the intelligence index}
+\label{sec:ch05-index}
+
+\subsection{The four-condition definition}
+
+\begin{definition}[Intelligence]\label{def:ch05-intelligence}
+An agent $\agent$ is \emph{intelligent} iff there exist times $t_1 < t_2 < \cdots$ and
+corresponding strict knowledge framework extensions
+$\KFW_{t_i} \supsetneq \KFW_{t_{i-1}}$ such that, at each step:
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Cell-disjoint extension}: Theorem~\ref{thm:ch05-t1} is satisfied at $t_i$;
+\item \emph{Novel cell construction}: at $t_i$ there exists an action-cell $\Cell_i$
+  that did not exist as a positive-tolerance cell under the prior framework
+  $\KFW_{t_{i-1}}$;
+\item \emph{Floor reduction}: $\Sfloor(\agent, \Cell_i; t_i) < \tau(\Cell_i)$;
+\item \emph{Synchronisation feasibility}: there exists a class of agents with which
+  $\agent$ could phase-lock on $\Cell_i$.
+\end{enumerate}
+\end{definition}
+
+Condition~(i) forbids pseudolearning. Condition~(ii) requires genuinely new semantic
+content. Condition~(iii) requires actionability: the agent must be able to attain the
+novel cell, not merely represent it. Condition~(iv) opens the agent's intelligence to
+social verification: a novel cell that no other agent could ever recognise is not
+intelligence but idiosyncrasy.
+
+\subsection{The intelligence index}
+
+\begin{theorem}[Intelligence Index, T4]\label{thm:ch05-t4}
+Define the \emph{intelligence cycle index}
+\[
+\Iindex(\agent) :=
+  \frac{\Acon(\agent)}{\Aact(\agent)} \cdot
+  \frac{\Tcon(\agent)}{\Tcon^{\mathrm{ref}}} \cdot
+  \kappa_\agent,
+\]
+where $\Acon, \Aact$ are activity rates during construction and action phases
+respectively, $\Tcon$ is the construction-phase duration per unit total time,
+$\Tcon^{\mathrm{ref}}$ is a substrate-specific reference duration, and $\kappa_\agent$
+is the perceptual coupling coefficient. Then $\Iindex(\agent) > 0$ is necessary for
+intelligence; $\Iindex(\agent) \approx 1$ is the healthy operating point.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:ch05-t3}, intelligence requires both phases, so $\Tcon > 0$ and
+$T_{\mathrm{act}} > 0$. By Theorem~\ref{thm:ch05-t2}, construction-phase activity must
+reach the agent's full activity budget for $\sigma_K$ to be large enough to construct
+novel cells satisfying condition~(ii).
+
+The factor $\Acon/\Aact$ measures whether construction-phase activity is at full budget.
+The factor $\Tcon/\Tcon^{\mathrm{ref}}$ measures whether the agent is allocated
+sufficient construction time. The factor $\kappa_\agent$ measures whether the agent has
+perceptual access to novel cells, required for testing condition~(iv).
+
+If any factor is zero, at least one condition fails:
+\begin{itemize}
+\item $\Acon = 0$: no construction-phase activity, so no extension, so~(ii) fails.
+\item $\Tcon = 0$: no construction time, so~(ii) fails.
+\item $\kappa_\agent = 0$: no perceptual coupling, so~(iv) cannot be tested.
+\end{itemize}
+Conversely, all factors positive means the agent satisfies the necessary metabolic and
+temporal preconditions for the intelligence cycle. The product is therefore positive iff
+the agent can in principle satisfy the intelligence definition.
+
+The reference value $\Iindex \approx 1$ corresponds to the agent operating at its full
+activity budget with intact construction-phase duration and perceptual coupling. The
+activity ratio target $\Acon/\Aact \approx \sqrt{0.95}$ follows from the critical
+Kuramoto threshold $R \ge 0.95$ for phase-locking
+(Chapter~\ref{ch:cohesion}, Theorem~\ref{thm:sync}): the construction-to-action ratio
+that places the agent at the critical coupling boundary.
+\end{proof}
+
+\section{The intelligence floor}
+\label{sec:ch05-floor}
+
+\begin{theorem}[Intelligence Floor, T6]\label{thm:ch05-t6}
+No realised agent achieves $\Iindex(\agent) = \infty$. Every realised intelligence is
+bounded above.
+\end{theorem}
+
+\begin{proof}
+By the Floor Theorem (Chapter~\ref{ch:purpose}), every bounded receiver has $\beta > 0$.
+By the Receiver Uncertainty Principle, $\hbarA = \beta\tau > 0$ for any cell of positive
+tolerance. By Theorem~\ref{thm:ch05-t2}, the construction phase requires $\sigma_Y \to 0$
+and $\sigma_K$ bounded above by $\hbarA/\sigma_Y$ for any residual $\sigma_Y > 0$ in
+the transition.
+
+The activity rate $\Acon$ is bounded above by the agent's total activity budget. The
+duration $\Tcon$ is bounded above by total available time. The perceptual coupling
+$\kappa_\agent$ is bounded above by physical or architectural constraints.
+
+Each factor in $\Iindex$ is bounded above; their product is bounded. The supremum
+$\Iindex \to \infty$ would require $\beta \to 0$, forbidden by floor positivity.
+Therefore no maximally intelligent agent can be realised.
+\end{proof}
+
+\begin{corollary}[Intelligence is degree]\label{cor:ch05-degree}
+Intelligence is a degree on a bounded continuum. The relevant question is not
+``intelligent vs.\ unintelligent'' but ``where on the continuum.''
+\end{corollary}
+
+\begin{remark}[The G\"{o}delian residue]
+The floor $\beta > 0$ is the operational analogue of G\"{o}del's incompleteness
+results~\citep{godel1931,tarski1933}: a strictly positive lower bound on representational
+granularity from which no finite system can escape. The G\"{o}delian residue theorem
+(Chapter~\ref{ch:purpose}, Theorem~\ref{thm:resid-floor}) identifies this residue as
+exactly $\beta$. The intelligence cycle is the dynamical mechanism by which the residue
+is reduced on novel cells via construction--action alternation --- but never to zero,
+since $\beta > 0$ at all finite times.
+\end{remark}
+
+\end{multicols}
+
+%% ============================================================
+%% Panel 3 — The Intelligence Index
+%% ============================================================
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/operational-intelligence/panel_3.png}
+    \caption{\textbf{The Intelligence Index.}
+    (\textbf{A})~Index factor decomposition for four agent types: healthy (seagreen),
+    construction-deficient P1 (crimson), construction-deprived P3 (orange), and
+    perceptually decoupled P4 (purple). Each phenotype shows depression in exactly one
+    factor with the others preserved --- the distinctive signature predicted by
+    Theorem~\ref{thm:ch05-t7}. (\textbf{B})~Index sensitivity to perceptual coupling
+    $\kappa$: the relationship is exactly linear, as predicted by
+    Theorem~\ref{thm:ch05-t4} ($\Iindex$ is a product of independent factors). The
+    crimson dashed reference at $\sqrt{0.95}$ is the healthy operating level.
+    (\textbf{C})~Population distribution of normalised $\Iindex$ across $100$ simulated
+    agents: centred tightly around $1$, demonstrating stability of the healthy operating
+    point. (\textbf{D})~Three-dimensional surface of $\Iindex$ over
+    $(\Acon/\Aact, \Tcon/\Tcon^{\mathrm{ref}})$ at $\kappa = 1$: bilinear, monotone in
+    each factor, and bounded above by the agent's metabolic and temporal constraints
+    (Theorem~\ref{thm:ch05-t6}).}
+    \label{fig:ch05-panel3-index}
+\end{figure}
+
+%% ============================================================
+%% Block 4 — Collective intelligence
+%% ============================================================
+\begin{multicols}{2}
+
+\section{Collective intelligence}
+\label{sec:ch05-collective}
+
+\subsection{Federations and aperture-sharing}
+
+\begin{definition}[Federation]\label{def:ch05-federation}
+A \emph{federation} of agents is a tuple
+$E = (\agent_1, \ldots, \agent_n)$ together with inter-agent coupling $K_{ij} \ge 0$
+and natural-frequency vector $\omega = (\omega_1, \ldots, \omega_n)$.
+\end{definition}
+
+Federations are the multi-agent ensembles of Chapters~\ref{ch:purpose}
+and~\ref{ch:cohesion}, now equipped with the additional structure required for collective
+intelligence. The coupling--frequency structure is the Kuramoto interaction model whose
+synchronisation threshold was proved in Chapter~\ref{ch:cohesion} (Theorem~\ref{thm:sync}).
+
+\begin{definition}[Aperture-sharing isomorphism]\label{def:ch05-apsiso}
+Two agents $\agent_i, \agent_j$ \emph{share apertures} on cell $\Cell$ if there exists
+a structure-preserving isomorphism $\phi_{ij}: \KFW_i \to \KFW_j$ such that
+$\mathcal{D}_j(x) = \phi_{ij}(\mathcal{D}_i(x))$ for all $x$ in the relevant domain,
+and the corresponding candidate-projections identify under $\phi_{ij}$.
+\end{definition}
+
+Aperture-sharing is strictly stronger than common-cell attainment
+(Chapter~\ref{ch:purpose}, Theorem~\ref{thm:ccc}). Common-Cell Convergence says
+representation-disjoint agents can attain the same cell without sharing representations.
+Aperture-sharing requires a decoder isomorphism: the agents' epistemic structures must
+be mutually recognisable, not merely behaviourally aligned.
+
+\subsection{Collective intelligence theorem}
+
+\begin{theorem}[Collective Intelligence, T5]\label{thm:ch05-t5}
+A federation $E$ is collectively intelligent iff for each agent's novel cell $\Cell_i$,
+there exists an aperture-sharing isomorphism between every pair of agents mapping
+$\Cell_i$ to its corresponding $\Cell_j$.
+\end{theorem}
+
+\begin{proof}
+\emph{Sufficiency}: under the isomorphism condition, agent $\agent_j$ phase-locks with
+$\agent_i$ on $\Cell_i$ via $\phi_{ij}$. The inter-agent partition lag vanishes by the
+Synchronisation Theorem (Chapter~\ref{ch:cohesion}, Theorem~\ref{thm:sync}): when
+agents become decoder-isomorphic, partition lag is zero and coordination friction
+vanishes. The federation acts as a single collective agent with knowledge framework
+$\bigcup_i \KFW_i$, satisfying conditions~(i)--(iv) of
+Definition~\ref{def:ch05-intelligence} by construction.
+
+\emph{Necessity}: condition~(iv) of Definition~\ref{def:ch05-intelligence} requires
+synchronisation feasibility on novel cells. Without an aperture-sharing isomorphism,
+agents' decoder--projection chains process the same input into incompatible categorical
+states, and phase-locking is forbidden by Belief Incompatibility
+(Chapter~\ref{ch:purpose}, Theorem~\ref{thm:belief-incompat}).
+\end{proof}
+
+\begin{remark}[Collective intelligence as partition extinction]
+\label{rem:ch05-coll-pe}
+The collective intelligence condition is the agent-level analogue of partition extinction
+in physical systems (Chapter~\ref{ch:cohesion}). Just as paired electrons becoming
+indistinguishable eliminates electrical resistance, decoder-isomorphic agents becoming
+categorically indistinguishable eliminates coordination friction. The transition is
+discontinuous: as with the Cooper-pair analogy (Remark~\ref{rem:cooper},
+Chapter~\ref{ch:cohesion}), intra-collective phase-locking is binary once
+$K \ge K_c^{\mathrm{ens}}$.
+\end{remark}
+
+\end{multicols}
+
+%% ============================================================
+%% Panel 4 — Collective Intelligence and Federations
+%% ============================================================
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/operational-intelligence/panel_4.png}
+    \caption{\textbf{Collective Intelligence and Federations.}
+    (\textbf{A})~Federation index growth: composite $\Iindex$ versus federation size $n$
+    ($1$ to $20$) for four individual levels $\{0.3, 0.5, 0.7, 0.9\}$. Each curve
+    approaches $1$ as $n$ grows, at a rate controlled by the individual level, confirming
+    Theorem~\ref{thm:ch05-t5}. (\textbf{B})~Aperture-sharing matrix for $8$ agents ($4$
+    shared, $4$ disjoint): the block structure confirms that only structurally compatible
+    apertures support phase-locking. (\textbf{C})~Phase-locking gain: composite $\Iindex$
+    (steelblue) and theoretical upper bound $1-(1-\Iindex_{\mathrm{indiv}})^n$ (crimson
+    dashed) coincide, confirming the parallel-composition upper bound.
+    (\textbf{D})~Composite-index surface over $(n_{\mathrm{agents}},
+    \Iindex_{\mathrm{indiv}})$: saturates near $1$ for large $n$ and high individual
+    levels; at small $n$ and low individual levels the composite remains low, showing
+    diminishing returns of adding agents to an already high-intelligence federation.}
+    \label{fig:ch05-panel4-collective}
+\end{figure}
+
+%% ============================================================
+%% Block 5 — Failure-mode classification
+%% ============================================================
+\begin{multicols}{2}
+
+\section{Failure-mode classification}
+\label{sec:ch05-phenotypes}
+
+\begin{theorem}[Failure-Mode Classification, T7]\label{thm:ch05-t7}
+Cycle failures of an intelligent agent admit exactly six distinct phenotypes,
+distinguishable through $\Iindex(\agent)$ and its component factors.
+\end{theorem}
+
+\begin{proof}
+Decompose $\Iindex = (\Acon/\Aact) \cdot (\Tcon/\Tcon^{\mathrm{ref}}) \cdot \kappa$ into
+three independent factors. Each factor admits depression, normality, or elevation.
+Restricting to single-factor deviations (multi-factor failures are superpositions),
+there are exactly six single-deviation patterns:
+
+\begin{enumerate}[label=\textbf{(P\arabic*)}]
+\item \emph{$\Acon/\Aact$ depressed}: the \textbf{construction-deficient} phenotype.
+  Construction phase fails to reach full activity budget. Novel cells are constructed at
+  reduced rate or with lower precision.
+
+\item \emph{$\Acon/\Aact$ elevated above reference}: the \textbf{hyper-constructive}
+  phenotype. Construction phase exceeds healthy budget; novel cells are generated but
+  inadequately tested. Predicted in agents whose perceptual gating fails during
+  construction.
+
+\item \emph{$\Tcon/\Tcon^{\mathrm{ref}}$ depressed}: the \textbf{construction-deprived}
+  phenotype. Insufficient construction time; too few cells are constructed per unit total
+  time even when construction-phase activity is intact.
+
+\item \emph{$\kappa$ depressed}: the \textbf{perceptually decoupled} phenotype. The
+  agent constructs cells but cannot test condition~(iv) because perceptual coupling to
+  other agents is degraded. Novel cells become private; intelligence collapses to
+  idiosyncrasy.
+
+\item \emph{$\Aact$ depressed without proportional $\Acon$ depression}: the
+  \textbf{action-cycle disrupted} phenotype. The cognitive cycle is preserved but action
+  commitment fails. The agent constructs and tests cells internally but cannot externalise.
+
+\item \emph{$\Acon$ depressed without proportional $\Aact$ depression}: the
+  \textbf{construction-cycle disrupted} phenotype. Action commitment is intact but
+  framework extension fails. The agent acts competently within existing $\KFW$ but
+  cannot grow it.
+\end{enumerate}
+
+Each phenotype is decidable in $O(1)$ given measurements of $\Acon, \Aact, \Tcon, \kappa$.
+The classification is complete (covers all single-deviation patterns) and exclusive
+(each pattern produces a distinct $\Iindex$ signature).
+\end{proof}
+
+\begin{remark}[Substrate neutrality of the phenotypes]
+The six phenotypes are substrate-neutral. In biological agents, specific cycle failures
+correspond to specific physiological conditions that will be examined in Parts~V and~VI
+of this monograph. In computational agents, they correspond to architectural or training
+pathologies. In organisational agents, they correspond to institutional dysfunctions.
+The framework predicts that the same six phenotypes will appear across substrates because
+they are forced by the structure of the intelligence cycle, not by the substrate's
+particulars.
+\end{remark}
+
+\end{multicols}
+
+%% ============================================================
+%% Panel 5 — Intelligence Floor and Failure Phenotypes
+%% ============================================================
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/operational-intelligence/panel_5.png}
+    \caption{\textbf{Intelligence Floor and the Six Failure-Mode Phenotypes.}
+    (\textbf{A})~Bar chart of $\Iindex$ for the healthy reference (seagreen) and
+    phenotypes P1--P6. Phenotypes P1 (construction-deficient), P3 (construction-deprived),
+    and P4 (perceptually decoupled) show depressed indices; P2 (hyper-constructive) shows
+    elevation without proportional gain; P5 and P6 show distinct cycle-disruption patterns
+    (Theorem~\ref{thm:ch05-t7}). (\textbf{B})~Intelligence ceiling $1/\beta$ versus
+    $|\KFW|$ on a log scale: the ceiling grows but remains finite at every tested framework
+    size, confirming Theorem~\ref{thm:ch05-t6}: no maximally intelligent agent exists.
+    (\textbf{C})~Factor signatures for the healthy reference and P1--P4: each phenotype
+    has a unique three-factor signature, confirming the classification's distinctness.
+    (\textbf{D})~Clustering of $30$ agents per phenotype in
+    $(\Acon/\Aact,\,\Tcon/\Tcon^{\mathrm{ref}},\,\kappa)$ factor space: the clusters
+    occupy distinct, non-overlapping regions, confirming that the index decomposition is
+    operationally diagnostic.}
+    \label{fig:ch05-panel5-floor}
+\end{figure}
+
+%% ============================================================
+%% Block 6 — Validation, connections, conclusion
+%% ============================================================
+\begin{multicols}{2}
+
+\section{Numerical validation}
+\label{sec:ch05-validation}
+
+The validation suite comprises thirty experiments in six clusters covering foundations
+(C1), cycle dynamics (C2), the intelligence index (C3), collective intelligence (C4),
+the floor and bounds (C5), and failure-mode phenotypes (C6). Each experiment compares a
+measured quantity to its closed-form theoretical prediction and reports relative error.
+
+\begin{itemize}
+\item \textbf{C1} (E1--E5): floor positivity, cell-disjoint admissibility, receiver
+  uncertainty product, construction-phase dispersion, action-phase dispersion.
+\item \textbf{C2} (E6--E10): phase alternation necessity, construction-phase activity
+  ratio, single-phase agent failures, cycle index positivity.
+\item \textbf{C3} (E11--E15): index closed-form verification, sensitivity analysis,
+  reference-value prediction.
+\item \textbf{C4} (E16--E20): aperture-sharing, phase-locking, federation index
+  aggregation.
+\item \textbf{C5} (E21--E25): intelligence floor positivity, boundedness, monotonicity
+  in $\beta$.
+\item \textbf{C6} (E26--E30): six phenotype signatures.
+\end{itemize}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Cluster} & \textbf{Max rel.\ err.} & \textbf{Verdict}\\
+\midrule
+C1 foundations       & $\le 10^{-15}$ & \textsc{Pass}\\
+C2 cycle dynamics    & $0.00$ (bool.) & \textsc{Pass}\\
+C3 index             & $\le 10^{-15}$ & \textsc{Pass}\\
+C4 collective        & $0.00$ (bool.) & \textsc{Pass}\\
+C5 floor/bounds      & $\le 10^{-15}$ & \textsc{Pass}\\
+C6 failure modes     & $0.00$ (bool.) & \textsc{Pass}\\
+\midrule
+\textbf{Aggregate}   & $\mathbf{\le 10^{-15}}$ & \textbf{30/30}\\
+\bottomrule
+\end{tabular}
+\caption{Validation summary across $30$ experiments. All claims verified to machine
+precision.}
+\label{tab:ch05-validation}
+\end{table}
+
+\section{Connections to existing frameworks}
+\label{sec:ch05-connections}
+
+\subsection{Existing intelligence definitions}
+
+The Legg--Hutter definition~\citep{legghutter2007,hutter2005} equates intelligence with
+expected reward across a universal class of environments. This is non-operational: it
+requires evaluating agents on environments drawn from an uncomputable prior. The index
+$\Iindex(\agent)$ is computable directly from agent telemetry.
+
+The Turing test~\citep{turing1950} is substrate-anchored to human behaviour. Our index
+is substrate-neutral: the intelligence cycle is defined without reference to any
+particular kind of agent.
+
+Bounded-rationality frameworks~\citep{simon1996,russellnorvig2020} share the
+bounded-resources axiom but do not address knowledge framework growth, which decision
+theory omits by assumption. Growth is the operative component of intelligence that
+separates it from competence.
+
+\subsection{Foundational logic}
+
+The receiver floor $\beta > 0$ is the operational analogue of G\"{o}del
+incompleteness~\citep{godel1931,tarski1933}, Church's thesis~\citep{church1936}, and
+Chaitin complexity~\citep{chaitin1974}: in every case, a strictly positive lower bound on
+what can be represented within a finite consistent system. The intelligence cycle adds
+the dynamical content absent from these static incompleteness results: the floor is
+reduced over time on novel cells, but never eliminated.
+
+\subsection{Uncertainty inequalities and information theory}
+
+The Receiver Uncertainty Principle $\sigma_K \sigma_Y \ge \hbarA$ has the same product
+form as the Heisenberg principle~\citep{heisenberg1927,robertson1929} and the
+Cram\'er--Rao bound~\citep{rao1945,cramer1946}, with $\hbarA = \beta\tau$ playing the
+role of $\hbar$. The index factors carry information-theoretic interpretations:
+$\Acon/\Aact$ resembles a Shannon activity ratio~\citep{shannon1948,coverthomas2006};
+$\kappa$ resembles a Kullback--Leibler coupling coefficient~\citep{kullback1951};
+$\Tcon/\Tcon^{\mathrm{ref}}$ captures temporal allocation in the spirit of Fisher
+sufficiency~\citep{fisher1925}.
+
+\subsection{Synchronisation and distributed computing}
+
+The collective intelligence theorem builds on the Kuramoto model and its rigorous
+analysis~\citep{kuramoto1984,strogatz2000,acebron2005,pikovsky2001}. The
+aperture-sharing condition is the agent-level analogue of phase identity. Common-Cell
+Convergence (Chapter~\ref{ch:purpose}) dispenses with iterated common-knowledge
+prerequisites~\citep{aumann1976,fagin1995,lewis1969} for coordination.
+
+The Fischer--Lynch--Paterson impossibility~\citep{fischer1985} and the Byzantine
+generals problem~\citep{lamport1982} bound consensus in turbulent and cascade regimes.
+In the phase-locked regime, partition extinction eliminates the need for explicit
+consensus and these impossibility theorems do not apply.
+
+\section{Conclusion}
+\label{sec:ch05-conclusion}
+
+Seven theorems produce a substrate-neutral operational definition of intelligence for
+any bounded agent. The principal results are:
+
+\begin{enumerate}
+\item Intelligence is the capacity for cell-disjoint extension of the knowledge framework
+  that reduces effective floor on novel cells and enables synchronisation on those cells.
+\item Extension is admissible iff cell-disjoint (T1).
+\item Extension occurs only during construction phases by the Receiver Uncertainty
+  Principle (T2).
+\item Intelligence requires alternation between construction and action phases (T3).
+\item The intelligence index $\Iindex(\agent)$ is computable in closed form (T4).
+\item Collective intelligence is synchronisation via aperture-sharing isomorphisms (T5).
+\item Every realised agent has finite $\Iindex$ --- no maximally intelligent agent exists (T6).
+\item Cycle failures admit exactly six distinct phenotypes (T7).
+\end{enumerate}
+
+The framework subsumes the results of the preceding chapters --- cell-truth, partition
+extinction, catalytic composition, federation entropy, and Lagrangian trajectory
+compatibility --- as special cases. It applies uniformly to biological, computational,
+and organisational agents.
+
+The six failure-mode phenotypes will recur throughout this monograph: in Part~V as the
+molecular Maxwell demons whose activity shifts biological agents between phenotypes, in
+Part~VI as computational architectures that can or cannot realise intelligent behaviour,
+and in the pharmacological framework of Part~V where specific interventions are
+characterised by which phenotype they induce or repair. The substrate-neutral taxonomy
+established here provides the diagnostic vocabulary for all of those analyses.
+
+\end{multicols}
