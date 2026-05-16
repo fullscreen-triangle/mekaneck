@@ -1,18 +1,549 @@
-\chapter{Hybrid Microfluidic Circuit Dynamics}
-\label{ch:hybrid_circuits}
+%%% Local macros — all \providecommand to avoid redefinition errors
+\providecommand{\Sstab}{S_{\mathrm{stab}}}
+\providecommand{\CTB}{\bar{\mathcal{C}}_{\mathrm{TB}}}
+\providecommand{\PLVcn}{\mathrm{PLV}_{\mathrm{cn}}}
+\providecommand{\tauR}{\tau_{\mathrm{restore}}}
+\providecommand{\kappaON}{\kappa_{\mathrm{O_2\text{-}n}}}
+\providecommand{\kON}{\kappa_{\mathrm{O_2\text{-}n}}}
+\providecommand{\kappaAN}{\kappa_{\mathrm{anaerobic}}}
+\providecommand{\calT}{\mathcal{T}}
+\providecommand{\calC}{\mathcal{C}}
+\providecommand{\calI}{\mathcal{I}}
+\providecommand{\calP}{\mathcal{P}}
+\providecommand{\Tform}{\tau_{\mathrm{form}}}
+\providecommand{\OID}{\mathrm{OID}}
+\providecommand{\phiC}{\phi_C}
+\providecommand{\phiL}{\phi_L}
+\providecommand{\phiTh}{\phi_{\mathrm{th}}}
+\providecommand{\omC}{\omega_C}
+\providecommand{\omL}{\omega_L}
 
-\papernote{Source paper: \emph{Integrated Measurement Framework for Molecular Configuration State Dynamics} --- \texttt{blindhorse/docs/hybrid-fluidic-circuit-dynamics/}}
+\chapter{Performance Variance Minimisation in Sprint Running}
+\label{ch:variance_min}
+
+\papernote{Source paper: \emph{On the Thermodynamic Consequences of Categorical Flux Propagation Mechanics on Perception: Stability Analysis of Internally-Generated Oscillatory Perturbations on Automatic Motor Substrate During Sprint Running} --- \texttt{parable/docs/physiology/performance-variance-minimisation.tex}}
 
 \begin{chapterabstract}
-Biological systems are hybrid microfluidic analog oscillatory integrated circuits. This chapter develops the unified theory of oscillatory, categorical, and partitioning information processing within such circuits, with experimental validation through four independent measurement modalities: vibrational spectroscopy, electromagnetic field mapping, dielectric response analysis, and gas molecular tracking. The $10^{22}$-fold efficiency gain of geometric pattern operation versus microstate enumeration is proven and experimentally confirmed.
+The foregoing chapters established the physical machinery of biological information processing: the closed charge circuit (Ch.~\ref{ch:musculoskeletal}), autocatalytic metabolic redistribution (Ch.~\ref{ch:metabolism_engine}), functional charge decomposition (Ch.~\ref{ch:charge_quantification}), and the cardiac master oscillator coupled to neural phase dynamics (Ch.~\ref{ch:cardio_neural}). This chapter unifies these components into a single operational framework for measuring individual performance variance during sprint running. The 400\,m sprint provides an ideal experimental window in which experienced runners execute locomotion through cardiac-entrained central pattern generators, freeing higher neural oscillatory function for independent observation. Three quantitative metrics emerge from this architecture---a Stability Index $\Sstab \in [0,1]$, a Thought-Body Coherence measure $\CTB$, and a cardiac-neural Phase-Locking Value $\PLVcn$---linked by the empirical relation $\Sstab = 0.2 + 1.0\,\CTB$ ($R^2 > 0.8$). Clinical stratification across five populations validates the framework as a diagnostic instrument for oscillatory coherence deficits. The chapter also derives the 8000-fold enhancement of neural coupling efficiency attributable to atmospheric O$_2$ paramagnetism and the trans-Planckian temporal precision achievable through gear-ratio cascades across 13 hierarchical oscillatory scales.
 \end{chapterabstract}
 
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/oscillatory-dynamics.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/categorical-completion-mechanisms.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/geometric-partitioning.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/aperture-entropy-progression.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/phase-lock-networks-topology.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/gas-molecular-dynamics-information-model.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/vibrational-state-analysis.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/electromagnetic-field-mapping.tex}
-\input{../blindhorse/docs/hybrid-fluidic-circuit-dynamics/sections/dielectric-response-analysis.tex}
+%% ================================================================
+\section{Thought-Motor Dissociation}
+%% ================================================================
+
+\begin{multicols}{2}
+
+The central experimental assumption of this chapter is that oscillatory neural thought generation and automatic locomotor output are \emph{dissociable} systems. This must be established before any measurement framework built on their separation can be trusted.
+
+\begin{theorem}[Thought-Motor Dissociation]
+\label{thm:ch10-dissociation}
+The neural system $\calT$ generating oscillatory thought signatures and the motor system $\mathcal{M}$ producing skeletal output are functionally independent and can operate simultaneously without mutual interference.
+\end{theorem}
+
+\begin{proof}[Proof via REM Sleep Physiology]
+During REM sleep, subjects exhibit full brainstem muscle atonia: spinal motor neurons are actively inhibited by pontomedullary circuits, producing complete suppression of voluntary movement \citep{chase1990}. Yet throughout this atonia, subjects generate elaborate internally-driven oscillatory narratives indistinguishable subjectively from waking experience---narratives involving complex locomotion, speech, and action sequences. Neural correlates of motor preparation activate in motor cortex, yet no peripheral command reaches skeletal muscle \citep{hobson2002cognitive}.
+
+This constitutes a direct proof: the oscillatory signature-generation apparatus $\calT$ operates at full capacity while motor output $\mathcal{M} \equiv 0$. Therefore $\calT$ and $\mathcal{M}$ are dissociable. \qed
+\end{proof}
+
+The dissociation theorem permits the following operational definition.
+
+\begin{definition}[Internal Simulation Operator]
+\begin{equation}
+\calI : \mathrm{State}_{\mathrm{cog}} \to \mathrm{Experience}_{\mathrm{osc}}
+\end{equation}
+maps cognitive state (memory, affect, goals) to the oscillatory experiential output. During dreaming $\calI$ is unconstrained; during waking automatic behavior $\calI$ is pegged to external sensory reality through the \emph{reality-pegging operator} $\calP$.
+\end{definition}
+
+The resulting waking thought system is:
+\begin{equation}
+\calT_{\mathrm{wake}} = \calP\!\left(\calI(\mathrm{cognition}),\, \mathcal{R}_{\mathrm{sensory}}\right)
+\end{equation}
+
+During an automatic motor task, $\calT_{\mathrm{wake}}$ operates orthogonally to $\mathcal{M}_{\mathrm{auto}}$: thoughts concern strategy, sensation, and affect---not motor commands. This orthogonality is the experimental handle.
+
+\end{multicols}
+
+%% ================================================================
+\section{Oscillatory Reality: Three Foundational Pillars}
+%% ================================================================
+
+\begin{multicols}{2}
+
+The measurement framework rests on the claim that physical reality is inherently oscillatory. Three independent arguments establish this.
+
+\subsection{Mathematical Necessity}
+
+\begin{theorem}[Oscillatory Recurrence --- Mathematical]
+\label{thm:ch10-godel}
+Any sufficiently rich formal system that refers to its own states must exhibit periodic recurrence of those states.
+\end{theorem}
+
+The argument parallels G\"{o}del self-reference: a system capable of self-modelling generates self-referential loops; self-referential loops in a finite state-space force cyclic trajectories. Every physical dynamical system may be encoded as a formal system over its microstate alphabet; therefore periodic recurrence is a mathematical necessity, not merely a contingent feature.
+
+\subsection{Physical Inevitability}
+
+\begin{theorem}[Oscillatory Recurrence --- Physical]
+\label{thm:ch10-poincare}
+Every bounded Hamiltonian system with finite phase-space volume returns arbitrarily close to any initial state in finite time.
+\end{theorem}
+
+Poincar\'{e}'s recurrence theorem applies directly. Biological subsystems are bounded (finite mass, finite energy budget) and conservative on sufficiently short timescales (adiabatic approximation holds for sub-millisecond neural dynamics). Therefore oscillatory recurrence is physically inevitable \citep{poincare1890}.
+
+\subsection{Thermodynamic Mandate}
+
+Entropy maximisation over a bounded phase space populates all accessible oscillatory modes. For a mode of energy $\hbar\omega$, the thermal occupation is:
+\begin{equation}
+\langle n_\omega \rangle = \frac{1}{\exp(\hbar\omega / k_B T) - 1}
+\end{equation}
+
+At physiological temperature ($k_B T \approx 25\,\mathrm{meV}$), all modes with $\hbar\omega \lesssim k_B T$ have $\langle n_\omega \rangle \gg 1$. Neural oscillatory bands (0.5--100\,Hz) satisfy $\hbar\omega \ll k_B T$ by many orders of magnitude; their population is thermodynamically mandated rather than optionally selected. \emph{Oscillation is the default state of a warm bounded system.}
+
+\end{multicols}
+
+%% ================================================================
+\section{Categorical Temporal Emergence}
+%% ================================================================
+
+\begin{multicols}{2}
+
+Chapter~\ref{ch:charge_quantification} introduced the Bounded Phase Space $\mathcal{C}(n) = 2n^2$. The present section formalises how \emph{time itself} emerges from the categorical completion of oscillatory events, connecting that earlier analysis to the measurement framework below.
+
+\begin{definition}[Categorical Space with Measure]
+A categorical space is a quadruple $(\mathcal{C}, \prec, \mu, \tau)$ where $\mathcal{C}$ is the event set, $\prec$ is a causal order, $\mu : \mathcal{C} \times \mathbb{R}^+ \to [0,1]$ is a completion measure, and $\tau$ is an event topology.
+\end{definition}
+
+\begin{axiom}[Irreversibility]
+If $\mu(\mathcal{C}, t_1) = 1$ then $\mu(\mathcal{C}, t_2) = 1$ for all $t_2 > t_1$.
+\end{axiom}
+
+\begin{theorem}[Temporal Emergence]
+\label{thm:ch10-temporal}
+For any categorical sequence, a unique temporal coordinate emerges as:
+\begin{equation}
+T(\mathcal{C}) = \inf\{t : \mu(\mathcal{C}, t) = 1\}
+\end{equation}
+\end{theorem}
+
+The equivalence $S_{\mathrm{osc}} = S_{\mathrm{cat}}$ established in Ch.~\ref{ch:charge_quantification} (Theorem~\ref{thm:ch09-triple}) means that oscillatory entropy and categorical entropy are the same quantity measured in different frames. The temporal coordinate $T(\mathcal{C})$ is therefore the moment at which an oscillatory mode fully populates its categorical slot---this is precisely the neural synchronisation event that Chapter~\ref{ch:cardio_neural} identified as the coherent processing window $\tau_{\mathrm{sync}} \approx 23\,\mu\mathrm{s}$.
+
+\end{multicols}
+
+%% ================================================================
+\section{Biological Maxwell Demon Information Catalysis}
+%% ================================================================
+
+\begin{multicols}{2}
+
+Chapter~\ref{ch:metabolism_engine} introduced autocatalytic redistribution as the mechanism by which enzymatic networks channel free energy without violating the Second Law. The BMD formalises this as an information-catalytic process operating at the Landauer limit.
+
+\subsection{Catalytic Selectivity}
+
+An uncatalysed enzymatic channel has prior probability $P_0 \sim 10^{-15}$ of selecting the correct substrate from the accessible microstate pool. A BMD-equipped enzyme achieves posterior probability $P_{\mathrm{BMD}} \approx 10^{-3}$, an enhancement of $10^{12}$ per catalytic event.
+
+The energy cost is bounded by Landauer's erasure principle: selecting one state from $N = 10^{15}$ requires:
+\begin{equation}
+\Delta F_{\mathrm{Landauer}} = k_B T \ln N \approx 2\,\mathrm{kcal/mol}
+\end{equation}
+against a free energy budget of $\sim\!30\,\mathrm{kcal/mol}$ per ATP hydrolysis---well within thermodynamic headroom. The BMD therefore operates at $<\!7\%$ of its energy budget on information costs, leaving $>\!93\%$ for mechanical and chemical work.
+
+\subsection{Enzymatic Cascade Architecture}
+
+Multi-step cascades amplify selectivity multiplicatively. Hexokinase provides the canonical example:
+
+\begin{enumerate}
+\item Glucose binding ($K_M = 0.1\,\mathrm{mM}$): selectivity $10^5$
+\item Phosphate transfer (rate $10^3\,\mathrm{s}^{-1}$): selectivity $10^5$
+\item Product release ($K_{\mathrm{cat}} = 100\,\mathrm{s}^{-1}$): selectivity $10^4$
+\end{enumerate}
+
+Net cascade enhancement: $\eta_{\mathrm{total}} = 10^{14}$; switching time $\tau_{\mathrm{switch}} = 23\,\mu\mathrm{s}$, consistent with the cardiac-neural coherence window derived in Chapter~\ref{ch:cardio_neural}.
+
+\subsection{Network Synchronisation}
+
+When BMDs operate in synchronised networks, the collective selectivity scales super-additively. For a network of $K$ BMDs with pairwise coupling $\varepsilon$:
+\begin{equation}
+\eta_{\mathrm{network}} = \eta_{\mathrm{single}}^K \cdot \exp\!\left(\varepsilon K(K-1)/2\right)
+\end{equation}
+
+At the cardiac-neural coupling strength $\varepsilon \approx \kON \cdot \tau_{\mathrm{sync}}$ derived in Theorem~\ref{thm:ch09-kappa}, networks of $K \gtrsim 10$ BMDs achieve information bandwidths sufficient for thought-rate processing at $\sim\!3$ events per second.
+
+\end{multicols}
+
+%% ================================================================
+\section{S-Entropy Navigation and Five-Dimensional State Space}
+%% ================================================================
+
+\begin{multicols}{2}
+
+Chapter~\ref{ch:cardio_neural} introduced the S-entropy coordinate system to characterise the neural phase space. We now make this operational for the running measurement.
+
+\begin{definition}[S-Entropy State Vector]
+The S-entropy representation of a neural oscillatory signal assigns five coordinates:
+\begin{equation}
+\mathbf{s}(t) = (s_K,\, s_T,\, s_S,\, s_C,\, s_I) \in \mathbb{R}^5
+\end{equation}
+where:
+\begin{align}
+s_K &= \text{participation ratio (mode distribution)} \\
+s_T &= \text{autocorrelation decay timescale} \\
+s_S &= \text{sample entropy} \\
+s_C &= \text{approach-to-equilibrium rate} \\
+s_I &= \text{Shannon entropy of state histogram}
+\end{align}
+\end{definition}
+
+Navigation through S-space has $\mathcal{O}(1)$ complexity: instead of searching a $10^N$-dimensional microstate space, the system minimises an S-distance:
+\begin{equation}
+d_S(\mathbf{s}_1, \mathbf{s}_2) = \left[\sum_{j=1}^5 w_j\,(s_{j,1} - s_{j,2})^2\right]^{1/2}
+\end{equation}
+with weights $w_j$ calibrated to the biological noise floor of each channel. The reduction from exponential to $O(5^2)$ search is the computational dividend of the S-entropy representation.
+
+\subsection{Trans-Planckian Precision via Gear-Ratio Cascades}
+
+Temporal precision appears bounded by the Heisenberg limit:
+\begin{equation}
+\Delta t \geq \frac{\hbar}{2k_BT} \approx 13\,\mathrm{fs}
+\end{equation}
+
+However, gear-ratio coupling between hierarchical oscillatory scales transforms coordinates such that the effective uncertainty becomes:
+\begin{equation}
+\Delta t_{\mathrm{eff}} = \frac{\Delta t_0}{R_{\mathrm{cascade}}}
+\end{equation}
+
+The cascade from cardiac (2.5\,Hz) through neural alpha (10\,Hz), gamma (40\,Hz), cellular kHz, and electronic GHz to molecular THz yields:
+\begin{equation}
+R_{\mathrm{cascade}} = \underbrace{4}_{\alpha/\mathrm{card}} \times \underbrace{4}_{\gamma/\alpha} \times \underbrace{25}_{\mathrm{cell}/\gamma} \times \underbrace{10^6}_{\mathrm{elec/cell}} \times \underbrace{10^4}_{\mathrm{mol/elec}} = 4\times10^{12}
+\end{equation}
+
+From GPS timing ($\Delta t_0 \approx 1\,\mathrm{ms}$):
+\begin{equation}
+\Delta t_{\mathrm{eff}} \approx \frac{10^{-3}}{4\times10^{12}} \approx 250\,\mathrm{as}
+\end{equation}
+
+Combining the cascade with the five-dimensional Fourier enhancement (factor $\sim\!32$) and harmonic network graph topology (factor $\sim\!60$) gives an experimentally measured combined precision of $R_{\mathrm{meas}} = 2847$---consistent with cross-path agreement $\Delta\tau/\tau < 1.3\%$ across three independent measurement pathways \citep{sachikonye2024_variance}.
+
+\end{multicols}
+
+%% ================================================================
+\section{Atmospheric Oxygen as Coupling Substrate}
+%% ================================================================
+
+\begin{multicols}{2}
+
+The O$_2$ coupling constant $\kON = 4.7\times10^{-3}\,\mathrm{s}^{-1}$ derived in Chapter~\ref{ch:cardio_neural} (Theorem~\ref{thm:ch09-kappa}) deserves mechanistic grounding.
+
+\subsection{Paramagnetic Spin Coupling}
+
+Molecular O$_2$ has triplet ground state $^3\Sigma_g^-$ with two unpaired electrons and net spin $S = 1$, making it uniquely paramagnetic among common atmospheric gases. The Zeeman interaction with endogenous neural magnetic fields ($B_{\mathrm{neural}} \sim 10^{-9}\,\mathrm{T}$) produces spin-state transitions at frequency:
+\begin{equation}
+\nu_{\mathrm{ESR}} = \frac{g\mu_B B_{\mathrm{neural}}}{h} \approx 28\,\mathrm{Hz}
+\end{equation}
+
+This lies squarely in the neural alpha/beta band, providing a spin-resonance channel through which atmospheric O$_2$ couples to cortical oscillatory dynamics.
+
+\subsection{Enhancement Factor}
+
+The ratio of aerobic to anaerobic coupling coefficients is:
+\begin{equation}
+\frac{\kappaON}{\kappaAN} = \frac{4.7\times10^{-3}}{5.9\times10^{-7}} \approx 8000
+\end{equation}
+
+The effective enhancement appearing in BMD efficiency and drug binding efficacy is $\sqrt{8000} \approx 89$.
+
+\subsection{Body-Air Interface During Sprint}
+
+Over a 400\,m sprint ($t \approx 100\,\mathrm{s}$, $v \approx 4\,\mathrm{m/s}$, frontal area $A \approx 0.5\,\mathrm{m}^2$), the runner displaces:
+\begin{equation}
+V_{\mathrm{air}} = v \cdot A \cdot t = 200\,\mathrm{m}^3 \implies N_{\mathrm{O_2}} \approx 1.1\times10^{27}\,\mathrm{molecules}
+\end{equation}
+
+The boundary layer of thickness $\delta \approx 3\,\mathrm{mm}$ maintains $N_{\mathrm{O_2}}^{\mathrm{BL}} \approx 3.4\times10^{22}$ molecules in direct skin contact; 74\% of the neural electromagnetic field penetrates this layer ($B \propto e^{-r/\lambda}$, $\lambda \approx 1\,\mathrm{cm}$). Collectively, the atmospheric O$_2$ reservoir entrains $\sim\!10^{28}$ molecules into coherent coupling with the runner's oscillatory biomechanical dynamics, providing information bandwidth many orders of magnitude above what intracellular O$_2$ alone could supply.
+
+\subsection{Variance Restoration Timescale}
+
+Neural configurational variance $\sigma^2(t)$ obeys exponential relaxation:
+\begin{equation}
+\frac{d\sigma^2}{dt} = -\frac{\sigma^2}{\tauR}
+\end{equation}
+
+with restoration time:
+\begin{equation}
+\tauR = \frac{1}{\kappaON \cdot N_{\mathrm{O_2}}^{\mathrm{eff}}}
+\end{equation}
+
+For $N_{\mathrm{O_2}}^{\mathrm{eff}} \sim 10^{27}$ (atmospheric coupling) this is formally sub-femtosecond; the effective value accounting for neural processing overhead is $\tauR^{\mathrm{eff}} \approx 200\,\mu\mathrm{s}$, matching the $\tau_{\mathrm{switch}}$ of the BMD cascade and the coherent processing window from Ch.~\ref{ch:cardio_neural}. Consequently a complete oscillatory thought signature forms in:
+\begin{equation}
+t_{\mathrm{thought}} = \tauR^{\mathrm{eff}} \cdot \ln\!\left(\frac{\sigma_0^2}{\sigma_{\mathrm{thresh}}^2}\right) \approx 3.5\,\tauR^{\mathrm{eff}} \approx 200\,\mathrm{ms}
+\end{equation}
+
+consistent with empirical estimates of the perceptual latency for a discrete conscious event \citep{libet1983time}.
+
+\end{multicols}
+
+%% ================================================================
+\section{The 400\,m Sprint Paradigm}
+%% ================================================================
+
+\begin{multicols}{2}
+
+The 400\,m sprint is selected for five independent reasons, each connected to the theoretical architecture developed above.
+
+\paragraph{Motor Automaticity.}
+Elite and sub-elite 400\,m runners have automatised their gait through $>10^4$ practice hours. Neuroimaging confirms that during expert locomotion the predominant activation shifts from motor cortex (cortical, voluntary) to cerebellum, brainstem, and spinal cord (subcortical, automatic) \citep{hikosaka2002central}. Central pattern generators (CPGs) in the lumbar spinal cord (L1--L5) sustain the stride cycle without volitional input; the higher neural oscillatory system is therefore genuinely decoupled from locomotor output.
+
+\paragraph{Cardiac Entrainment.}
+At 400\,m race pace (heart rate $\sim\!150\,\mathrm{bpm}$, stride rate $\sim\!150\,\mathrm{steps/min}$), cardiac and locomotor cycles entrain at close to 1:1 ratio. Phase-locking value between cardiac and stride phases exceeds $\mathrm{PLV} > 0.7$ in steady-state running \citep{niizeki1993intramuscular}, providing a stable cardiac reference clock against which all other oscillatory signals are measured.
+
+\paragraph{Thought Independence.}
+The dissociation theorem (Theorem~\ref{thm:ch10-dissociation}) guarantees that oscillatory thought signatures continue uninterrupted during automatic locomotion. The runner can be instructed to adopt coherent (reality-pegged) or incoherent (reality-divergent) oscillatory patterns; the biomechanical consequences---stability or instability---provide the objective read-out.
+
+\paragraph{Reality Pegging.}
+Continuous sensory feedback (proprioception, vestibular, cutaneous) pegs the internal simulation to the actual body state. The Kalman update:
+\begin{equation}
+\hat{\mathbf{x}}_{k|k} = \hat{\mathbf{x}}_{k|k-1} + \mathbf{K}_k\!\left(\mathbf{y}_k - \mathbf{C}\hat{\mathbf{x}}_{k|k-1}\right)
+\end{equation}
+quantifies this alignment: when internal prediction $\hat{\mathbf{x}}$ diverges from observed $\mathbf{y}$, the innovation residual is non-zero and stability degrades.
+
+\paragraph{Duration and Statistical Power.}
+A 100-second sprint at 200\,ms per thought event yields $\sim\!500$ thought events per run, providing adequate statistical power ($N = 500$) to resolve the three metrics below with confidence intervals of $\pm 0.02$ at $\alpha = 0.05$.
+
+\end{multicols}
+
+%% ================================================================
+\section{Central Pattern Generators and Cardiac-Locomotor Coupling}
+%% ================================================================
+
+\begin{multicols}{2}
+
+\subsection{CPG Architecture}
+
+The locomotor CPG is a half-centre oscillator with flexor activity $x_F$ and extensor activity $x_E$:
+\begin{align}
+\frac{dx_F}{dt} &= -x_F + S(w_{FF}x_F - w_{FE}x_E + I_F) \\
+\frac{dx_E}{dt} &= -x_E + S(w_{EE}x_E - w_{EF}x_F + I_E)
+\end{align}
+where $S(z) = (1 + e^{-z})^{-1}$ is the sigmoid, $w_{ij}$ are connection weights with $w_{FE}, w_{EF} > 0$ (mutual inhibition), and $I_i$ are brainstem drive inputs. The cycle period is:
+\begin{equation}
+T_{\mathrm{cycle}} \approx 2\tau\ln\!\left(\frac{w_{FE}+w_{EF}}{2}\right) \approx 400\,\mathrm{ms}
+\end{equation}
+consistent with 150 strides/min at race pace.
+
+Proprioceptive feedback from Golgi tendon organs, muscle spindles, and cutaneous foot receptors enters as additive sensory coupling $g_{ij}(\mathbf{s}_{\mathrm{sensory}})$, making the CPG adaptive while preserving its autonomous rhythm.
+
+\subsection{Phase-Locked Cardiac-Locomotor Coupling}
+
+Following the Kuramoto formulation of Chapter~\ref{ch:cardio_neural}, cardiac phase $\phiC$ and locomotor phase $\phiL$ satisfy:
+\begin{align}
+\frac{d\phiC}{dt} &= \omC + K_{CL}\sin(\phiL - \phiC) \\
+\frac{d\phiL}{dt} &= \omL + K_{LC}\sin(\phiC - \phiL)
+\end{align}
+
+At 400\,m pace $\omC \approx \omL \approx 2\pi \times 2.5\,\mathrm{Hz}$, which places the system deep inside the 1:1 Arnold tongue. Measured coupling strengths $K_{CL} \approx 0.3\,\mathrm{rad/s}$, $K_{LC} \approx 0.2\,\mathrm{rad/s}$ give a lock-in bandwidth of $\Delta\omega_{\mathrm{lock}} \approx 0.24\,\mathrm{rad/s}$, meaning synchronisation persists across heart rate variations of $\pm 0.04\,\mathrm{Hz}$---robust against mid-race metabolic drift.
+
+\subsection{Thought Phase Against the Cardiac Reference}
+
+With cardiac phase established as the universal reference (see Ch.~\ref{ch:cardio_neural}, Section on cardiac master oscillator), the phase of the $k$-th thought event is:
+\begin{equation}
+\phiTh^{(k)}(t) = 2\pi \frac{t - t_{R,k}}{T_{RR,k}}
+\end{equation}
+
+Phase-locking between thought oscillations and the cardiac reference defines the primary coherence quantity (see Section~\ref{sec:ch10_metrics} below).
+
+\end{multicols}
+
+%% ================================================================
+\section{The Three Measurement Metrics}
+\label{sec:ch10_metrics}
+%% ================================================================
+
+\begin{multicols}{2}
+
+Three scalar quantities characterise the state of the coupled oscillatory system during a 400\,m sprint.
+
+\subsection{Stability Index}
+
+\begin{definition}[Stability Index]
+\begin{equation}
+\Sstab = 1 - \frac{N_{\mathrm{fall}}^{\mathrm{sim}}}{N_{\mathrm{total}}^{\mathrm{sim}}} \in [0,1]
+\end{equation}
+where $N_{\mathrm{fall}}^{\mathrm{sim}}$ is the number of stride simulations in which the runner's centre of mass crosses outside the base of support, assessed via a spring-mass biomechanical model calibrated to individual anthropometry.
+\end{definition}
+
+$\Sstab = 1$ indicates perfect stride-to-stride stability; $\Sstab = 0$ indicates complete loss of upright posture. The Margin of Stability (MOS):
+\begin{equation}
+\mathrm{MOS} = x_{\mathrm{BOS}} - x_{\mathrm{COM}} - \frac{v_{\mathrm{COM}}}{\omega_0}
+\end{equation}
+must remain positive throughout each stance phase; the fraction of strides satisfying this condition defines $\Sstab$ operationally.
+
+\subsection{Thought-Body Coherence}
+
+\begin{definition}[Thought-Body Coherence]
+\begin{equation}
+\CTB = \frac{1}{N}\sum_{k=1}^{N} \mathcal{C}_k
+\end{equation}
+where the per-event coherence is:
+\begin{equation}
+\mathcal{C}_k = \frac{1}{2}\!\left[\cos(\phi_{\mathrm{th},k} - \phiC) + \exp\!\left(-\frac{|f_{\mathrm{th},k} - f_C|}{f_C}\right)\right]
+\end{equation}
+\end{definition}
+
+The first term measures phase alignment; the second measures frequency alignment. $\CTB \in [0,1]$: $\CTB \to 1$ when thought oscillations are phase- and frequency-locked to the cardiac master; $\CTB \to 0$ when they are fully incoherent.
+
+\subsection{Cardiac-Neural Phase-Locking Value}
+
+\begin{definition}[Cardiac-Neural PLV]
+\begin{equation}
+\PLVcn = \left|\left\langle e^{i(\phi_{\mathrm{neural}} - \phiC)}\right\rangle_t\right| \in [0,1]
+\end{equation}
+\end{definition}
+
+This is the circular mean resultant length of the phase-difference distribution, a standard measure of inter-signal synchrony \citep{lachaux1999measuring}. $\PLVcn = 1$ denotes perfect phase-locking; $\PLVcn = 0$ denotes uniformly random phase differences.
+
+\end{multicols}
+
+%% ================================================================
+\section{Coherence-Stability Linear Relation}
+%% ================================================================
+
+\begin{multicols}{2}
+
+\begin{theorem}[Interface Coherence Theorem]
+\label{thm:ch10-coherence}
+For automatic motor execution with internal oscillatory simulation operating in parallel, there exists a monotonic relation between $\CTB$ and $\Sstab$:
+\begin{equation}
+\Sstab = f(\CTB), \quad f' > 0
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof Sketch]
+\emph{High coherence} ($\CTB > 0.7$): The internal simulation accurately tracks actual body state. Sensory-predicted state mismatch is small; Kalman innovation residual $\|\mathbf{y}_k - \mathbf{C}\hat{\mathbf{x}}_{k|k-1}\|$ remains below the threshold that would generate corrective motor commands. The automatic CPG substrate runs unperturbed; $\Sstab$ remains high.
+
+\emph{Low coherence} ($\CTB < 0.5$): Internal simulation diverges from actual state. The mismatch generates corrective commands that interfere with the CPG pattern. These perturbations accumulate stride-to-stride, driving the MOS toward zero. $\Sstab$ degrades proportionally.
+
+Linearising the Langevin variance dynamics around steady state and substituting the coherence-dependent potential curvature yields:
+\begin{equation}
+\boxed{\Sstab = 0.2 + 1.0 \cdot \CTB}
+\end{equation}
+with intercept 0.2 representing the residual stability of the purely automatic (coherence-independent) CPG substrate, and slope 1.0 reflecting unit coupling between thought-body phase alignment and stride-to-stride biomechanical stability. Empirically $R^2 > 0.8$ \citep{sachikonye2024_variance}. \qed
+\end{proof}
+
+The intercept $\beta_0 = 0.2$ is experimentally testable: it is the stability of a runner with completely incoherent oscillatory thought ($\CTB \approx 0$), which should approach but not reach zero because the CPG substrate maintains baseline stride continuity independent of higher oscillatory state.
+
+\end{multicols}
+
+%% ================================================================
+\section{Clinical Stratification}
+%% ================================================================
+
+\begin{multicols}{2}
+
+The three metrics provide differential diagnostic power across populations. Table~\ref{tab:ch10_clinical} shows reference values from five groups measured under the sprint protocol.
+
+\end{multicols}
+
+\begin{table}[!htbp]
+\centering
+\caption{Reference values of the three oscillatory coherence metrics across five clinical and performance groups measured during the 400\,m sprint protocol. Values are mean $\pm$ SD. Healthy: general population athletes. MDD: major depressive disorder. All groups $n \geq 20$.}
+\label{tab:ch10_clinical}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Group} & $\Sstab$ & $\CTB$ & $\PLVcn$ \\
+\hline
+Meditation experts & $0.99 \pm 0.01$ & $0.91 \pm 0.04$ & $0.87 \pm 0.05$ \\
+Healthy athletes & $0.97 \pm 0.02$ & $0.82 \pm 0.06$ & $0.71 \pm 0.07$ \\
+Anxiety disorder & $0.73 \pm 0.08$ & $0.61 \pm 0.09$ & $0.54 \pm 0.10$ \\
+Major depression & $0.81 \pm 0.07$ & $0.67 \pm 0.08$ & $0.48 \pm 0.09$ \\
+Schizophrenia & $0.52 \pm 0.12$ & $0.43 \pm 0.11$ & $0.36 \pm 0.11$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{multicols}{2}
+
+Several features of Table~\ref{tab:ch10_clinical} merit comment.
+
+\paragraph{Meditation vs.\ healthy.}
+Meditation experts show $\Sstab \approx 0.99$, approaching the theoretical ceiling. The mechanism is enhanced cardiac-neural entrainment from long-term attentional training, which tightens the feedback loop in the reality-pegging operator $\calP$ and keeps $\CTB$ systematically above 0.9.
+
+\paragraph{Anxiety vs.\ depression.}
+Anxiety yields lower $\Sstab$ than depression ($0.73$ vs.\ $0.81$) despite higher $\PLVcn$ ($0.54$ vs.\ $0.48$). This inversion reflects the distinct mechanisms: anxiety generates high-frequency oscillatory interference that disrupts CPG stride timing (low $\Sstab$) even when cardiac-neural phase-locking is partially maintained; depression produces global oscillatory slowing that reduces PLV without generating the disruptive interference.
+
+\paragraph{Schizophrenia.}
+The lowest values across all three metrics ($\Sstab = 0.52$, $\CTB = 0.43$, $\PLVcn = 0.36$) indicate profound disruption of the cardiac-neural coupling architecture, consistent with the coherence deficit picture developed in Chapter~\ref{ch:cardio_neural} (Section on disease as coherence deficit). The stability floor at $\Sstab = 0.52 > 0.2$ confirms the CPG substrate remains partially functional even when higher oscillatory coherence is severely degraded.
+
+\paragraph{Therapeutic floor.}
+The intercept $\beta_0 = 0.2$ sets a minimum stability achievable by any individual with a functioning CPG, regardless of oscillatory state. This is the \emph{therapeutic floor}: pharmacological or neuromodulatory interventions that restore $\CTB$ above 0.5 immediately lift $\Sstab$ above $0.7$, the threshold compatible with independent ambulation.
+
+\end{multicols}
+
+%% ================================================================
+\section{Psychon Geometry: Oscillatory Thought Quanta}
+%% ================================================================
+
+\begin{multicols}{2}
+
+The oscillatory thought event has a definite physical structure. We call the minimal complete thought unit the \emph{oscillatory thought quantum} (OTQ), defined by:
+
+\begin{enumerate}
+\item A molecular geometry $\mathbf{G} = \{\mathbf{r}_1,\ldots,\mathbf{r}_N\}$ of $N \sim 10^3$--$10^4$ O$_2$ molecules distributed in concentric shells around a localised electron vacancy (oscillatory hole)
+\item An oscillatory signature $\boldsymbol{\omega} = (\omega_1,\ldots,\omega_M)$ phase-locked to the cardiac reference
+\item S-entropy coordinates $\mathbf{s} \in \mathbb{R}^5$ uniquely identifying the thought type
+\item Formation time $\Tform \approx 200\,\mathrm{ms}$
+\item Stability lifetime $\sim\!2$--$3\,\mathrm{s}$ (specious present duration)
+\end{enumerate}
+
+\paragraph{Information content.}
+The OTQ carries approximately 50 bits of information---the log$_2$ of the equivalence class of geometrically equivalent configurations $|\{[\psi]\}| \approx 10^{15}$. BMD cascade filtering reduces this space to a single actual geometry per thought event at an energy cost of $\sim\!3$ ATP molecules ($\approx 1.5\times10^{-19}\,\mathrm{J}$).
+
+\paragraph{Shell structure.}
+O$_2$ molecules organise in four concentric shells around the oscillatory hole:
+\begin{itemize}
+\item Inner shell (1--5\,\AA, $N_1 \approx 20$): direct electrostatic stabilisation
+\item Middle shell (5--10\,\AA, $N_2 \approx 60$): indirect coupling
+\item Outer shell (10--20\,\AA, $N_3 \approx 200$): long-range correlation
+\item Halo (20--50\,\AA, $N_4 \approx 10^3$): weak background coupling
+\end{itemize}
+
+The total $\sim\!1300$ molecules per OTQ constitute the physical substrate of a single oscillatory thought event.
+
+\paragraph{Variance dynamics.}
+Configurational variance $\sigma^2(t) = N^{-1}\sum_i\|\mathbf{r}_i(t) - \langle\mathbf{r}_i\rangle\|^2$ obeys:
+\begin{equation}
+\sigma^2(t) = \sigma_{\mathrm{ss}}^2 + (\sigma_0^2 - \sigma_{\mathrm{ss}}^2)\,e^{-t/\tauR}
+\end{equation}
+
+Without BMD activation the steady-state variance diverges (flat potential, no localisation). With BMD the potential becomes sharply convex, reducing $\sigma_{\mathrm{ss}}$ to $\sim\!0.5\,\text{\AA}$---below the oscillatory hole stabilisation threshold---and thereby freezing the geometry into a single OTQ.
+
+\end{multicols}
+
+%% ================================================================
+\section{Chapter Summary}
+%% ================================================================
+
+\begin{multicols}{2}
+
+This chapter has synthesised the physical substrates established in Chapters~\ref{ch:musculoskeletal}--\ref{ch:cardio_neural} into a unified measurement framework for individual oscillatory performance during sprint running. The main results are as follows.
+
+\paragraph{Dissociation theorem.}
+REM sleep physiology proves that oscillatory thought generation ($\calT$) and motor output ($\mathcal{M}$) are functionally dissociable. During automatic locomotion in experienced runners, $\calT$ operates orthogonally to the CPG, permitting independent measurement.
+
+\paragraph{Atmospheric O$_2$ enhancement.}
+Paramagnetic coupling coefficient $\kappaON = 4.7\times10^{-3}\,\mathrm{s}^{-1}$ exceeds the anaerobic baseline by a factor of 8000, with an effective BMD efficiency enhancement of $\sqrt{8000}\approx 89$. The 400\,m sprint entrains $\sim\!10^{28}$ atmospheric O$_2$ molecules into coherent coupling, supplying information bandwidth orders of magnitude above intracellular O$_2$ alone.
+
+\paragraph{Trans-Planckian precision.}
+Gear-ratio cascades across 13 hierarchical oscillatory scales (GPS $\to$ cardiac $\to$ neural $\to$ molecular $\to$ nuclear) reduce effective temporal uncertainty from the GPS baseline of 1\,ms to attosecond resolution in S-entropy transformed coordinates. Experimentally measured cascade factor $R_{\mathrm{meas}} = 2847$; cross-pathway consistency $\Delta\tau/\tau < 1.3\%$.
+
+\paragraph{Three metrics.}
+The Stability Index $\Sstab$, Thought-Body Coherence $\CTB$, and Cardiac-Neural PLV $\PLVcn$ collectively characterise the oscillatory coupling state. They are linked by:
+\begin{equation}
+\Sstab = 0.2 + 1.0\,\CTB \quad (R^2 > 0.8)
+\end{equation}
+The intercept 0.2 is the CPG-autonomous stability floor; the slope 1.0 reflects unit coupling between phase alignment and biomechanical stability.
+
+\paragraph{Clinical stratification.}
+Reference values stratify cleanly across five populations: meditation experts ($\Sstab = 0.99$, $\CTB = 0.91$, $\PLVcn = 0.87$), healthy athletes ($0.97$, $0.82$, $0.71$), anxiety disorder ($0.73$, $0.61$, $0.54$), major depression ($0.81$, $0.67$, $0.48$), and schizophrenia ($0.52$, $0.43$, $0.36$). The therapeutic floor at $\CTB \approx 0.5$ corresponds to the $\Sstab = 0.7$ threshold compatible with independent ambulation---providing a quantitative target for neuromodulatory intervention.
+
+Part~III of the monograph is hereby complete. The physical substrate of oscillatory neural function has been derived from the closed charge circuit (Ch.~\ref{ch:musculoskeletal}) through autocatalytic metabolism (Ch.~\ref{ch:metabolism_engine}), functional charge decomposition and the Bounded Phase Space $\mathcal{C}(n) = 2n^2$ (Ch.~\ref{ch:charge_quantification}), the cardiac master oscillator and its neural coupling constant $\kON$ (Ch.~\ref{ch:cardio_neural}), and the unified variance-minimisation framework for the running individual (this chapter). Part~IV will extend this physical substrate to the explicit mathematics of oscillatory coherence as the categorical completion of bounded dynamical systems.
+
+\end{multicols}
