@@ -6,7 +6,7 @@
 \usepackage[margin=2.4cm]{geometry}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{bm}
-\usepackage{booktabs,array,float}
+\usepackage{booktabs,array,float,multirow}
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{syntax}
@@ -904,6 +904,105 @@ A parse acceptance of an exclusion-free \texttt{seek} would falsify
 \Cref{thm:termination}; a raised exception on conflicting evidence would
 falsify \Cref{cor:decline}. Results are recorded in machine-readable form
 alongside this paper.
+
+\subsection{Results}
+\label{sec:results}
+
+All five checks passed.
+
+\emph{Parsing and typing.} The reference program of
+\Cref{sec:grammar} parsed and type-checked. The same program with the
+\texttt{excluding} clause deleted was rejected at parse time, as
+\Cref{cor:reject} requires: the rejection occurs before typing, because the
+form is absent from the grammar rather than ill-typed within it. Declaring a
+floor of $0$ or of $-3$ was rejected by \textsc{T-Seek-Pos}; a
+\texttt{via} clause naming two catalysts was rejected by
+\textsc{T-Seek-Coh}; and a \texttt{via} clause naming three catalysts of
+which one was not declared mutually independent of the others was also
+rejected, showing the rule tests the independence relation and not merely
+the count.
+
+\emph{Semantics.} Over $500$ randomly generated substrates, each evaluated
+under all $3!=6$ orderings of the catalyst set---$3000$ evaluations in
+total---there were zero violations of progress or preservation, zero of
+determinism, zero of the termination bound, zero of record monotonicity, and
+zero of the outcome dichotomy. Every evaluation terminated in at most
+$\abs{\Gamma_{\mathrm{avail}}}=3$ invocations, as \Cref{thm:termination}
+requires, and every configuration reduced to a value of type
+\texttt{Outcome}.
+
+\emph{Both branches occur.} Of the $500$ substrates, $296$ terminated in
+\texttt{Resolved} and $204$ in \texttt{Declined}. We record this because a
+dichotomy theorem is compatible with one branch being unreachable in
+practice, and a language whose declination branch never fires would be a
+language with a threshold criterion in disguise. The near-balance here is an
+artefact of the substrate sampling---cell counts were drawn so that agreement
+and disagreement were both common---but it establishes that both branches
+are live and that declination arises from ordinary substrate configurations
+rather than from contrived ones.
+
+\emph{Closure against a threshold.} On the substrate in which two catalysts
+reach a common cell and the third reaches an incompatible one, with the
+common cell carrying an attained uncertainty of $5.0$ against a threshold of
+$\theta=10.0$, the threshold procedure halted after $1$ invocation reporting
+$\texttt{Resolved}(\mathtt{cellA})$, while the closure procedure performed
+$2$ invocations and reported
+$\texttt{Declined}(\{\mathtt{cellA},\mathtt{cellB}\})$. The two procedures
+returned incompatible verdicts on identical evidence, which is the concrete
+content of \Cref{thm:closure-stronger}.
+
+\begin{remark}[The threshold procedure stopped before the disagreement was
+reachable]
+\label{rem:threshold-early}
+The detail worth drawing out is \emph{when} the threshold procedure halted:
+after one invocation, not two. It stopped as soon as a single source reported
+an outcome it found confident, and therefore never invoked the source that
+would have contradicted it---not because that source was unavailable, but
+because the criterion had already been satisfied. This is the failure mode of
+\Cref{rem:closure-why} realised in a concrete evaluation: internal
+consistency of one line of evidence is sufficient to satisfy a threshold, and
+a threshold cannot express the requirement that the remaining sources be
+consulted. Closure expresses exactly that requirement, and does so without
+reference to any magnitude---the closure rules of \Cref{sec:semantics} inspect
+only whether the reached set would grow, never how confident any outcome is.
+\end{remark}
+
+\emph{Diagnostics.} The separation statistic distinguished an informative
+from an uninformative binding: $\eta=0.992$ for a substrate whose four event
+types had well-spaced mean powers, against $\eta=2.20\times10^{-3}$ for a
+substrate whose type means agreed to three significant figures, the latter
+falling below the flagging threshold of \Cref{prop:uninformative}.
+
+The floor estimators were compared in two sampling regimes,
+\Cref{tab:floor}. In both, the sample minimum returned a strictly positive
+value for a process with no floor---$2.82\times10^{-11}$ at realistic sample
+sizes and $6.08\times10^{-17}$ at large ones---and was biased upward on the
+floored process. The asymptotic estimator recovered the true floor to within
+$0.002$ and returned a negative value on the unfloored process in both
+regimes. The contrast is the practical justification for requiring a
+substrate to declare which estimator discharges obligation~(S4): the two
+agree on a process that has a floor and disagree in kind on one that does
+not, and only the second can report the disagreement.
+
+\begin{table}[H]
+\centering
+\caption{Floor estimators on generating processes with true floor $10$ and
+with no floor.}
+\label{tab:floor}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+Regime & Estimator & Floored ($\flo=10$) & Unfloored ($\flo=0$)\\
+\midrule
+\multirow{2}{*}{$n=50$--$400$}
+ & Sample minimum & $10.0000000010$ & $2.82\times10^{-11}$\\
+ & Asymptotic     & $9.9981$        & $-1.76\times10^{-5}$\\
+\midrule
+\multirow{2}{*}{$n=50$--$4000$}
+ & Sample minimum & $10.0000000000$ & $6.08\times10^{-17}$\\
+ & Asymptotic     & $10.0000$       & $-2.32\times10^{-3}$\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 % =====================================================================
 \section{Scope and limitations}

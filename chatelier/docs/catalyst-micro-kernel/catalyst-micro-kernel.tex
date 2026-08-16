@@ -851,6 +851,76 @@ under a fair rule would falsify \Cref{thm:scheduler}(ii). We report the
 outcome of each check in machine-readable form alongside this paper,
 including any that fail.
 
+\subsection{Results}
+\label{sec:results}
+
+All seven checks passed. We report the quantities rather than the verdicts,
+since the verdicts are uninformative on their own.
+
+\emph{Inertia.} A node carrying five chunks, two of which raise, emitted
+five values: three ordinary and two error values. The committed record
+advanced to $5$, showing that a raising chunk commits exactly as a
+non-raising one does. All three non-raising chunks were evaluated despite
+two of the five raising, which is the content of \Cref{cor:completion}. No
+attribute of the kernel object corresponded to an exit code, status, or
+return code, consistent with \Cref{thm:inertia}.
+
+\emph{Convergence.} Three contributions over four subtask identities,
+overlapping on one, were merged in all $3!=6$ orders. All six produced the
+same protocol fingerprint---one distinct fingerprint across six orders. The
+shared identity accumulated $4$ chunks, being the union of two contributions
+of two chunks each, confirming that convergence occurred rather than the
+contributions remaining disjoint. Re-submitting every contribution a second
+time left the fingerprint unchanged, exhibiting idempotence.
+
+\emph{Fingerprint discrimination.} The fingerprint was stable across
+construction orders, and changed when a single chunk's content changed and
+when a single subtask identity changed, as \Cref{thm:fingerprint} requires.
+
+\emph{Emergence and opacity.} Two runs of a fixed protocol whose probe
+chunk consulted a varying external source produced identical protocol
+fingerprints and different trajectories, instantiating
+\Cref{thm:emergence}. When the two branches were arranged to deposit the
+same terminal value, the terminal stores were equal, the interior
+trajectories differed, and none of the three store-determined functions
+probed---cardinality, sorted representation, and a cryptographic digest of
+the sorted store---separated the two runs. This is the construction of
+\Cref{thm:opacity}: the interior is not recoverable from the result.
+
+\emph{Record.} The committed record traced $0\to1\to2$ over two
+single-chunk nodes. The two nodes' value collections were equal at the end
+of the run---a recurrence of value configuration---while the records
+differed, so the two states were distinguished by the record alone. This is
+the operative content of \Cref{thm:monotone}: recurrence is not return.
+Re-executing a node whose chunk bag had not changed left the record
+unaltered.
+
+\emph{Scheduler.} Over $12$ nodes carrying $3$ chunks each, a fair random
+selection over the ready set performed exactly $12$ executions and committed
+all $36$ chunks, after which no node was ready and the scheduler halted. No
+node was executed twice, confirming \Cref{thm:scheduler}(i), and the
+execution count equalling the node count shows that each node's pending
+chunks were evaluated in a single visit. A chunk contributed to an
+already-executed node after the sweep was subsequently evaluated, confirming
+the absence of starvation.
+
+\begin{remark}[What the emergence and opacity checks jointly establish]
+\label{rem:joint}
+The two checks are complementary and it is worth stating what their
+conjunction shows, since neither alone would suffice. The emergence check
+fixes the protocol and varies the trajectory, demonstrating that the
+trajectory is not a function of the protocol. The opacity check fixes both
+the protocol \emph{and} the terminal store and varies the trajectory,
+demonstrating that the trajectory is not a function of the result either.
+Together they place the trajectory outside the closure of the two data a
+reader of a run normally possesses---what was asked, and what came back---
+which is the precise sense in which \Cref{cor:repro} restricts
+reproducibility claims to the protocol. A system that logged only protocol
+and terminal store would therefore be unable to reconstruct its own
+trajectory even in principle, which is the practical argument for logging
+the read-to-emit relation explicitly, as \Cref{rem:record-limits} recommends.
+\end{remark}
+
 % =====================================================================
 \section{Discussion}
 \label{sec:discussion}
