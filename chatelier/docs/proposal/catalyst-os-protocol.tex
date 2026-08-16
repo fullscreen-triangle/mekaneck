@@ -1,0 +1,660 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm,physics}
+\usepackage{booktabs,array,multirow,float}
+\usepackage{enumitem}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tcolorbox}
+
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=green!50!black,urlcolor=blue!60!black}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}{Axiom}
+\newtheorem{principle}[theorem]{Principle}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\kB}{k_{\mathrm{B}}}
+\newcommand{\Sfloor}{S_{\flat}}
+\newcommand{\dcat}{d_{\mathrm{cat}}}
+\newcommand{\Rorder}{R}
+
+\lstdefinestyle{python}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{red!60!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+}
+
+\title{\textbf{Catalyst Calculus:\\
+A Domain-Specific Language for S-Entropy Analysis\\
+on a Semantically Inert Research Kernel}}
+
+\author{
+Kundai Farai Sachikonye\\
+\small Technical University of Munich\\
+\small \texttt{kundai.sachikonye@tum.de}
+}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We present a complete computational system for identifying, measuring, and composing \emph{information catalysts} in bounded physical systems. The system has three layers. \textbf{Layer~1: The Algebra.} From the S-entropy calculus on bounded receivers, we derive the catalytic power $\kappa = (S_{\mathrm{before}} - S_{\mathrm{after}})/(S_{\mathrm{before}} - \Sfloor)$ and the multiplicative composition law $\kappa(\gamma_1 \diamond \gamma_2) = 1 - (1-\kappa_1)(1-\kappa_2)$, which governs how sequential catalysts chain. The floor theorem guarantees $\Sfloor > 0$ for every bounded receiver. \textbf{Layer~2: The DSL.} We define four primitive types---Receiver, State, Catalyst, Floor---and one execution type, Run, which binds a data source to the primitives and tests the composition law against alternatives (additive, geometric mean, max). Domain bindings translate any experimental substrate (EEG sleep stages, microstate transitions, reaction times, cardiac rhythms, protein folding) into the universal types; the engine handles extraction, cascade construction, and law comparison. \textbf{Layer~3: The Kernel.} We embed the DSL in a semantically inert runtime where the unit of work is a node---a subtask identity fused with executable code chunks and values. The kernel executes every chunk and judges nothing: no exit code, no expected state, no comparison. Domain-specific languages are injected as chunk factories; agents decompose problems into nodes; the trajectory of computation emerges from which modules read which values. Crucially, the kernel can analyse its own trajectory using the same catalyst calculus, because the agent's navigation through the graph IS a catalytic process governed by the same composition law. We validate the system against real PhysioNet Sleep-EDF polysomnographic data (6~recordings, 7{,}093~epochs) and published EEG microstate transition matrices (5~sleep conditions), finding: floor positivity confirmed universally ($\Sfloor > 0$ in all receivers across all domains); the multiplicative law outperforms additive composition on microstate data ($r = 0.53$ vs $r = 0.36$); and a critical methodological correction---that instance-specific $\kappa$ testing produces a trivial $r = 1.0$ from a telescoping product identity, requiring type-averaged $\kappa$ for genuine empirical tests.
+\end{abstract}
+
+\tableofcontents
+
+%======================================================================
+\section{Introduction}
+\label{sec:intro}
+%======================================================================
+
+\subsection{The Problem: Where Are the Catalysts?}
+
+The S-entropy calculus, developed from the Bounded Phase Space axiom ($\beta > 0$), establishes that every bounded receiver has a positive information floor, and that information catalysts drive geometric convergence toward that floor. The calculus defines a catalytic power $\kappa \in [0,1]$ for each catalyst and proves a multiplicative composition law for sequential application.
+
+The theoretical framework is complete. What is missing is the experimental apparatus: a systematic way to point the calculus at any data domain, extract catalytic events, and test whether the composition law holds. This paper provides that apparatus.
+
+The difficulty is that we do not know, \emph{a priori}, where the catalysts are. In a sleep EEG recording, the catalyst might be the transition between sleep stages, or the microstate switch within a stage, or the phase reset of a particular frequency band. In a protein system, it might be a conformational change, a binding event, or a post-translational modification. In a pharmacological system, it might be a receptor occupation event, a coupling strength change, or a regime transition.
+
+Rather than committing to one substrate, we build a domain-specific language (DSL) that can express catalytic analysis generically, then instantiate it for any domain through a thin binding layer. The DSL is embedded in a runtime kernel that executes the analysis without semantic judgement, allowing multiple DSLs to coexist on the same graph and multiple agents to converge on shared subtasks.
+
+\subsection{Contributions}
+
+\begin{enumerate}[leftmargin=1.4em]
+\item \textbf{The Catalyst Calculus DSL} (Section~\ref{sec:algebra}--\ref{sec:dsl}): Four primitive types (Receiver, State, Catalyst, Floor) and one execution type (Run) that test the composition law against alternatives on any data domain.
+
+\item \textbf{The Composition Law Test} (Section~\ref{sec:composition}): A methodologically correct test using type-averaged $\kappa$ values, with explicit identification of the telescoping product identity that makes instance-specific testing trivial.
+
+\item \textbf{Domain Bindings} (Section~\ref{sec:domains}): Reference implementations for sleep EEG, EEG microstates, and multisensory reaction time, demonstrating that the same engine tests the same law on different substrates.
+
+\item \textbf{The Catalyst Kernel} (Section~\ref{sec:kernel}): A semantically inert runtime where DSLs are injectable, agents decompose problems into graph nodes, trajectories emerge from propagation, and the kernel's own trajectory is analysable by the same calculus.
+
+\item \textbf{Validation} (Section~\ref{sec:validation}): Results from real Sleep-EDF data and published microstate matrices, including the floor positivity confirmation and the multiplicative law's advantage on microstate transitions.
+\end{enumerate}
+
+\subsection{Design Principles}
+
+Three principles govern the system's architecture:
+
+\begin{principle}[Generative Engagement]
+The system is built to find catalysts, not to confirm a theory. Each domain binding is a hypothesis about where to point the instrument. The composition law is tested, not assumed.
+\end{principle}
+
+\begin{principle}[Semantic Inertia]
+The kernel executes code and judges nothing. It holds no expectation, issues no verdict, and cannot fail. Adjudication belongs to the consumer of values, not to the runtime.
+\end{principle}
+
+\begin{principle}[Self-Similarity]
+The agent's navigation through the computational graph is itself a catalytic process. The same composition law governs both the data being analysed and the analysis procedure. The system is recursive: the tool for finding catalysts IS a catalyst.
+\end{principle}
+
+%======================================================================
+\section{The S-Entropy Algebra}
+\label{sec:algebra}
+%======================================================================
+
+\subsection{Bounded Receivers and the Floor Theorem}
+
+\begin{axiom}[Bounded Phase Space]
+\label{ax:bounded}
+Every physical system occupies a bounded region of phase space with finite Liouville measure: $\mu(\Omega) < \infty$.
+\end{axiom}
+
+\begin{definition}[Receiver]
+A \emph{receiver} is a bounded system with measurable state. Its S-entropy $S \in [0, S_{\max}]$ quantifies the distance from perfect internal coherence, with $S = 0$ corresponding to full coherence and $S = S_{\max}$ to maximal disorder.
+\end{definition}
+
+\begin{theorem}[Floor Theorem]
+\label{thm:floor}
+For every bounded receiver $R$, there exists a positive floor $\Sfloor(R) > 0$ such that no catalyst or sequence of catalysts can drive $S$ below $\Sfloor$:
+\begin{equation}
+\Sfloor(R) > 0 \quad \forall R.
+\end{equation}
+\end{theorem}
+
+The floor is receiver-intrinsic: it depends on the structure of the receiver, not on external conditions.
+
+\subsection{S-Entropy from the Kuramoto Order Parameter}
+
+For oscillatory systems, the natural observable is the Kuramoto order parameter:
+\begin{equation}
+\Rorder = \left| \frac{1}{N} \sum_{j=1}^{N} e^{i\phi_j} \right| \in [0,1],
+\end{equation}
+where $\phi_j$ are the phases of $N$ coupled oscillators. The S-entropy maps as:
+\begin{equation}
+S = S_{\max} \cdot (1 - \Rorder).
+\end{equation}
+
+The structural factor $\mathcal{S}(\Rorder)$ determines the equation of state:
+\begin{equation}
+\mathcal{S}(\Rorder) = \begin{cases}
+1 + \Rorder^2 / (1 - \Rorder^2) & \text{coherent regime } (\Rorder > 0.3) \\
+1 - \sigma^2(\phi) / (2\pi^2) & \text{turbulent regime } (\Rorder < 0.3)
+\end{cases}
+\end{equation}
+
+\subsection{Catalytic Power}
+
+\begin{definition}[Catalyst]
+A \emph{catalyst} $\gamma$ is an event that drives a receiver from one S-entropy state to another. Its \emph{catalytic power} is:
+\begin{equation}
+\boxed{\kappa(\gamma) = \frac{S_{\mathrm{before}} - S_{\mathrm{after}}}{S_{\mathrm{before}} - \Sfloor}}
+\end{equation}
+\end{definition}
+
+Properties:
+\begin{itemize}[nosep]
+\item $\kappa > 0$: catalyst drives system toward floor (therapeutic/constructive)
+\item $\kappa < 0$: catalyst drives system away from floor (pathological/destructive)
+\item $\kappa = 1$: catalyst reaches the floor in one step (perfect catalyst)
+\item $\kappa = 0$: catalyst has no effect
+\end{itemize}
+
+\subsection{The Multiplicative Composition Law}
+
+\begin{theorem}[Catalytic Composition]
+\label{thm:composition}
+For sequential catalysts $\gamma_1, \gamma_2, \ldots, \gamma_n$ applied to a receiver with floor $\Sfloor$, the net catalytic power composes multiplicatively:
+\begin{equation}
+\boxed{\kappa(\gamma_1 \diamond \gamma_2 \diamond \cdots \diamond \gamma_n) = 1 - \prod_{i=1}^{n} (1 - \kappa_i)}
+\end{equation}
+\end{theorem}
+
+This law has a specific physical meaning: each catalyst closes a \emph{fraction} of the remaining distance to the floor, and the residual distances multiply. The additive alternative $\kappa_{\mathrm{add}} = \sum_i \kappa_i$ would predict that catalysts close absolute distances that sum.
+
+\begin{remark}[Telescoping Product Identity]
+\label{rem:telescoping}
+When each $\kappa_i$ is computed from the same S-value sequence as the direct cascade measurement, the multiplicative composition is algebraically exact:
+\begin{align}
+\prod_{i=1}^{n} (1 - \kappa_i) &= \prod_{i=1}^{n} \frac{S_{i+1} - \Sfloor}{S_i - \Sfloor} = \frac{S_{n+1} - \Sfloor}{S_1 - \Sfloor}
+\end{align}
+This is a telescoping product, giving $r = 1.0$ trivially. The genuine empirical test requires \emph{type-averaged} $\kappa$ values: compute the mean $\bar{\kappa}$ for each transition type across all instances, then predict specific cascade outcomes using these means. This tests whether the type-level catalytic power, composed multiplicatively, predicts individual cascade outcomes.
+\end{remark}
+
+%======================================================================
+\section{The Catalyst Calculus DSL}
+\label{sec:dsl}
+%======================================================================
+
+\subsection{Primitive Types}
+
+The DSL defines four primitive types:
+
+\begin{definition}[State]
+A point in S-entropy space:
+\begin{equation}
+\mathtt{State} = (S,\; \Rorder,\; \mathtt{label},\; t)
+\end{equation}
+where $S$ is the S-entropy, $\Rorder$ the order parameter, $\mathtt{label}$ a domain-specific identifier (e.g., ``N2'', ``microstate\_A''), and $t$ the time coordinate.
+\end{definition}
+
+\begin{definition}[Catalyst]
+A transition event:
+\begin{equation}
+\mathtt{Catalyst} = (\mathtt{state\_from},\; \mathtt{state\_to},\; \kappa,\; \mathtt{label})
+\end{equation}
+\end{definition}
+
+\begin{definition}[Cascade]
+A sequence of catalysts with three composition predictions:
+\begin{equation}
+\mathtt{Cascade} = (\{\gamma_i\},\; \kappa_{\mathrm{mult}},\; \kappa_{\mathrm{add}},\; \kappa_{\mathrm{measured}})
+\end{equation}
+\end{definition}
+
+\begin{definition}[Floor]
+The irreducible minimum:
+\begin{equation}
+\mathtt{Floor} = (\Sfloor,\; \mathtt{receiver\_id})
+\end{equation}
+\end{definition}
+
+\subsection{The Domain Protocol}
+
+Any data domain becomes analysable by implementing four methods:
+
+\begin{tcolorbox}[colback=gray!5,colframe=gray!50,title=Domain Protocol]
+\begin{lstlisting}[style=python,numbers=none]
+class Domain(Protocol):
+    def receivers(self) -> List[str]:        # Who
+    def states(self, rid) -> List[State]:     # What
+    def catalysts(self, rid, states, floor) -> List[Catalyst]:  # When
+    def floor(self, states) -> float:         # How low
+\end{lstlisting}
+\end{tcolorbox}
+
+Each method is $\sim$20 lines of domain-specific code. The engine handles everything else: cascade extraction, composition law testing, floor verification, and result aggregation.
+
+\subsection{The Engine}
+
+The \texttt{CatalystEngine} is the runtime that executes a Run:
+
+\begin{enumerate}[nosep]
+\item For each receiver: extract states, compute floor, extract catalysts
+\item Compress consecutive same-label states into runs (mean $S$ per run)
+\item Enumerate all sub-cascades of length 3--5 from the run sequence
+\item Compute type-averaged $\bar{\kappa}$ for each transition type
+\item For each cascade, predict net $\kappa$ using four composition laws:
+\begin{align}
+\kappa_{\mathrm{mult}} &= 1 - \prod_i (1 - \bar{\kappa}_{\mathrm{type}(i)}) \\
+\kappa_{\mathrm{add}} &= \min\left(\sum_i \bar{\kappa}_{\mathrm{type}(i)},\; 1\right) \\
+\kappa_{\mathrm{geo}} &= 1 - \left(\prod_i (1 - \bar{\kappa}_{\mathrm{type}(i)})\right)^{1/n} \\
+\kappa_{\mathrm{max}} &= \max_i \bar{\kappa}_{\mathrm{type}(i)}
+\end{align}
+\item Compare each law's predictions against measured cascade $\kappa$ via Pearson $r$ and RMSE
+\item Report: which law wins, by how much, across how many cascades
+\end{enumerate}
+
+%======================================================================
+\section{The Composition Law Test}
+\label{sec:composition}
+%======================================================================
+
+\subsection{Why Instance-Specific Testing is Trivial}
+
+Consider a cascade $A \to B \to C$ with S-entropy values $S_A, S_B, S_C$ and floor $\Sfloor$. The instance-specific catalytic powers are:
+\begin{align}
+\kappa_1 &= \frac{S_A - S_B}{S_A - \Sfloor}, \quad
+\kappa_2 = \frac{S_B - S_C}{S_B - \Sfloor}
+\end{align}
+
+The multiplicative prediction:
+\begin{align}
+\kappa_{\mathrm{mult}} &= 1 - (1-\kappa_1)(1-\kappa_2) = 1 - \frac{S_B - \Sfloor}{S_A - \Sfloor} \cdot \frac{S_C - \Sfloor}{S_B - \Sfloor} = \frac{S_A - S_C}{S_A - \Sfloor}
+\end{align}
+
+But the directly measured cascade $\kappa$ is:
+\begin{equation}
+\kappa_{\mathrm{measured}} = \frac{S_A - S_C}{S_A - \Sfloor}
+\end{equation}
+
+These are identical. The multiplicative law is algebraically guaranteed to give $r = 1.0$ when using instance-specific $\kappa$ values. This is the telescoping product identity, not an empirical finding.
+
+\subsection{The Genuine Test: Type-Averaged $\kappa$}
+
+The real test uses the \emph{mean catalytic power for each transition type}:
+\begin{equation}
+\bar{\kappa}_{\mathrm{type}} = \frac{1}{|\mathcal{T}|} \sum_{t \in \mathcal{T}} \kappa_t
+\end{equation}
+where $\mathcal{T}$ is the set of all instances of a given transition type (e.g., all $\text{W} \to \text{N1}$ transitions across all recordings).
+
+For a specific cascade instance $A \to B \to C$, the prediction is:
+\begin{equation}
+\hat{\kappa}_{\mathrm{mult}} = 1 - (1 - \bar{\kappa}_{A \to B})(1 - \bar{\kappa}_{B \to C})
+\end{equation}
+
+This is a genuine prediction: the type-averaged $\kappa$ is a \emph{population-level} property, and the cascade outcome is an \emph{instance-level} observation. The multiplicative law's advantage over additive composition, if it exists, manifests as lower RMSE and higher $r$ between predicted and measured cascade $\kappa$.
+
+\subsection{When the Test Has Power}
+
+The test has statistical power when:
+\begin{enumerate}[nosep]
+\item States are well-separated in S-entropy space (different labels have substantially different mean $S$)
+\item Within-type variance of $\kappa$ is smaller than between-type variance
+\item Sufficient cascades are available for reliable correlation
+\end{enumerate}
+
+When states compress into a narrow S-entropy band (as with 2-channel PLV in sleep EEG, where all sleep stages have $\Rorder \approx 0.33$), the test is underpowered: all $\kappa$ values are small and noisy, and the type means cannot predict instance outcomes.
+
+%======================================================================
+\section{Domain Bindings}
+\label{sec:domains}
+%======================================================================
+
+\subsection{Sleep EEG (PhysioNet Sleep-EDF)}
+
+\begin{itemize}[nosep]
+\item \textbf{Receiver}: One whole-night PSG recording
+\item \textbf{State}: One 30-second epoch, labelled by expert-scored sleep stage (W, N1, N2, N3, REM)
+\item \textbf{Observable}: Multi-band inter-channel PLV between Fpz-Cz and Pz-Oz, weighted: $\Rorder = 0.15\cdot\mathrm{PLV}_\delta + 0.20\cdot\mathrm{PLV}_\theta + 0.40\cdot\mathrm{PLV}_\alpha + 0.25\cdot\mathrm{PLV}_\beta$
+\item \textbf{$S$-entropy}: $S = 100 \cdot (1 - \Rorder)$
+\item \textbf{Catalyst}: A transition between adjacent epochs with different stage labels
+\item \textbf{Floor}: Minimum $S$ observed across all epochs in a recording
+\end{itemize}
+
+\subsection{EEG Microstates}
+
+\begin{itemize}[nosep]
+\item \textbf{Receiver}: One experimental condition (wake, N1, N2, N3, REM)
+\item \textbf{State}: A microstate class (A, B, C, D) with duration, coverage, and condition-level $\Rorder$
+\item \textbf{Observable}: $\Rorder_{\mathrm{class}} = \Rorder_{\mathrm{condition}} \cdot (\mathrm{duration}/\mathrm{max\_duration}) \cdot (1 + \mathrm{coverage})$
+\item \textbf{Catalyst}: A transition between microstate classes
+\item \textbf{Floor}: Minimum class-$S$ across all classes in a condition
+\item \textbf{Data source}: Published transition matrices (e.g., Brodbeck et al.\ 2012)
+\end{itemize}
+
+\subsection{Multisensory Reaction Time}
+
+\begin{itemize}[nosep]
+\item \textbf{Receiver}: One subject
+\item \textbf{State}: A trial, labelled by modality condition (V, A, T, VA, AT, VAT, baseline)
+\item \textbf{Observable}: $S = \mathrm{RT} / \mathrm{RT}_{\mathrm{scale}} \cdot 50$, mapping faster RT to lower $S$
+\item \textbf{Catalyst}: Each sensory modality is an independent catalyst
+\item \textbf{Floor}: Minimum RT (motor execution floor) mapped to S-space
+\item \textbf{Key prediction}: $\kappa_{\mathrm{VA}} = 1 - (1-\kappa_V)(1-\kappa_A)$ with zero free parameters
+\end{itemize}
+
+\subsection{Adding a New Domain}
+
+To add a new domain (cardiac HRV, protein folding, metabolic flux, disease progression):
+
+\begin{enumerate}[nosep]
+\item Identify the receiver (what is bounded)
+\item Identify the observable that maps to $\Rorder$ (what measures coherence)
+\item Define the state labels (what are the categorical conditions)
+\item Define what constitutes a catalytic event (when does the state change)
+\item Implement the four methods of the Domain protocol ($\sim$200 lines)
+\end{enumerate}
+
+The engine handles cascade extraction, composition testing, and reporting automatically.
+
+%======================================================================
+\section{The Catalyst Kernel}
+\label{sec:kernel}
+%======================================================================
+
+\subsection{Why a Kernel}
+
+The DSL needs a runtime. A conventional runtime would execute a program: a fixed sequence of instructions with an expected outcome and an exit code. But catalytic analysis is not a program---it is an experiment. The sequence of computations depends on what values propagated from earlier steps. An unexpected result does not abort the analysis; it is the most informative thing the run produced.
+
+We therefore embed the DSL in a semantically inert kernel that:
+\begin{enumerate}[nosep]
+\item Executes every code chunk on a node and judges nothing
+\item Has no exit code (Theorem~\ref{thm:no-exit-kernel})
+\item Runs to completion under anomaly (Corollary~\ref{cor:completion-kernel})
+\item Allows injectable DSLs as chunk factories
+\item Records the trajectory of computation as the emerged set of propagated values
+\end{enumerate}
+
+\subsection{Nodes, Chunks, Values}
+
+\begin{definition}[Node]
+A \emph{node} is a triple:
+\begin{equation}
+n = (\tau,\; \mathcal{K}(n),\; \mathcal{V}(n))
+\end{equation}
+where $\tau$ is the subtask identity, $\mathcal{K}(n) = \{c_1, \ldots, c_r\}$ is a bag of code chunks, and $\mathcal{V}(n)$ is the time-varying collection of values.
+\end{definition}
+
+The multiplicity of $\mathcal{K}$ is essential: a subtask may be realised by chunks from different DSLs. A cardiac analysis node may carry a chunk from the cardiac DSL and a chunk from the catalyst DSL. Both are executed. Neither is selected.
+
+\begin{definition}[Convergence]
+Two subtask realisations \emph{converge} when they share subtask identity $\tau$. Convergence merges their chunk bags and unifies their value collections onto the single node bearing $\tau$.
+\end{definition}
+
+\begin{definition}[Value Contract]
+Every module emits values onto nodes and reads values from nodes. The graph's vocabulary consists of exactly four operations: \emph{identify}, \emph{read}, \emph{transform} (internal), \emph{emit}. There is no fifth operation. In particular, there is no \textsc{IsCorrect} or \textsc{Compare}.
+\end{definition}
+
+\subsection{The Kernel's Semantic Content}
+
+\begin{definition}[Node Execution]
+To execute a node $n$ is to run every chunk in its bag:
+\begin{equation}
+\mathrm{Run}(n) = \langle\, \mathrm{Eval}(c) : c \in \mathcal{K}(n) \,\rangle
+\end{equation}
+The kernel performs $\mathrm{Run}(n)$ and nothing else.
+\end{definition}
+
+\begin{theorem}[No Exit Code]
+\label{thm:no-exit-kernel}
+The kernel cannot emit an exit code. An exit code presupposes a comparison between achieved and expected states. The graph's vocabulary contains no operation denoting ``expected'' and stores no expectation. Hence no quantity the kernel could compute has the meaning of an exit code.
+\end{theorem}
+
+\begin{corollary}[Run to Completion]
+\label{cor:completion-kernel}
+The kernel does not halt on anomaly. A chunk that raises produces an error value, which is emitted like any other value. Nothing in $\mathrm{Run}(n)$ branches on emission content.
+\end{corollary}
+
+\subsection{DSL Injection}
+
+A DSL is injected as a \emph{chunk factory}: a function that, given a subtask identity and context, produces executable chunks.
+
+\begin{tcolorbox}[colback=gray!5,colframe=gray!50,title=Chunk Factory Protocol]
+\begin{lstlisting}[style=python,numbers=none]
+class ChunkFactory(Protocol):
+    @property
+    def dsl_name(self) -> str: ...
+    def make_chunks(self, tau: str, context: dict) -> List[Chunk]: ...
+\end{lstlisting}
+\end{tcolorbox}
+
+The kernel does not know what a DSL does. It knows only that a chunk factory produces chunks, and chunks produce values when executed. The catalyst calculus is the default DSL, but the kernel treats it exactly like any other.
+
+\subsection{Agents and Problem Decomposition}
+
+\begin{definition}[Agent]
+An \emph{agent} is a module that reads values, transforms internally, and emits values. Given a problem, an agent decomposes it into subtasks, each becoming a node in the graph. Two agents arriving at the same subtask converge on one node.
+\end{definition}
+
+The decomposition is the only source of structure. There is no master plan, no global problem decomposition---only the union of what agents happened to produce.
+
+\subsection{Trajectory Emergence}
+
+\begin{definition}[Trajectory]
+The \emph{trajectory} of a run is the set of nodes at which a value was read and, on the strength of it, a value was emitted that another module later read.
+\end{definition}
+
+\begin{theorem}[Trajectory Emergence]
+\label{thm:emergence-kernel}
+The trajectory is not knowable before the run and not storable as a schedule. It is constituted by the reads and emits of the run itself.
+\end{theorem}
+
+\begin{corollary}[Protocol vs Results]
+The node set (``what can be computed'') is durable. The trajectory (``what was computed'') is not. Reproducibility attaches to the former---the protocol fingerprint---not to the values.
+\end{corollary}
+
+\subsection{The Recursion: Self-Analysis}
+
+The kernel can analyse its own trajectory using the same catalyst calculus:
+
+\begin{enumerate}[nosep]
+\item Each node has an S-entropy, computed from the convergence of values upon it
+\item Each transition between nodes is a catalytic event with measurable $\kappa$
+\item The sequence of node visits forms a cascade, testable by the composition law
+\item The agent's own floor $\Sfloor > 0$ is the minimum S-entropy achievable by any decomposition
+\end{enumerate}
+
+This is the self-similarity: the system analysing data and the system navigating its own computation are governed by the same algebra. The tool for finding catalysts IS a catalyst.
+
+%======================================================================
+\section{Validation}
+\label{sec:validation}
+%======================================================================
+
+\subsection{Cross-Domain Results}
+
+\begin{table}[H]
+\centering
+\caption{Cross-domain summary. The same engine, same algebra, three substrates.}
+\label{tab:cross}
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Domain & States & Catalysts & Cascades & $\Sfloor > 0$ & Best Law & $r$ & RMSE \\
+\midrule
+Microstates & 2{,}500 & 2{,}495 & 4{,}975 & \checkmark & Multiplicative & 0.53 & 2.48 \\
+Reaction Time & 12{,}000 & 11{,}980 & 35{,}820 & \checkmark & Geo.\ Mean & 0.04 & 341 \\
+Sleep EEG & 7{,}093 & 233 & 687 & \checkmark & Geo.\ Mean & 0.22 & 0.50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Floor Positivity (Confirmed)}
+
+Every receiver in every domain has $\Sfloor > 0$:
+\begin{itemize}[nosep]
+\item Microstates: $\Sfloor = 25.0 \pm 15.9$ (5 conditions)
+\item Reaction Time: $\Sfloor = 24.0 \pm 2.4$ (20 subjects)
+\item Sleep EEG: $\Sfloor = 60.1 \pm 8.4$ (6 recordings)
+\end{itemize}
+
+\subsection{Microstate Domain: Multiplicative Law Wins}
+
+On published EEG microstate transition matrices (Brodbeck et al.\ 2012 sleep data, 5 conditions):
+\begin{itemize}[nosep]
+\item Multiplicative: $r = 0.53$, RMSE = 2.48
+\item Additive: $r = 0.36$, RMSE = 3.28
+\item Geometric mean: $r = 0.51$, RMSE = 2.70
+\item Max: $r = 0.29$, RMSE = 3.02
+\end{itemize}
+
+Microstate class C acts as a dominant attractor (lowest $S$, longest duration). Transitions toward C have high positive $\kappa$; transitions away have large negative $\kappa$. This asymmetry is the catalytic signature predicted by the framework.
+
+\subsection{Sleep EEG: Floor Confirmed, Composition Inconclusive}
+
+On 6 PhysioNet Sleep-EDF recordings (2 with full sleep architecture):
+\begin{itemize}[nosep]
+\item Floor positivity: confirmed ($\Sfloor$ range 49.5--71.5)
+\item Stage ordering: N2 $>$ N3 $>$ REM $>$ N1 $>$ W (sleep stages have higher inter-channel coherence than wake)
+\item Composition law: inconclusive ($r \approx 0.21$ for all laws) due to S-entropy compression with 2-channel PLV
+\end{itemize}
+
+The composition test needs higher-density EEG (19+ channels) for adequate state separation.
+
+\subsection{Methodological Contribution}
+
+The critical finding: the initial pipeline gave $r = 1.000$ for the multiplicative law. This was identified as a mathematical tautology (Remark~\ref{rem:telescoping}), not an empirical result. The correction to type-averaged $\kappa$ testing prevents this false positive and provides the genuine empirical test framework.
+
+%======================================================================
+\section{Implementation Architecture}
+\label{sec:implementation}
+%======================================================================
+
+\subsection{File Structure}
+
+\begin{table}[H]
+\centering
+\caption{Implementation files and responsibilities.}
+\begin{tabular}{@{}llr@{}}
+\toprule
+File & Responsibility & Lines \\
+\midrule
+\texttt{kernel.py} & Semantically inert runtime, nodes, agents & $\sim$350 \\
+\texttt{engine.py} & Composition law tester, cascade extraction & $\sim$250 \\
+\texttt{domains/sleep.py} & Sleep-EDF $\to$ States/Catalysts & $\sim$200 \\
+\texttt{domains/microstate.py} & Published matrices $\to$ States/Catalysts & $\sim$250 \\
+\texttt{domains/reaction\_time.py} & RT data $\to$ States/Catalysts & $\sim$200 \\
+\texttt{run\_all.py} & Multi-domain runner & $\sim$80 \\
+\texttt{demo\_kernel.py} & Kernel demonstration with injected DSLs & $\sim$150 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Adding a New Domain}
+
+A new domain requires one Python class implementing the Domain protocol:
+
+\begin{lstlisting}[style=python]
+class MyDomain:
+    @property
+    def name(self) -> str:
+        return "my_domain"
+    
+    def receivers(self) -> List[str]:
+        # Return list of receiver IDs
+        ...
+    
+    def states(self, receiver_id: str) -> List[State]:
+        # Load data, compute R, map to S-entropy
+        # Return ordered state sequence
+        ...
+    
+    def catalysts(self, receiver_id, states, floor) -> List[Catalyst]:
+        # Identify transitions between states
+        # Compute kappa for each
+        ...
+    
+    def floor(self, states: List[State]) -> float:
+        return min(s.S for s in states)
+\end{lstlisting}
+
+To inject into the kernel, additionally implement the \texttt{ChunkFactory} protocol with a \texttt{make\_chunks} method.
+
+\subsection{Running the System}
+
+\begin{lstlisting}[style=python]
+from engine import CatalystEngine
+from domains.microstate import MicrostateDomain
+
+# Create domain binding
+domain = MicrostateDomain.from_brodbeck_sleep()
+
+# Run the engine
+engine = CatalystEngine(cascade_range=(3, 5))
+result = engine.run(domain)
+
+# Print results
+print(result.summary())
+\end{lstlisting}
+
+%======================================================================
+\section{Discussion}
+\label{sec:discussion}
+%======================================================================
+
+\subsection{What the System Does Not Know}
+
+The system does not know where the catalysts are. Each domain binding is a hypothesis: ``perhaps sleep stage transitions are catalytic events,'' ``perhaps microstate switches are catalytic events,'' ``perhaps sensory modalities are independent catalysts.'' The engine tests these hypotheses by checking whether the composition law holds on the extracted events. When it does (microstates: $r = 0.53$), the hypothesis gains support. When it doesn't (sleep EEG: $r = 0.21$), either the hypothesis is wrong or the measurement lacks resolution.
+
+\subsection{The Resolution Problem}
+
+The sleep EEG result illustrates a general challenge: the composition law test requires states that are well-separated in S-entropy space. With 2-channel PLV, all sleep stages compress to $\Rorder \approx 0.33$, making $\kappa$ values small and noisy. Higher-density EEG, different observables (spectral power, microstate statistics), or different domains entirely may provide better separation.
+
+\subsection{The Kernel as Experimental Protocol}
+
+The semantically inert kernel is not a convenience---it is a commitment to the experimental stance. By refusing to judge values, the kernel forces all interpretation into the modules that read them. An unexpected result is recorded, not raised. The trajectory is what happened, not what should have happened. This is the computational analogue of the laboratory notebook.
+
+\subsection{Future Directions}
+
+\begin{enumerate}[nosep]
+\item \textbf{Higher-density EEG}: MASS dataset (19 channels) for better sleep stage separation
+\item \textbf{Published microstate datasets}: Koenig normative database, Kindler schizophrenia cohorts, pharmacological perturbation studies
+\item \textbf{Multisensory RT}: Published trial-level data from Colonius \& Diederich for zero-parameter composition test
+\item \textbf{Protein folding}: Folding trajectories as catalytic cascades through conformational states
+\item \textbf{Cardiac HRV}: Heart rate variability as S-entropy, with interventions as catalysts
+\item \textbf{Pharmacological time series}: EEG phase coherence trajectories during antidepressant treatment as multi-week catalytic cascades
+\end{enumerate}
+
+%======================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%======================================================================
+
+We have built a complete computational system for catalytic analysis of bounded systems. The system has three layers that compose cleanly:
+
+\textbf{The algebra} provides the catalytic power $\kappa$ and the multiplicative composition law, derived from the S-entropy calculus on bounded receivers with positive floors.
+
+\textbf{The DSL} provides four primitive types (Receiver, State, Catalyst, Floor) and an engine that tests the composition law against alternatives on any domain through a thin binding layer.
+
+\textbf{The kernel} provides a semantically inert runtime where DSLs are injectable, agents decompose problems into convergent nodes, trajectories emerge from propagation, and the system can analyse its own trajectory using the same algebra.
+
+The floor positivity prediction holds universally. The multiplicative composition law shows signal on microstate data. The methodological correction---from instance-specific to type-averaged $\kappa$ testing---prevents false positives from the telescoping product identity.
+
+We do not know where the catalysts are. The DSL gives us the instrument to look. Each new domain binding is a hypothesis about where to point it. The kernel gives us the runtime to execute these hypotheses without prejudgement. The recursion gives us the assurance that the instrument and the process it analyses are governed by the same law.
+
+\end{document}

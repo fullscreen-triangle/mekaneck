@@ -1,0 +1,950 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{booktabs,array,float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{syntax}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{listings}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\usepackage{cleveref}
+
+\newtheoremstyle{thmstyle}{\topsep}{\topsep}{\itshape}{}{\bfseries}{.}{.5em}{}
+\theoremstyle{thmstyle}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\flo}{\beta}
+\newcommand{\kap}{\kappa}
+\newcommand{\sep}{\sigma}
+\newcommand{\med}{\mathfrak{M}}
+\newcommand{\Env}{\Gamma}
+\newcommand{\store}{\Sigma}
+\newcommand{\steps}{\longrightarrow}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\seek}{\mathbf{seek}}
+\newcommand{\excl}{\mathbf{excluding}}
+\newcommand{\via}{\mathbf{via}}
+\newcommand{\until}{\mathbf{until}}
+\newcommand{\Ty}[2]{#1\ \vdash\ #2}
+
+\lstdefinelanguage{mck}{
+  morekeywords={seek,excluding,via,until,closure,catalyst,receiver,observable,type,let,report,decline,over,where,as,floor,record},
+  sensitive=true,
+  morecomment=[l]{\#},
+  morestring=[b]",
+}
+\lstdefinestyle{mckstyle}{
+  language=mck,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{green!45!black}\itshape,
+  stringstyle=\color{red!55!black},
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+}
+
+\title{\textbf{Mekaneck: A Substrate-Neutral Language\\[2pt]
+for Individuation-Structured Inquiry}\\[4pt]
+\large Grammar, Type System, and Operational Semantics of \texttt{.mck}}
+
+\author{%
+Kundai Farai Sachikonye\\
+\small Technical University of Munich\\
+\small \texttt{kundai.sachikonye@tum.de}}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We define \emph{Mekaneck} (source extension \texttt{.mck}), a small language
+whose sole computational primitive expresses the individuation of a target
+from a substrate by explicit exclusion, and whose termination condition is
+the exhaustion of reachable outcomes rather than the crossing of a
+confidence threshold. The language has one binding form, one primitive
+\texttt{seek} with a \emph{mandatory} exclusion clause, and a fixed set of
+substrate declarations that bind an experimental domain to the primitive
+through four obligations: what the receivers are, what observable is
+recorded, what counts as a discriminating event, and how the irreducible
+floor is estimated. We give the complete lexical and context-free grammar,
+a type system with five types and two non-standard rules---a
+\emph{positivity} rule rejecting programs that assert an attainable zero
+residual, and a \emph{coherence} rule rejecting claims grounded on fewer
+than three mutually supporting independent sources---and a small-step
+operational semantics over a configuration comprising a substrate binding, a
+value store, and a monotone committed record. We prove progress and
+preservation for the type system, and hence that a well-typed program does
+not get stuck; we prove that evaluation is deterministic given the substrate
+and the sequence of catalyst outcomes, so that non-determinism enters only
+through substrate responses; we prove that the committed record is strictly
+monotone, so a program never returns to a previous configuration and its
+provenance order is intrinsic; we prove that every well-typed \texttt{seek}
+over a finite catalyst registry terminates, and that it terminates in
+exactly one of two typed outcomes---a \emph{resolved} cell or an explicit
+\emph{decline} carrying the plurality of incompatible cells found. We prove
+that the exclusion clause cannot be eliminated: a \texttt{seek} without it
+is not merely unidiomatic but untypable, because the target of an
+individuation is not determined by a positive description alone. We then
+show the language is substrate-neutral by exhibiting three bindings---an
+oscillatory-coherence substrate, a discrete-transition substrate, and a
+latency substrate---each requiring only the four obligations, and we
+identify precisely the condition on a substrate under which its
+discriminating events carry no information, so that a binding may be
+diagnosed as uninformative rather than the inquiry being reported as
+negative.
+\end{abstract}
+
+\noindent\textbf{Keywords:} domain-specific language; operational semantics;
+type soundness; individuation by exclusion; closure-based termination;
+substrate neutrality; scientific workflow languages.
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+% =====================================================================
+
+\subsection{The design question}
+
+Languages for scientific computation generally supply a rich vocabulary of
+operations over a domain and leave the structure of inquiry implicit in how
+a user composes them. A script computes some quantities, applies a test,
+and---by a convention external to the language---stops when a number falls
+below a threshold. The structure of the inquiry lives in the analyst's head
+and in comments.
+
+Mekaneck inverts this. It supplies almost no domain vocabulary and instead
+makes the structure of inquiry the only thing the language expresses. There
+is one computational primitive. It states what is being individuated, what
+it is being individuated \emph{against}, by what means, and under what
+condition the individuation is complete. Everything domain-specific enters
+through a substrate binding that satisfies four obligations and is otherwise
+opaque to the language.
+
+Two commitments distinguish the design, and both are enforced by the type
+system rather than by convention.
+
+\emph{Exclusion is mandatory.} A \texttt{seek} must state what its target is
+being told apart from. This is not stylistic. \Cref{thm:exclusion-necessary}
+shows that a positive description alone does not determine a target, so a
+\texttt{seek} lacking an exclusion clause has no well-defined denotation and
+is rejected at compile time.
+
+\emph{Termination is by exhaustion, not by threshold.} A \texttt{seek}
+completes when no remaining catalyst can carry it to an outcome outside the
+set already reached. \Cref{thm:closure-stronger} shows this condition is not
+obtainable by lowering a threshold, and \Cref{thm:dichotomy} shows it
+resolves into exactly two typed outcomes, one of which is an explicit
+declination.
+
+\subsection{What the language is not}
+
+Mekaneck is not a general-purpose language and has no facilities for
+arithmetic beyond what the substrate supplies, no user-defined functions, no
+recursion, and no I/O other than through substrate bindings. It is a
+coordination language for inquiry, in the sense that a build language is a
+coordination language for compilation: the work happens elsewhere, and the
+language expresses only its structure. A program that needs to compute a
+spectral estimate calls a substrate that computes it; the language sees an
+opaque value.
+
+\subsection{Relation to existing work}
+
+The formal apparatus is standard: a context-free grammar in the style of
+\citet{aho2006}, a type system presented as inference rules with progress
+and preservation in the manner of \citet{wright1994} and
+\citet{pierce2002}, and a small-step structural operational semantics
+following \citet{plotkin1981,kahn1987}. The novelty is not in the metatheory
+but in what the rules enforce.
+
+Scientific workflow languages---Make and its lineage, and the modern
+dataflow workflow engines \citep{koster2012,direct2017,amstutz2016}---express
+dependency and let the user supply the stopping condition. Statistical
+workflow systems embed stopping rules in libraries rather than in the
+language. Sequential-analysis stopping rules
+\citep{wald1945,lindley1956,chaloner1995} halt when an expected gain or a
+likelihood ratio crosses a boundary; \Cref{thm:closure-stronger} distinguishes
+our criterion from all such rules. The requirement of three mutually
+supporting independent sources (\Cref{sec:coherence}) is related to the
+triangulation heuristics discussed in methodological work on convergent
+evidence \citep{munafo2018} and to the treatment of conflicting evidence in
+belief functions \citep{shafer1976}, but is here a typing rule with a proof
+rather than a recommendation. The insistence that the language report a
+plurality when evidence conflicts, rather than select a representative,
+parallels the ``honest decline'' available in conformal and abstention-based
+prediction \citep{chow1970,vovk2005}.
+
+% =====================================================================
+\section{The substrate interface}
+\label{sec:substrate}
+% =====================================================================
+
+Everything domain-specific enters through a substrate. A substrate is
+required to discharge exactly four obligations, and the language depends on
+nothing else about it.
+
+\begin{definition}[Substrate]
+\label{def:substrate}
+A \emph{substrate} $\mathcal{D}$ is a four-tuple of obligations:
+\begin{enumerate}[label=\textup{(S\arabic*)},leftmargin=3.2em,nosep]
+\item \textbf{Receivers.} A finite set $R(\mathcal{D})$ of bounded systems,
+each of which is the unit to which a floor attaches.
+\item \textbf{Observable.} For each receiver, a finite sequence of
+\emph{states}, each carrying a real-valued uncertainty $S$ and a label drawn
+from a finite label set.
+\item \textbf{Events.} A rule determining which ordered pairs of states
+constitute \emph{discriminating events}, and a type for each such event
+drawn from a finite set.
+\item \textbf{Floor.} An estimator returning $\flo(\mathcal{D},r)>0$ for
+each receiver $r$, the irreducible residual below which uncertainty does not
+fall.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[The floor obligation is the substantive one]
+\label{rem:floor-obligation}
+(S1)--(S3) are bookkeeping: they say what the units are, what is measured,
+and what counts as a step. (S4) is a commitment with empirical content. A
+substrate that discharges it by returning the minimum observed $S$ has
+discharged it trivially---the value is positive whenever the sample is, and
+carries no information. A substrate that discharges it by estimating the
+asymptote of separation cost as the sample grows has made a claim capable of
+being wrong. The language cannot tell these apart, and we therefore require
+a substrate to declare which estimator it uses, so that a reader of a
+\texttt{.mck} program can see it. \Cref{sec:diagnostics} gives the
+diagnostic that detects the trivial case from data.
+\end{remark}
+
+\begin{definition}[Catalyst]
+\label{def:catalyst}
+A \emph{catalyst} is a named means of advancing an inquiry: a computation
+over substrate data, a query to an external source, or an inferential
+procedure. Catalysts are opaque to the language, which knows only their
+names, their declared independence relation
+(\Cref{sec:coherence}), and the outcomes they return.
+\end{definition}
+
+\begin{definition}[Cell]
+\label{def:cell}
+A \emph{cell} is an equivalence class of outcomes under a substrate-supplied
+indistinguishability relation. Cells, not points, are the values a
+\texttt{seek} returns.
+\end{definition}
+
+\begin{remark}[Why the return type is a cell]
+\label{rem:cell}
+The language cannot return a point-valued answer, because the floor
+obligation (S4) asserts a positive irreducible residual and a point-valued
+answer would assert a zero residual. This is enforced by the positivity rule
+of \Cref{sec:typing} and is the reason the type \texttt{Point} does not
+exist in the language.
+\end{remark}
+
+% =====================================================================
+\section{Lexical structure and grammar}
+\label{sec:grammar}
+% =====================================================================
+
+\subsection{Token classes}
+
+\begin{definition}[Tokens]
+\label{def:tokens}
+The lexer recognises: \emph{keywords}
+\texttt{substrate}, \texttt{receivers}, \texttt{observable},
+\texttt{events}, \texttt{floor}, \texttt{catalyst}, \texttt{independent},
+\texttt{let}, \texttt{seek}, \texttt{excluding}, \texttt{via},
+\texttt{until}, \texttt{closure}, \texttt{report}, \texttt{resolved},
+\texttt{decline}, \texttt{record};
+\emph{identifiers} matching \texttt{[A-Za-z\_][A-Za-z0-9\_]*} that are not
+keywords; \emph{string literals} delimited by double quotes;
+\emph{numeric literals} in decimal notation; \emph{punctuation}
+\texttt{\{ \} ( ) , ; : =}; and \emph{comments} from \texttt{\#} to
+end-of-line, discarded. Whitespace is insignificant except as a token
+separator.
+\end{definition}
+
+\subsection{Context-free grammar}
+
+\begin{grammar}
+<program> ::= <decl>*
+
+<decl> ::= <substrate-decl> | <catalyst-decl> | <let-decl> | <report-decl>
+
+<substrate-decl> ::= `substrate' <ident> `\{'
+  `receivers' `:' <expr> `;'
+  `observable' `:' <expr> `;'
+  `events' `:' <expr> `;'
+  `floor' `:' <expr> `;' `\}'
+
+<catalyst-decl> ::= `catalyst' <ident> `:' <expr>
+  [ `independent' <ident-list> ] `;'
+
+<let-decl> ::= `let' <ident> `=' <seek-expr> `;'
+
+<report-decl> ::= `report' <ident> `;'
+
+<seek-expr> ::= `seek' <expr>
+  `excluding' <expr>
+  [ `via' `(' <ident-list> `)' ]
+  `until' <term-cond>
+
+<term-cond> ::= `closure'
+
+<ident-list> ::= <ident> ( `,' <ident> )*
+
+<expr> ::= <ident> | <string> | <number> | <ident> `(' <arg-list>? `)'
+
+<arg-list> ::= <expr> ( `,' <expr> )*
+\end{grammar}
+
+\begin{proposition}[The grammar is unambiguous]
+\label{prop:unambiguous}
+The grammar of \Cref{sec:grammar} is LL(1) and therefore unambiguous.
+\end{proposition}
+
+\begin{proof}
+Each production for a non-terminal begins with a distinct terminal: the four
+\texttt{<decl>} alternatives begin with the distinct keywords
+\texttt{substrate}, \texttt{catalyst}, \texttt{let}, \texttt{report}; the
+\texttt{<seek-expr>} clauses are introduced by the distinct keywords
+\texttt{seek}, \texttt{excluding}, \texttt{via}, \texttt{until}; the
+optional clauses \texttt{via} and \texttt{independent} are distinguished
+from what follows by their leading keyword; and \texttt{<expr>} alternatives
+are distinguished by token class, with the function-call form disambiguated
+by a one-token lookahead for \texttt{(}. Hence a single token of lookahead
+selects a unique production at every point, so the grammar is LL(1), and
+LL(1) grammars are unambiguous \citep{aho2006}.
+\end{proof}
+
+\begin{remark}[The exclusion clause is not optional in the grammar]
+\label{rem:excl-grammar}
+Note that \texttt{via} and \texttt{independent} are bracketed as optional in
+the grammar while \texttt{excluding} is not. This is deliberate and is the
+syntactic reflection of \Cref{thm:exclusion-necessary}: a \texttt{seek}
+without an exclusion clause is not a parse error to be recovered from but a
+form the language does not contain.
+\end{remark}
+
+\subsection{An example program}
+
+\begin{lstlisting}[style=mckstyle]
+# Individuate a coherence regime against the rest of the record.
+substrate Osc {
+  receivers  : recordings("cohort-A");
+  observable : coherence_index();
+  events     : label_change();
+  floor      : asymptotic_separation();   # not sample_minimum()
+}
+
+catalyst spectral  : band_decomposition()  independent surrogate, phase;
+catalyst surrogate : phase_randomised()    independent spectral, phase;
+catalyst phase     : locking_value()       independent spectral, surrogate;
+
+let regime =
+  seek        target_state("high-coherence")
+  excluding   all_other_states()
+  via         (spectral, surrogate, phase)
+  until       closure;
+
+report regime;
+\end{lstlisting}
+
+The program declares a substrate discharging the four obligations, three
+mutually independent catalysts, and one \texttt{seek} whose target is
+individuated against the explicitly named remainder. It terminates by
+closure, and \texttt{report} emits either a resolved cell or a declination.
+
+% =====================================================================
+\section{The type system}
+\label{sec:typing}
+% =====================================================================
+
+\subsection{Types}
+
+\begin{definition}[Types]
+\label{def:types}
+The types are
+\[
+T \ ::=\ \texttt{Substrate}\ \mid\ \texttt{Catalyst}\ \mid\ \texttt{Cell}\ \mid\ \texttt{Outcome}\ \mid\ \texttt{Floor}.
+\]
+There is no type of points: the language cannot express a residue-free
+answer.
+\end{definition}
+
+\begin{definition}[Outcome]
+\label{def:outcome}
+$\texttt{Outcome}=\texttt{Resolved}(\texttt{Cell})\ \mid\
+\texttt{Declined}(\{\texttt{Cell}\})$, a sum whose second summand carries a
+set of at least two mutually incompatible cells.
+\end{definition}
+
+\subsection{Judgements and standard rules}
+
+A typing environment $\Env$ maps identifiers to types. The judgement
+$\Env\vdash e:T$ is derived by the following rules, in which
+\textsc{T-Var}, \textsc{T-Sub}, \textsc{T-Cat} are standard.
+
+\begin{align*}
+&\textsc{T-Var}\quad
+\frac{x:T\in\Env}{\Env\vdash x:T}
+\qquad
+\textsc{T-Sub}\quad
+\frac{\Env\vdash r,o,v,f\ \text{well-formed}}
+     {\Env\vdash \texttt{substrate}\,\{r;o;v;f\}:\texttt{Substrate}}\\[6pt]
+&\textsc{T-Cat}\quad
+\frac{\Env\vdash e:\_\qquad \iota\subseteq\mathrm{dom}(\Env)}
+     {\Env\vdash \texttt{catalyst}\ c:e\ \texttt{independent}\ \iota:\texttt{Catalyst}}
+\end{align*}
+
+\subsection{The two non-standard rules}
+
+\begin{definition}[Positivity rule]
+\label{def:positivity}
+\[
+\textsc{T-Seek-Pos}\quad
+\frac{\Env\vdash t:\texttt{Cell}\quad \Env\vdash x:\texttt{Cell}\quad
+      \Env\vdash \flo:\texttt{Floor}\quad \flo>0}
+     {\Env\vdash \seek\ t\ \excl\ x\ \dots:\texttt{Outcome}}
+\]
+A \texttt{seek} is well typed only if the substrate's floor is positive. A
+program asserting an attainable zero residual---by declaring a floor of
+zero, or by requesting a point-valued target---does not type.
+\end{definition}
+
+\begin{definition}[Coherence rule]
+\label{def:coherence-rule}
+\[
+\textsc{T-Seek-Coh}\quad
+\frac{\Env\vdash c_i:\texttt{Catalyst}\ (1\le i\le k)\quad
+      k\ge3\quad \mathrm{MutIndep}(c_1,\dots,c_k)}
+     {\Env\vdash \seek\ \dots\ \via\ (c_1,\dots,c_k)\ \until\ \texttt{closure}:\texttt{Outcome}}
+\]
+where $\mathrm{MutIndep}$ holds when the declared independence relation
+contains every unordered pair. A \texttt{seek} with an explicit \texttt{via}
+clause is well typed only if it names at least three mutually independent
+catalysts.
+\end{definition}
+
+\Cref{sec:coherence} justifies the threshold of three.
+
+\subsection{Necessity of the exclusion clause}
+
+\begin{theorem}[Exclusion cannot be eliminated]
+\label{thm:exclusion-necessary}
+Let a target be specified by a positive description alone---a predicate
+asserting properties the target has---within a substrate whose state space
+contains no distinguished element. Then the description does not determine a
+unique cell, unless the description already names the complement it is to be
+distinguished from. Consequently a \texttt{seek} without an exclusion clause
+has no unique denotation, and the language is right to exclude the form.
+\end{theorem}
+
+\begin{proof}
+A cell is an equivalence class of outcomes (\Cref{def:cell}); to determine a
+cell is to determine, of each outcome, whether it belongs. A positive
+description asserts properties of members. Suppose two distinct cells
+$A\ne A'$ both satisfy every asserted property---which is possible whenever
+the description does not mention a property on which $A$ and $A'$ differ.
+Then the description determines neither, and no appeal to a distinguished
+element resolves the tie, since by hypothesis none exists. To force
+uniqueness the description must assert a property that $A$ has and $A'$
+lacks; asserting such a property is asserting what the target is
+\emph{not}---namely, not the thing lacking it---which is an exclusion. Hence
+either the specification is incomplete or it contains an exclusion, and a
+form with no exclusion clause cannot in general denote uniquely.
+\end{proof}
+
+\begin{corollary}[Compile-time rejection]
+\label{cor:reject}
+A parser for the grammar of \Cref{sec:grammar} rejects
+$\seek\ t\ \via\ \dots$ without \texttt{excluding}, and no typing derivation
+exists for such a term.
+\end{corollary}
+
+% =====================================================================
+\section{Why three catalysts}
+\label{sec:coherence}
+% =====================================================================
+
+\begin{definition}[Support structure]
+\label{def:support}
+Given catalysts $c_1,\dots,c_k$ bearing on a target, the \emph{support
+structure} is the directed graph on $\{c_1,\dots,c_k\}$ with an edge
+$c_i\to c_j$ when the outcome of $c_i$ is used to license the outcome of
+$c_j$. A conclusion is \emph{robust} if it survives the removal of any
+single catalyst.
+\end{definition}
+
+\begin{theorem}[Linear support is not robust]
+\label{thm:linear}
+If the support structure is acyclic, the conclusion is not robust: there is a
+catalyst whose removal leaves some other catalyst's contribution
+unlicensed, and by induction the chain collapses.
+\end{theorem}
+
+\begin{proof}
+An acyclic finite digraph has a vertex of in-degree zero, say $c_s$: its
+contribution is licensed by nothing internal to the structure. Removing the
+terminal vertex of a maximal path leaves its predecessor's contribution
+unused, and removing $c_s$ leaves every vertex reachable only through it
+unlicensed. In either case some contribution's licensing is lost, so the
+conclusion does not survive the removal of that single catalyst, and is not
+robust by \Cref{def:support}.
+\end{proof}
+
+\begin{theorem}[Three is the minimum]
+\label{thm:three}
+A robust support structure contains a directed cycle of length at least
+three. Cycles of length one \textup{(}self-support\textup{)} and two
+\textup{(}mutual support of a pair\textup{)} do not confer robustness.
+Conversely, three catalysts each supported by the other two form a robust
+structure.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:linear} a robust structure is not acyclic, so it contains a
+cycle. A $1$-cycle is a catalyst citing itself, which licenses nothing not
+already assumed. For a $2$-cycle $\{c_1,c_2\}$: removing either leaves the
+other supported by nothing, so the conclusion does not survive a single
+removal and is not robust. Hence the shortest cycle compatible with
+robustness has length $\ge3$. Conversely, in a $3$-cycle with all mutual
+edges, removing any one catalyst leaves the remaining two still mutually
+supporting via the edge between them, so a licensed contribution survives
+and the structure is robust.
+\end{proof}
+
+\begin{remark}[What the rule does and does not guarantee]
+\label{rem:coh-limits}
+\Cref{def:coherence-rule} enforces a structural necessary condition, not
+sufficiency for a correct conclusion. Three catalysts that are declared
+independent but are not---sharing a common upstream data source, a common
+preprocessing step, or a common modelling assumption---satisfy the rule
+while violating its intent. The language cannot verify independence; it can
+only require that it be declared, so that the declaration is visible in the
+source and auditable. We regard this as the honest division of labour:
+mechanical enforcement of the structure, human responsibility for the
+premise.
+\end{remark}
+
+% =====================================================================
+\section{Operational semantics}
+\label{sec:semantics}
+% =====================================================================
+
+\subsection{Configurations}
+
+\begin{definition}[Configuration]
+\label{def:config}
+A \emph{configuration} is a triple
+$\langle e,\ \store,\ \rho\rangle$ where $e$ is the term being evaluated,
+$\store$ is the value store mapping identifiers to values, and
+$\rho\in\N$ is the \emph{committed record}, a count of catalyst invocations
+performed.
+\end{definition}
+
+\begin{definition}[Reachable-cell set]
+\label{def:reachable}
+For a \texttt{seek} in progress, $\mathcal{C}$ denotes the set of cells
+reached by catalysts invoked so far.
+\end{definition}
+
+\subsection{Reduction rules}
+
+We write $\store(c)\Downarrow z$ for ``invoking catalyst $c$ against the
+substrate yields cell $z$''. The rules are:
+
+\begin{align*}
+&\textsc{E-Invoke}\quad
+\frac{c\in \Gamma_{\mathrm{avail}}\qquad \store(c)\Downarrow z}
+{\langle \seek\ t\ \excl\ x\ \via\ \Gamma_{\mathrm{avail}}\ \until\ \texttt{closure},\ \store,\ \rho\rangle
+\steps
+\langle \seek\ t\ \excl\ x\ \via\ \Gamma_{\mathrm{avail}}\setminus\{c\}\ \until\ \texttt{closure},\ \store[\mathcal{C}\mapsto\mathcal{C}\cup\{z\}],\ \rho+1\rangle}\\[8pt]
+&\textsc{E-Close-Res}\quad
+\frac{\forall c\in\Gamma_{\mathrm{avail}}:\ \store(c)\Downarrow z\Rightarrow z\in\mathcal{C}
+\qquad \abs{\mathcal{C}}=1}
+{\langle \seek\ \dots,\ \store,\ \rho\rangle\steps
+\langle \texttt{Resolved}(z_0),\ \store,\ \rho\rangle}\\[8pt]
+&\textsc{E-Close-Dec}\quad
+\frac{\forall c\in\Gamma_{\mathrm{avail}}:\ \store(c)\Downarrow z\Rightarrow z\in\mathcal{C}
+\qquad \abs{\mathcal{C}}\ge2}
+{\langle \seek\ \dots,\ \store,\ \rho\rangle\steps
+\langle \texttt{Declined}(\mathcal{C}),\ \store,\ \rho\rangle}
+\end{align*}
+
+\textsc{E-Invoke} consumes one available catalyst, adds its cell to the
+reached set, and increments the record. The two closure rules fire when no
+remaining catalyst can add a cell, and are distinguished solely by the
+cardinality of $\mathcal{C}$.
+
+\subsection{Metatheory}
+
+\begin{theorem}[Progress]
+\label{thm:progress}
+If $\Env\vdash e:\texttt{Outcome}$ and $e$ is not of the form
+$\texttt{Resolved}(\cdot)$ or $\texttt{Declined}(\cdot)$, then for any store
+$\store$ and record $\rho$ there is a configuration to which
+$\langle e,\store,\rho\rangle$ steps.
+\end{theorem}
+
+\begin{proof}
+A well-typed non-value term of type \texttt{Outcome} is a \texttt{seek} by
+\Cref{def:positivity,def:coherence-rule}, the only rules concluding that
+type. Consider its available set $\Gamma_{\mathrm{avail}}$. If some
+available catalyst yields a cell outside $\mathcal{C}$, then
+\textsc{E-Invoke} applies with that catalyst. Otherwise every available
+catalyst yields a cell in $\mathcal{C}$; then $\mathcal{C}$ is nonempty---by
+\textsc{T-Seek-Coh} at least three catalysts were named and, if none has yet
+been invoked, \textsc{E-Invoke} applies to any of them---so exactly one of
+\textsc{E-Close-Res} ($\abs{\mathcal{C}}=1$) or \textsc{E-Close-Dec}
+($\abs{\mathcal{C}}\ge2$) applies. In every case a rule fires, so the term
+is not stuck.
+\end{proof}
+
+\begin{theorem}[Preservation]
+\label{thm:preservation}
+If $\Env\vdash e:T$ and
+$\langle e,\store,\rho\rangle\steps\langle e',\store',\rho'\rangle$ then
+$\Env\vdash e':T$.
+\end{theorem}
+
+\begin{proof}
+By cases on the rule applied. \textsc{E-Invoke} yields a \texttt{seek} term
+differing from its predecessor only in the available set and the store; the
+premises of \textsc{T-Seek-Pos} concern the floor, unchanged, and those of
+\textsc{T-Seek-Coh} concern the catalysts named in the \texttt{via} clause
+at the time of typing, which are not re-checked at each step---the rule
+constrains the program text, not the residual available set. Hence the
+reduct types at \texttt{Outcome}. \textsc{E-Close-Res} yields
+$\texttt{Resolved}(z_0)$ with $z_0:\texttt{Cell}$, of type \texttt{Outcome}
+by \Cref{def:outcome}; \textsc{E-Close-Dec} yields
+$\texttt{Declined}(\mathcal{C})$ with $\abs{\mathcal{C}}\ge2$, likewise of
+type \texttt{Outcome}. In all cases the type is preserved.
+\end{proof}
+
+\begin{corollary}[Soundness]
+\label{cor:soundness}
+A well-typed program does not get stuck: it either reduces indefinitely or
+reaches a value of type \texttt{Outcome}. Combined with
+\Cref{thm:termination} below, every well-typed program reaches such a value
+in finitely many steps.
+\end{corollary}
+
+\begin{proof}
+Immediate from \Cref{thm:progress,thm:preservation} by the standard
+syntactic argument \citep{wright1994}.
+\end{proof}
+
+\begin{theorem}[Monotone record and non-return]
+\label{thm:monotone}
+The record $\rho$ is non-decreasing along any reduction and strictly
+increases at each \textsc{E-Invoke}. Two configurations with identical terms
+and stores but different records are distinct; hence no program returns to a
+previous configuration.
+\end{theorem}
+
+\begin{proof}
+\textsc{E-Invoke} increments $\rho$; the closure rules leave it unchanged
+and produce values, from which no further step is taken. No rule decrements
+$\rho$. Configurations with records $r<r'$ are separated by the predicate
+$\rho\le r$, hence distinct. A return would require $\rho$ to decrease,
+which no rule permits.
+\end{proof}
+
+\begin{theorem}[Determinism modulo substrate]
+\label{thm:determinism}
+Fix a substrate and fix, for each catalyst, the cell it yields. Then
+reduction is deterministic up to the order of \textsc{E-Invoke} steps, and
+the final \texttt{Outcome} is independent of that order.
+\end{theorem}
+
+\begin{proof}
+The only choice in the semantics is which available catalyst
+\textsc{E-Invoke} consumes. Each invocation adjoins $\store(c)\Downarrow z$
+to $\mathcal{C}$, and set union is associative, commutative, and idempotent,
+so the reached set after all catalysts have been consumed is
+$\{\store(c)\Downarrow z : c\in\Gamma_{\mathrm{avail}}\}$ regardless of
+order. The closure rules are selected by $\abs{\mathcal{C}}$, a function of
+that set. Hence the final outcome is order-independent, and any residual
+non-determinism arises solely from the substrate's responses.
+\end{proof}
+
+\begin{theorem}[Termination]
+\label{thm:termination}
+Every well-typed \texttt{seek} over a finite catalyst registry reaches an
+\texttt{Outcome} in at most $\abs{\Gamma_{\mathrm{avail}}}$ invocations.
+\end{theorem}
+
+\begin{proof}
+Each \textsc{E-Invoke} removes one catalyst from the available set, which is
+finite, so at most $\abs{\Gamma_{\mathrm{avail}}}$ such steps occur. When the
+set is empty the premise of the closure rules---that every available
+catalyst yields a cell already in $\mathcal{C}$---is vacuously satisfied, so
+a closure rule fires and a value is produced. Hence termination in at most
+$\abs{\Gamma_{\mathrm{avail}}}$ invocations, and possibly earlier if closure
+is detected before exhaustion.
+\end{proof}
+
+\begin{theorem}[Closure is strictly stronger than a threshold]
+\label{thm:closure-stronger}
+For any threshold $\theta$ on attained uncertainty there is a substrate and
+program in which a partial invocation attains uncertainty below $\theta$
+while an uninvoked catalyst would reach a cell outside $\mathcal{C}$; the
+threshold criterion terminates, the closure criterion does not.
+\end{theorem}
+
+\begin{proof}
+Take a substrate with two catalysts $c_A,c_B$ reaching incompatible cells
+$z_A\ne z_B$, with the uncertainty attained at $z_A$ below $\theta$.
+Invoking $c_A$ alone satisfies the threshold. But $c_B$ is available and
+$z_B\notin\mathcal{C}=\{z_A\}$, so the premise of both closure rules fails
+and the closure criterion requires \textsc{E-Invoke} on $c_B$. Hence the two
+criteria differ on this program, with closure requiring strictly more.
+\end{proof}
+
+\begin{theorem}[Dichotomy of outcomes]
+\label{thm:dichotomy}
+Every terminating \texttt{seek} produces either
+$\texttt{Resolved}(z)$ or $\texttt{Declined}(\mathcal{C})$ with
+$\abs{\mathcal{C}}\ge2$, and never both.
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:termination} a closure rule fires. The two rules have premises
+$\abs{\mathcal{C}}=1$ and $\abs{\mathcal{C}}\ge2$, which are mutually
+exclusive and, since $\mathcal{C}$ is nonempty at closure (at least one
+catalyst has been invoked by \Cref{thm:progress}), jointly exhaustive.
+\end{proof}
+
+\begin{corollary}[Declination is a first-class result]
+\label{cor:decline}
+A program whose evidence is genuinely conflicting terminates normally,
+returning the plurality of incompatible cells. This is a value of type
+\texttt{Outcome}, not an error, and \texttt{report} emits it as such.
+\end{corollary}
+
+% =====================================================================
+\section{Substrate neutrality}
+\label{sec:neutrality}
+% =====================================================================
+
+The language depends on a substrate only through the four obligations of
+\Cref{def:substrate}. We exhibit three bindings of different character to
+show the obligations are discharge\-able without altering the language.
+
+\begin{example}[Oscillatory-coherence substrate]
+\label{ex:osc}
+Receivers are recordings. The observable is a coherence index in $[0,1]$
+computed from multi-channel phase relationships, mapped to uncertainty by an
+order-reversing affine map so that higher coherence is lower uncertainty.
+Events are transitions between adjacent segments carrying different labels,
+typed by the ordered label pair. The floor is estimated by the asymptotic
+method of \Cref{sec:diagnostics}.
+\end{example}
+
+\begin{example}[Discrete-transition substrate]
+\label{ex:discrete}
+Receivers are experimental conditions. States are members of a small finite
+class set with an associated occupancy and dwell statistic; uncertainty is
+derived from occupancy. Events are class-to-class transitions, typed by the
+ordered class pair. This binding is appropriate when the underlying record
+is a transition matrix rather than a time series.
+\end{example}
+
+\begin{example}[Latency substrate]
+\label{ex:latency}
+Receivers are participants. States are trials labelled by condition, with
+uncertainty an affine function of response latency. Events are the addition
+of an information source to a condition, typed by the source added. This
+binding yields a zero-free-parameter prediction: the power of a compound
+condition should equal the composition of the powers of its constituents.
+\end{example}
+
+\begin{proposition}[Neutrality]
+\label{prop:neutrality}
+No rule of \Cref{sec:grammar,sec:typing,sec:semantics} refers to any feature
+of a substrate beyond the four obligations. Consequently a program is
+well-typed and reduces identically under any substrate discharging them.
+\end{proposition}
+
+\begin{proof}
+Inspection of the rules: the grammar mentions substrate fields by keyword
+only; \textsc{T-Sub} requires well-formedness of the four fields and nothing
+else; \textsc{T-Seek-Pos} requires only $\flo>0$, supplied by (S4);
+\textsc{T-Seek-Coh} concerns catalysts, not substrates; and the reduction
+rules use the substrate only through $\store(c)\Downarrow z$, which is (S2)
+and (S3) mediated by a catalyst. No rule inspects the internal structure of
+a receiver, observable, event, or floor.
+\end{proof}
+
+% =====================================================================
+\section{Diagnostics: when a binding is uninformative}
+\label{sec:diagnostics}
+% =====================================================================
+
+A binding may satisfy every obligation and still be incapable of supporting
+an inference. The language cannot detect this, but a diagnostic computed
+from substrate data can, and we specify it so that a negative result is
+attributed correctly.
+
+\begin{definition}[Type separation]
+\label{def:separation}
+For a corpus of events with types, let $\mathrm{Var}_{\mathrm{b}}$ be the
+variance across types of the per-type mean power and
+$\mathrm{Var}_{\mathrm{w}}$ the mean within-type variance. The
+\emph{separation} is
+$\eta=\mathrm{Var}_{\mathrm{b}}/(\mathrm{Var}_{\mathrm{b}}+\mathrm{Var}_{\mathrm{w}})\in[0,1]$.
+\end{definition}
+
+\begin{proposition}[Uninformative bindings]
+\label{prop:uninformative}
+If $\eta\approx0$, the per-type means are indistinguishable, predictions
+formed from them are constant at fixed cascade length, and no comparison
+among composition rules has discriminating power. A negative result obtained
+in this regime is evidence about the observable, not about the process.
+\end{proposition}
+
+\begin{proof}
+If all type means coincide at $\bar\kap$, any prediction formed as a
+function of the type means alone depends only on the number of events
+composed; at fixed length it is constant, so its sample variance vanishes
+and any correlation with measured outcomes is undefined. Competing rules
+computed from the same means are likewise constant and cannot be separated.
+\end{proof}
+
+\begin{remark}[The floor diagnostic]
+\label{rem:floor-diag}
+The second diagnostic concerns obligation (S4). Two estimators are
+distinguishable from data: the sample-minimum estimator returns the least
+observed uncertainty and is positive whenever the sample is nonempty; the
+asymptotic estimator fits the limiting value of separation cost as the
+sample grows and can return a value statistically indistinguishable from
+zero. Only the second can fail. A substrate binding should declare which it
+uses, and a reader should treat a positivity claim from the former as
+carrying no evidential weight. \Cref{sec:validation} tests both estimators
+against generating processes with and without a genuine floor.
+\end{remark}
+
+% =====================================================================
+\section{Numerical verification}
+\label{sec:validation}
+% =====================================================================
+
+\subsection{Method}
+
+We implement a lexer, parser, type checker, and evaluator for the language
+as specified, and exercise them against constructed programs and synthetic
+substrates. The following are checked.
+
+\emph{Grammar and parsing.} Well-formed programs parse; programs omitting
+the \texttt{excluding} clause are rejected at parse time
+(\Cref{cor:reject}).
+
+\emph{Typing.} Programs declaring a non-positive floor are rejected by
+\textsc{T-Seek-Pos}; programs naming fewer than three catalysts, or three
+that are not pairwise declared independent, are rejected by
+\textsc{T-Seek-Coh}; conforming programs type.
+
+\emph{Progress and preservation.} Over randomly generated well-typed
+programs and substrates, every intermediate configuration is checked to be
+either a value or reducible, and the type of each reduct is checked to be
+\texttt{Outcome} (\Cref{thm:progress,thm:preservation}).
+
+\emph{Determinism and termination.} Each program is evaluated under
+randomised catalyst orderings; the final outcome is checked to be
+independent of order (\Cref{thm:determinism}), and the invocation count is
+checked against the bound of \Cref{thm:termination}.
+
+\emph{Record monotonicity.} The record is checked to increase strictly at
+each invocation and never to decrease (\Cref{thm:monotone}).
+
+\emph{Dichotomy.} Substrates are constructed to force each branch: one in
+which all catalysts agree, yielding \texttt{Resolved}; one in which two
+catalysts reach incompatible cells, yielding \texttt{Declined}. We check
+that the latter terminates normally rather than raising
+(\Cref{cor:decline}).
+
+\emph{Closure versus threshold.} The construction of
+\Cref{thm:closure-stronger} is instantiated, and we verify that a
+threshold rule stops after one catalyst while closure continues and reports
+a declination.
+
+\emph{Diagnostics.} Both floor estimators are applied to generating
+processes with and without a floor, and the separation $\eta$ is computed
+for substrates of varying type separation, verifying that the uninformative
+regime is detected (\Cref{prop:uninformative}).
+
+\subsection{What would count as a failure}
+
+A parse acceptance of an exclusion-free \texttt{seek} would falsify
+\Cref{cor:reject}; an order-dependent outcome would falsify
+\Cref{thm:determinism}; a stuck configuration would falsify
+\Cref{thm:progress}; a run exceeding the invocation bound would falsify
+\Cref{thm:termination}; a raised exception on conflicting evidence would
+falsify \Cref{cor:decline}. Results are recorded in machine-readable form
+alongside this paper.
+
+% =====================================================================
+\section{Scope and limitations}
+\label{sec:scope}
+% =====================================================================
+
+The language expresses the structure of an inquiry and delegates all
+computation to substrates; it is therefore useless without a substrate and
+makes no claim to compute anything itself. The coherence rule enforces a
+structural condition and cannot verify the independence it requires
+(\Cref{rem:coh-limits}). The closure criterion is only as good as the
+catalyst registry: closure over an impoverished registry is easily attained
+and means only that the registry is exhausted, not that the question is
+settled---the criterion quantifies over available catalysts, not over
+conceivable ones. The positivity rule prevents a program from asserting a
+zero residual but cannot prevent a substrate from discharging the floor
+obligation trivially; the diagnostic of \Cref{rem:floor-diag} is offered
+because the type system cannot do this work. Finally, the semantics treats
+catalyst invocation as returning a determinate cell; substrates whose
+responses are noisy require the indistinguishability relation of
+\Cref{def:cell} to absorb that noise, and the choice of that relation is a
+substantive modelling decision the language does not make.
+
+\subsection{Conclusion}
+
+Mekaneck has one primitive, two non-standard typing rules, and three
+reduction rules. The primitive requires an inquiry to say what its target is
+being told apart from, and the type system rejects programs that do not; the
+termination condition requires an inquiry to exhaust its available means
+rather than to cross a threshold, and the semantics guarantees it does so in
+finitely many steps; and the outcome type admits an explicit declination, so
+that conflicting evidence terminates a program normally instead of forcing a
+choice the evidence does not support. The metatheory is standard---progress,
+preservation, determinism modulo substrate, termination---and the substrate
+interface is narrow enough that the same program runs unchanged over
+substrates of quite different character. What the language cannot do, it
+declines to pretend to do: it cannot verify independence, cannot validate a
+floor estimator, and cannot know whether the catalysts available to it are
+the ones that matter.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
