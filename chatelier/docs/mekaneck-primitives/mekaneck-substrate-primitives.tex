@@ -10,6 +10,7 @@
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{syntax}
+\usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{listings}
@@ -905,6 +906,9 @@ A parse acceptance of an exclusion-free \texttt{seek} would falsify
 falsify \Cref{cor:decline}. Results are recorded in machine-readable form
 alongside this paper.
 
+
+\input{figures/primitive-captions}
+
 \subsection{Results}
 \label{sec:results}
 
@@ -951,6 +955,21 @@ $\texttt{Declined}(\{\mathtt{cellA},\mathtt{cellB}\})$. The two procedures
 returned incompatible verdicts on identical evidence, which is the concrete
 content of \Cref{thm:closure-stronger}.
 
+\emph{The two failure rates coincide exactly.} Sweeping the probability that
+catalysts agree, over $400$ substrates at each of $20$ agreement levels, the
+fraction of runs on which closure declines and the fraction on which the
+threshold rule reports a single answer \emph{despite} split evidence are
+equal at every level---$0.268$, $0.765$ and $0.280$ at agreement
+probabilities $0.1$, $0.5$ and $0.9$ respectively. The coincidence is not a
+coefficient to be estimated: whenever the reachable set contains more than
+one cell, some catalyst reaches the cell that satisfies the threshold, and
+the threshold rule halts there by construction. Hence on this family of
+substrates the threshold rule fails on \emph{exactly} the runs where the
+evidence is contested, with no residue of cases in which it happens to be
+right. The rate is non-monotone in agreement, peaking near $0.5$, because
+both very high and very low agreement produce unanimity---at one extreme on
+the confident cell, at the other on its alternative.
+
 \begin{remark}[The threshold procedure stopped before the disagreement was
 reachable]
 \label{rem:threshold-early}
@@ -959,7 +978,7 @@ after one invocation, not two. It stopped as soon as a single source reported
 an outcome it found confident, and therefore never invoked the source that
 would have contradicted it---not because that source was unavailable, but
 because the criterion had already been satisfied. This is the failure mode of
-\Cref{rem:closure-why} realised in a concrete evaluation: internal
+\Cref{thm:closure-stronger} realised in a concrete evaluation: internal
 consistency of one line of evidence is sufficient to satisfy a threshold, and
 a threshold cannot express the requirement that the remaining sources be
 consulted. Closure expresses exactly that requirement, and does so without

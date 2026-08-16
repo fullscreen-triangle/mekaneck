@@ -89,11 +89,14 @@ def panel1():
         thr_inv.append(ti / trials)
         clo_inv.append(ci / trials)
 
-    # (A) how often a threshold rule reports a single answer on split evidence
-    ax[0].plot(p_agree, thr_wrong, "o-", color=C_SECOND, ms=4,
-               label="threshold: false resolve")
-    ax[0].plot(p_agree, clo_declined, "s-", color=C_PRIMARY, ms=4,
-               label="closure: declines")
+    # (A) The two curves coincide exactly: on every substrate where closure
+    # declines, the threshold rule reported a single answer instead. Drawn
+    # with different widths/styles so the coincidence is visible rather than
+    # one curve hiding the other.
+    ax[0].plot(p_agree, clo_declined, "-", color=C_PRIMARY, lw=3.4,
+               alpha=0.85, label="closure declines")
+    ax[0].plot(p_agree, thr_wrong, "o--", color=C_SECOND, ms=4.5, lw=1.4,
+               label="threshold false-resolves")
     ax[0].set_xlabel("catalyst agreement probability")
     ax[0].set_ylabel("fraction of runs")
     ax[0].set_ylim(-0.03, 1.03)
@@ -145,7 +148,7 @@ def panel1():
     ax[3].set_ylabel("runs (of 500)")
     tag(ax[3], "D")
 
-    finish(fig, os.path.join(OUT, "panel_1_closure.png"))
+    finish(fig, os.path.join(OUT, "panel-1-closure.png"))
 
 
 # ======================================================================
@@ -204,24 +207,44 @@ def panel2():
     ax[2].set_xticks([1, 2, 3])
     tag(ax[2], "C")
 
-    # (D) 3d: record growth per step, per ordering
-    n_show = 40
-    Z = np.zeros((n_show, 6, ))
-    for i in range(n_show):
-        Z[i] = records[i]
-    X, Y = np.meshgrid(np.arange(6), np.arange(n_show))
-    s = ax[3].plot_surface(X, Y, Z, cmap="crest" if False else "viridis",
-                           linewidth=0.15, edgecolor="white",
-                           antialiased=True, rstride=1, cstride=1)
-    ax[3].set_xlabel("ordering")
-    ax[3].set_ylabel("substrate")
+    # (D) 3d: record trajectory. Each committed invocation increments the
+    # record by exactly one and the reached-cell set grows monotonically;
+    # plotted as (step, distinct cells reached, record) for every ordering of
+    # every substrate, so monotonicity is visible as a staircase in space.
+    seek_n = len(seek.via)
+    pts_x, pts_y, pts_z, pts_c = [], [], [], []
+    for i in range(120):
+        ncell = int(rng.choice([1, 1, 2, 3]))
+        cells = [f"cell{i2}" for i2 in range(ncell)]
+        sub = {c: cells[int(rng.integers(0, ncell))] for c in seek.via}
+        for oi, order in enumerate(itertools.permutations(seek.via)):
+            cfg = evaluate(seek, sub, order=list(order))
+            reached = 0
+            seen = set()
+            for step, ev in enumerate(cfg.trace, start=1):
+                seen.add(ev["cell"])
+                reached = len(seen)
+                pts_x.append(step)
+                pts_y.append(reached)
+                pts_z.append(ev["record"])
+                pts_c.append(ncell)
+    jx = rng.normal(0, 0.05, len(pts_x))
+    jy = rng.normal(0, 0.05, len(pts_y))
+    s = ax[3].scatter(np.array(pts_x) + jx, np.array(pts_y) + jy, pts_z,
+                      c=pts_c, cmap="viridis", s=8, alpha=0.5,
+                      edgecolors="none")
+    ax[3].set_xlabel("step")
+    ax[3].set_ylabel("cells reached")
     ax[3].set_zlabel("record")
-    ax[3].view_init(elev=26, azim=-58)
+    ax[3].set_xticks([1, 2, 3])
+    ax[3].set_yticks([1, 2, 3])
+    ax[3].set_zticks([1, 2, 3])
+    ax[3].view_init(elev=20, azim=-60)
     cb = fig.colorbar(s, ax=ax[3], shrink=0.52, pad=0.15, aspect=14)
     cb.ax.tick_params(labelsize=7)
     tag(ax[3], "D", is3d=True)
 
-    finish(fig, os.path.join(OUT, "panel_2_semantics.png"))
+    finish(fig, os.path.join(OUT, "panel-2-semantics.png"))
 
 
 # ======================================================================
@@ -257,17 +280,21 @@ def panel3():
     ax[0].legend(loc="center right")
     tag(ax[0], "A")
 
-    # (B) 3d: majority margin over (k, dissent fraction)
-    K, D = np.meshgrid(np.arange(2, 11), np.linspace(0, 0.9, 40))
-    MARGIN = (1 - D) - D                       # supporters minus dissenters
-    MARGIN = np.where(K - 1 >= 2, MARGIN, np.nan)
-    s = ax[1].plot_surface(K, D, MARGIN, cmap="RdYlGn", linewidth=0,
+    # (B) 3d: probability that a claim still has >=2 mutually supporting
+    # catalysts after independent per-catalyst failures. This is what the
+    # k>=3 rule buys, as a function of k and the failure probability q.
+    K, Q = np.meshgrid(np.arange(1, 11), np.linspace(0.0, 0.6, 45))
+    # survivors ~ Binomial(k, 1-q); need at least 2 to retain mutual support
+    from scipy.stats import binom
+    ROBUST = 1.0 - binom.cdf(1, K, 1.0 - Q)
+    s = ax[1].plot_surface(K, Q, ROBUST, cmap="RdYlGn", linewidth=0,
                            antialiased=True, rstride=1, cstride=1,
-                           vmin=-1, vmax=1)
-    ax[1].set_xlabel("$k$")
-    ax[1].set_ylabel("dissent frac.")
-    ax[1].set_zlabel("margin")
-    ax[1].view_init(elev=22, azim=-60)
+                           vmin=0, vmax=1)
+    ax[1].set_xlabel("catalysts $k$")
+    ax[1].set_ylabel("failure prob. $q$")
+    ax[1].set_zlabel("P(support survives)")
+    ax[1].set_zlim(0, 1.02)
+    ax[1].view_init(elev=22, azim=-62)
     cb = fig.colorbar(s, ax=ax[1], shrink=0.52, pad=0.15, aspect=14)
     cb.ax.tick_params(labelsize=7)
     tag(ax[1], "B", is3d=True)
@@ -313,7 +340,7 @@ report x;
     ax[3].set_ylim(0, 1.25)
     tag(ax[3], "D")
 
-    finish(fig, os.path.join(OUT, "panel_3_coherence.png"))
+    finish(fig, os.path.join(OUT, "panel-3-coherence.png"))
 
 
 # ======================================================================
@@ -407,7 +434,7 @@ def panel4():
     ax[3].legend(loc="lower left")
     tag(ax[3], "D")
 
-    finish(fig, os.path.join(OUT, "panel_4_diagnostics.png"))
+    finish(fig, os.path.join(OUT, "panel-4-diagnostics.png"))
 
 
 def main():
