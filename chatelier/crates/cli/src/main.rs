@@ -61,6 +61,12 @@ enum Command {
     },
     /// Print the tokens a source file lexes to (for editor development).
     Tokens { file: PathBuf },
+    /// Serve the local IDE on loopback and print a pairing token.
+    Serve {
+        /// Port on 127.0.0.1. 0 asks the OS for a free one.
+        #[arg(long, default_value_t = 8731)]
+        port: u16,
+    },
     /// Analyse a substrate: estimate its floor, extract cascades, and compare
     /// composition laws under both estimation regimes.
     Analyse {
@@ -396,6 +402,30 @@ fn cmd_analyse(file: PathBuf, json: bool) -> Result<ExitCode> {
     Ok(ExitCode::SUCCESS)
 }
 
+/// Start the loopback server.
+///
+/// The token is printed once, here, and never written to disk. Restarting the
+/// binary invalidates it, which is the behaviour we want from a pairing secret
+/// rather than a credential.
+fn cmd_serve(port: u16) -> Result<ExitCode> {
+    use mekaneck_server::{serve_local, Token};
+
+    let token = Token::generate()?;
+    println!("mekaneck is listening on http://127.0.0.1:{port}");
+    println!();
+    println!("  token: {}", token.expose());
+    println!();
+    println!("Paste that token into the IDE to pair this browser with this binary.");
+    println!("Nothing leaves this machine: the browser connects to you, not the other way round.");
+    println!("The token is not stored; restarting invalidates it.");
+    println!();
+    println!("Press Ctrl-C to stop.");
+
+    let rt = tokio::runtime::Runtime::new()?;
+    rt.block_on(serve_local(token, port))?;
+    Ok(ExitCode::SUCCESS)
+}
+
 fn main() -> Result<ExitCode> {
     match Cli::parse().command {
         Command::Check { file, floors, json } => cmd_check(file, floors, json),
@@ -412,5 +442,6 @@ fn main() -> Result<ExitCode> {
         } => cmd_floor(file, estimator, json),
         Command::Tokens { file } => cmd_tokens(file),
         Command::Analyse { file, json } => cmd_analyse(file, json),
+        Command::Serve { port } => cmd_serve(port),
     }
 }

@@ -16,6 +16,8 @@ mekaneck-algebra = { path = "../algebra" }
 mekaneck-lang = { path = "../lang" }
 mekaneck-kernel = { path = "../kernel" }
 mekaneck-substrates = { path = "../substrates" }
+mekaneck-server = { path = "../server" }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 clap = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

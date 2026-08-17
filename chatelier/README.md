@@ -10,9 +10,10 @@ Implementation of the three papers in [`docs/`](docs/):
 
 ## Status
 
-Built and tested: **algebra**, **kernel**, **lang**, **substrates**, **cli** —
-115 tests, zero clippy warnings.
-Not yet built: server (loopback WebSocket + token), web IDE.
+Built and tested: **algebra**, **kernel**, **lang**, **substrates**, **server**,
+**cli** — 156 Rust tests + 19 live end-to-end server checks, zero clippy
+warnings. Not yet built: the Next.js IDE (the WebSocket client and generated
+protocol types are in place).
 
 ## Quick start
 
@@ -31,6 +32,7 @@ the binary is the intended path; the hosted editor is a front end for it.
 ## The CLI
 
 ```bash
+mekaneck serve        --port 8731             # loopback IDE server + token
 mekaneck check   FILE --floor NAME=VALUE        # parse + typecheck
 mekaneck run     FILE --floor NAME=VALUE --cell CATALYST=CELL
 mekaneck floor   FILE --estimator asymptotic    # estimate a floor from stages
@@ -132,6 +134,49 @@ same law tested properly. `eta` is printed alongside because a law comparison
 below the flagging threshold cannot adjudicate the typing, however good `r`
 looks.
 
+## Pairing a browser with your binary
+
+```console
+$ mekaneck serve
+mekaneck is listening on http://127.0.0.1:8731
+
+  token: 3169bd90f4ec79ff47512c469852bebc339d221c59c653d8e10d1ad10e93e636
+
+Paste that token into the IDE to pair this browser with this binary.
+Nothing leaves this machine: the browser connects to you, not the other way round.
+The token is not stored; restarting invalidates it.
+```
+
+The threat model is narrow and worth stating exactly. The listener is bound to
+`127.0.0.1`, so a remote host cannot reach it. What *can* reach it is any page
+the user has open, because a browser will happily attempt requests to
+localhost. Four things address that:
+
+- the token is 32 bytes from the OS CSPRNG, never written to disk, and
+  compared in **constant time** — a local page cannot recover it by timing;
+- `Origin` is checked on the WebSocket upgrade, so a page from a remote site
+  gets `403` even holding a valid token;
+- CORS on `/health` returns `access-control-allow-origin` only for local
+  origins, so a remote page cannot even detect that a binary is running;
+- the protocol version is compared, not negotiated: a stale browser tab
+  talking to a rebuilt binary is refused with both version numbers named.
+
+## No hand-written protocol types
+
+`web/src/connection/protocol.ts` is **generated** from
+`crates/server/src/protocol.rs` by `ts-rs`:
+
+```bash
+cargo test -p mekaneck-server export_bindings
+```
+
+A mismatched message shape fails at runtime over a socket, which is a worse
+failure than a compile error — so the Rust is the single source of truth and
+`crates/server/tests/bindings_are_current.rs` fails the build if the checked-in
+TypeScript goes stale. It also asserts the two properties a client must not
+lose in translation: that `Outcome::Declined` carries a *list* of cells, and
+that `LawRow` carries `evidential`.
+
 ## Layout
 
 ```
@@ -142,7 +187,9 @@ chatelier/
 │   ├── kernel/           node, graph, exec, schedule, trajectory
 │   ├── lang/             lex, parse, types, eval, ast
 │   ├── substrates/       the four obligations as a trait + bindings
+│   ├── server/           loopback HTTP/WS, token, generated TS bindings
 │   └── cli/              the `mekaneck` binary
+├── web/src/connection/   generated protocol.ts + WebSocket client
 ├── examples/             .mck programs and fixture data
 ├── docs/                 the three papers + figure panels
 └── validation/           Python suites the Rust conforms to
@@ -156,8 +203,11 @@ produce — the telescoping deviation bound of `2.22e-16`, the closed form
 invocation counts. The two implementations cannot drift apart silently.
 
 ```bash
-cargo test                                   # Rust, 115 tests
+cargo test                                   # Rust, 156 tests
 python validation/run_all.py                 # Python, 21 checks
+
+mekaneck serve --port 8731                   # then, against the live binary:
+python validation/smoke_server.py --token <TOKEN>   # 19 end-to-end checks
 ```
 
 The kernel's conformance suite additionally pins the inertia counts (5 chunks,
@@ -167,7 +217,10 @@ record 36, late chunk served in one step).
 
 ## Next
 
-- `server` — loopback WebSocket, token handshake
-- `web` — Next.js IDE; TypeScript mirrors lex/parse/typecheck for instant
-  diagnostics, with a shared conformance suite against the Rust to prevent
-  drift. Evaluation stays in the local binary.
+- `web` — the Next.js IDE shell: Monaco with a `.mck` language definition,
+  panels for diagnostics, results and the trajectory graph. The connection
+  layer and protocol types are already in place.
+- A TypeScript mirror of lex/parse/typecheck, so diagnostics do not need a
+  round trip. It must ship with a shared fixture suite asserting the same
+  diagnostics as the Rust, for the same reason the protocol types are
+  generated: two front halves drift.
