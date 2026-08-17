@@ -1,0 +1,26 @@
+# Individuate a coherence regime against the rest of the record.
+#
+# The exclusion clause is mandatory: a target is not determined by a positive
+# description alone, so `excluding` says what the regime is being told apart
+# from. Termination is by closure, not by a confidence threshold.
+
+substrate Osc {
+  receivers  : recordings("cohort-A");
+  observable : coherence_index();
+  events     : label_change();
+  floor      : asymptotic_separation();   # falsifiable; not sample_minimum()
+}
+
+# Three mutually independent catalysts: fewer cannot survive the loss of a
+# member, so the type checker rejects them.
+catalyst spectral  : band_decomposition() independent surrogate, phase;
+catalyst surrogate : phase_randomised()   independent spectral, phase;
+catalyst phase     : locking_value()      independent spectral, surrogate;
+
+let regime =
+  seek        target_state("high-coherence")
+  excluding   all_other_states()
+  via         (spectral, surrogate, phase)
+  until       closure;
+
+report regime;
