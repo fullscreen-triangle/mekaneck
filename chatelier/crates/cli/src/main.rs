@@ -61,6 +61,14 @@ enum Command {
     },
     /// Print the tokens a source file lexes to (for editor development).
     Tokens { file: PathBuf },
+    /// Analyse a substrate: estimate its floor, extract cascades, and compare
+    /// composition laws under both estimation regimes.
+    Analyse {
+        /// A serialised `Tabular` substrate (JSON).
+        file: PathBuf,
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 fn parse_pairs(items: &[String], what: &str) -> Result<Vec<(String, String)>> {
@@ -269,6 +277,125 @@ fn cmd_tokens(file: PathBuf) -> Result<ExitCode> {
     }
 }
 
+/// Analyse a substrate end to end.
+///
+/// Reports the floor with its evidential status, the type separation η, and
+/// the law comparison under *both* estimation regimes — the instance-specific
+/// one is shown precisely so that its perfect agreement can be seen for what
+/// it is rather than mistaken for a result.
+fn cmd_analyse(file: PathBuf, json: bool) -> Result<ExitCode> {
+    use mekaneck_substrates::{cascade_for, Substrate, Tabular};
+
+    let text = std::fs::read_to_string(&file)
+        .with_context(|| format!("reading {}", file.display()))?;
+    let sub: Tabular = serde_json::from_str(&text)
+        .with_context(|| format!("{} is not a serialised substrate", file.display()))?;
+
+    let mut cascades = Vec::new();
+    let mut floors = Vec::new();
+    for r in sub.receivers() {
+        let f = sub.floor(&r)?;
+        floors.push((r.clone(), f));
+        match cascade_for(&sub, &r) {
+            Ok(c) => cascades.push(c),
+            Err(e) => eprintln!("warning: receiver {r:?} yielded no cascade: {e}"),
+        }
+    }
+    if cascades.is_empty() {
+        anyhow::bail!("no receiver produced a cascade");
+    }
+
+    let sep = alg::separation(&cascades)?;
+    let averages = alg::TypeAverages::fit(&cascades)?;
+
+    // Both regimes, so the contrast is visible.
+    let mut rows = Vec::new();
+    for law in alg::Law::ALL {
+        for est in [alg::Estimation::InstanceSpecific, alg::Estimation::TypeAveraged] {
+            let mut preds = Vec::new();
+            let mut meas = Vec::new();
+            let mut worst: f64 = 0.0;
+            for c in &cascades {
+                let avg = matches!(est, alg::Estimation::TypeAveraged).then_some(&averages);
+                if let Ok(t) = alg::test_cascade(c, law, est, avg) {
+                    worst = worst.max(t.discrepancy());
+                    preds.push(t.predicted);
+                    meas.push(t.measured);
+                }
+            }
+            rows.push(serde_json::json!({
+                "law": law.name(),
+                "estimation": if matches!(est, alg::Estimation::TypeAveraged)
+                    { "type_averaged" } else { "instance_specific" },
+                "evidential": est.has_null_hypothesis(),
+                "max_discrepancy": worst,
+                "pearson_r": alg::pearson(&preds, &meas),
+                "rmse": alg::rmse(&preds, &meas),
+            }));
+        }
+    }
+
+    if json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "substrate": sub.name(),
+                "receivers": floors.iter().map(|(r, f)| serde_json::json!({
+                    "receiver": r,
+                    "floor": f.value,
+                    "estimator": f.estimator,
+                    "falsifiable": f.estimator.is_falsifiable(),
+                    "supports_positive_floor": f.supports_positive_floor(alg::ZERO_TOLERANCE),
+                })).collect::<Vec<_>>(),
+                "cascades": cascades.len(),
+                "separation": sep,
+                "laws": rows,
+            }))?
+        );
+        return Ok(ExitCode::SUCCESS);
+    }
+
+    println!("substrate: {}", sub.name());
+    for (r, f) in &floors {
+        print!("  {r}: floor {:.6} [{:?}]", f.value, f.estimator);
+        if !f.estimator.is_falsifiable() {
+            print!("  (cannot falsify: positivity is not evidence)");
+        } else if !f.supports_positive_floor(alg::ZERO_TOLERANCE) {
+            print!("  (does not support a positive floor)");
+        }
+        println!();
+    }
+    println!(
+        "\ncascades: {}   types: {}   eta: {:.4}{}",
+        cascades.len(),
+        sep.n_types,
+        sep.eta,
+        if sep.is_informative() {
+            ""
+        } else {
+            "  <- below threshold: a law comparison here cannot adjudicate the typing"
+        }
+    );
+
+    println!("\n{:<16} {:<18} {:>10} {:>10} {:>8}", "law", "estimation", "r", "rmse", "evid");
+    for row in &rows {
+        println!(
+            "{:<16} {:<18} {:>10} {:>10} {:>8}",
+            row["law"].as_str().unwrap_or("?"),
+            row["estimation"].as_str().unwrap_or("?"),
+            row["pearson_r"].as_f64().map(|v| format!("{v:.4}")).unwrap_or_else(|| "-".into()),
+            row["rmse"].as_f64().map(|v| format!("{v:.4}")).unwrap_or_else(|| "-".into()),
+            if row["evidential"].as_bool().unwrap_or(false) { "yes" } else { "NO" },
+        );
+    }
+    println!(
+        "\nRows marked evid=NO are algebraic identities: under instance-specific\n\
+         estimation the prediction and the measurement are the same expression,\n\
+         so their agreement is not evidence about the process."
+    );
+    Ok(ExitCode::SUCCESS)
+}
+
 fn main() -> Result<ExitCode> {
     match Cli::parse().command {
         Command::Check { file, floors, json } => cmd_check(file, floors, json),
@@ -284,5 +411,6 @@ fn main() -> Result<ExitCode> {
             json,
         } => cmd_floor(file, estimator, json),
         Command::Tokens { file } => cmd_tokens(file),
+        Command::Analyse { file, json } => cmd_analyse(file, json),
     }
 }

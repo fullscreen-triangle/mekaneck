@@ -5,13 +5,14 @@ Implementation of the three papers in [`docs/`](docs/):
 | Paper | Crate | What it is |
 |---|---|---|
 | *A Residual Algebra for Catalytic Composition* | `mekaneck-algebra` | derived floors, catalytic power, composition, closure |
-| *A Semantically Inert Microkernel* | `mekaneck-kernel` *(not yet built)* | judgement-free runtime |
+| *A Semantically Inert Microkernel* | `mekaneck-kernel` | judgement-free runtime |
 | *Mekaneck: A Substrate-Neutral Language* | `mekaneck-lang` | the `.mck` compiler |
 
 ## Status
 
-Built and tested: **algebra**, **lang**, **cli** — 71 tests, zero clippy warnings.
-Not yet built: kernel, substrates, server, web IDE.
+Built and tested: **algebra**, **kernel**, **lang**, **substrates**, **cli** —
+115 tests, zero clippy warnings.
+Not yet built: server (loopback WebSocket + token), web IDE.
 
 ## Quick start
 
@@ -30,10 +31,11 @@ the binary is the intended path; the hosted editor is a front end for it.
 ## The CLI
 
 ```bash
-mekaneck check FILE  --floor NAME=VALUE        # parse + typecheck
-mekaneck run   FILE  --floor NAME=VALUE --cell CATALYST=CELL
-mekaneck floor FILE  --estimator asymptotic    # estimate a floor from stages
-mekaneck tokens FILE                            # token stream, for editor work
+mekaneck check   FILE --floor NAME=VALUE        # parse + typecheck
+mekaneck run     FILE --floor NAME=VALUE --cell CATALYST=CELL
+mekaneck floor   FILE --estimator asymptotic    # estimate a floor from stages
+mekaneck analyse FILE                           # full pipeline over a substrate
+mekaneck tokens  FILE                           # token stream, for editor work
 ```
 
 All commands take `--json` for machine-readable output.
@@ -107,6 +109,29 @@ to caller discipline:
 - `FloorEstimator` records whether an estimate *could* have come out
   non-positive, so a reported positive floor carries its own evidential status.
 
+### The analysis the apparatus exists for
+
+`analyse` runs a substrate through floor estimation, cascade extraction and the
+law comparison, and reports **both** estimation regimes side by side:
+
+```console
+$ mekaneck analyse examples/data/sleep_substrate.json
+cascades: 40   types: 20   eta: 0.9635
+
+law              estimation                  r       rmse     evid
+multiplicative   instance_specific      1.0000     0.0000       NO
+multiplicative   type_averaged          0.9847     0.0232      yes
+additive         type_averaged          0.8112     0.1733      yes
+geometric_mean   type_averaged          0.8417     0.4474      yes
+maximum          type_averaged          0.7671     0.2937      yes
+```
+
+The first row is the trap the papers exist to name: a perfect `r = 1.0000`
+that is an algebraic identity, marked `evid=NO`. The row beneath it is the
+same law tested properly. `eta` is printed alongside because a law comparison
+below the flagging threshold cannot adjudicate the typing, however good `r`
+looks.
+
 ## Layout
 
 ```
@@ -114,7 +139,9 @@ chatelier/
 ├── Cargo.toml            workspace root
 ├── crates/
 │   ├── algebra/          residual, power, compose, cascade, diagnose
+│   ├── kernel/           node, graph, exec, schedule, trajectory
 │   ├── lang/             lex, parse, types, eval, ast
+│   ├── substrates/       the four obligations as a trait + bindings
 │   └── cli/              the `mekaneck` binary
 ├── examples/             .mck programs and fixture data
 ├── docs/                 the three papers + figure panels
@@ -129,14 +156,17 @@ produce — the telescoping deviation bound of `2.22e-16`, the closed form
 invocation counts. The two implementations cannot drift apart silently.
 
 ```bash
-cargo test                                   # Rust, 71 tests
+cargo test                                   # Rust, 115 tests
 python validation/run_all.py                 # Python, 21 checks
 ```
 
+The kernel's conformance suite additionally pins the inertia counts (5 chunks,
+2 errors, 3 normal), the convergence result (1 protocol over 6 merge orders,
+4 chunks on the shared identity), and the scheduler numbers (12 executions,
+record 36, late chunk served in one step).
+
 ## Next
 
-- `kernel` — nodes, inertia, convergence, protocol fingerprint, scheduler
-- `substrates` — the four obligations as a trait, with three bindings
 - `server` — loopback WebSocket, token handshake
 - `web` — Next.js IDE; TypeScript mirrors lex/parse/typecheck for instant
   diagnostics, with a shared conformance suite against the Rust to prevent
