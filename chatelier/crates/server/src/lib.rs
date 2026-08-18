@@ -27,7 +27,7 @@ pub mod handlers;
 pub mod protocol;
 pub mod ws;
 
-use std::net::{Ipv4Addr, SocketAddr};
+use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr};
 use std::sync::Arc;
 
 use axum::extract::{ConnectInfo, State, WebSocketUpgrade};
@@ -103,22 +103,57 @@ async fn upgrade(
 }
 
 /// Bind to loopback and serve until the process is interrupted.
+///
+/// Binds **both** `127.0.0.1` and `::1` where available.
+///
+/// This is not belt-and-braces. `localhost` resolves to `::1` first for many
+/// clients (Python's asyncio among them) and to `127.0.0.1` for others, and a
+/// single-stack listener refuses the other family with a bare "connection
+/// refused" — which reads as *the binary is not running* rather than *wrong
+/// address family*. Windows does not enable dual-stack sockets by default, so
+/// binding one and hoping is not enough.
+///
+/// IPv6 is optional: if it is unavailable the IPv4 listener alone is served.
 pub async fn serve_local(token: Token, port: u16) -> anyhow::Result<()> {
-    let addr = SocketAddr::from((Ipv4Addr::LOCALHOST, port));
-    let listener = tokio::net::TcpListener::bind(addr).await?;
-    let bound = listener.local_addr()?;
+    let v4 = tokio::net::TcpListener::bind(SocketAddr::from((Ipv4Addr::LOCALHOST, port))).await?;
+    let bound = v4.local_addr()?;
+    // A port of 0 asks the OS to choose; the second listener must use the
+    // port actually assigned, not 0 again.
+    let port = bound.port();
+    let v6 = tokio::net::TcpListener::bind(SocketAddr::from((Ipv6Addr::LOCALHOST, port)))
+        .await
+        .ok();
 
-    let state = Arc::new(AppState::new(token, bound.to_string()));
-    let app = router(state);
+    let state = Arc::new(AppState::new(
+        token,
+        match &v6 {
+            Some(_) => format!("127.0.0.1:{port} and [::1]:{port}"),
+            None => bound.to_string(),
+        },
+    ));
 
-    axum::serve(
-        listener,
-        app.into_make_service_with_connect_info::<SocketAddr>(),
-    )
-    .with_graceful_shutdown(async {
+    let shutdown = || async {
         let _ = tokio::signal::ctrl_c().await;
-    })
-    .await?;
+    };
+
+    let app_v4 = router(Arc::clone(&state));
+    let serve_v4 = axum::serve(v4, app_v4.into_make_service_with_connect_info::<SocketAddr>())
+        .with_graceful_shutdown(shutdown());
+
+    match v6 {
+        Some(v6) => {
+            let app_v6 = router(state);
+            let serve_v6 =
+                axum::serve(v6, app_v6.into_make_service_with_connect_info::<SocketAddr>())
+                    .with_graceful_shutdown(shutdown());
+            // Either family serving is enough; the first to stop ends the run.
+            tokio::select! {
+                r = serve_v4 => r?,
+                r = serve_v6 => r?,
+            }
+        }
+        None => serve_v4.await?,
+    }
     Ok(())
 }
 

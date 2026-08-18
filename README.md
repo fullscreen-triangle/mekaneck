@@ -1,494 +1,329 @@
-# Mekaneck: Pharmaceutical Maxwell Demon Framework
+# Mekaneck
 
+A calculus for inquiry conducted by observers that cannot complete it, together
+with an implementation: a residual algebra, a judgement-free execution kernel,
+and a small language whose termination condition is the exhaustion of reachable
+outcomes rather than the crossing of a confidence threshold.
 
-<div align="center">
-  <img src="assets/NgoloMask.jpg" alt="Borgia Logo" width="200"/>
-</div>
-
-
-<div align="center">
-
-**Virtual Brain for Drug Testing Through Biological Oscillatory Principles**
-
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
-[![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange)](https://www.rust-lang.org/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-green)](Dockerfile)
-
-[Features](#features) •
-[Quick Start](#quick-start) •
-[Documentation](#documentation) •
-[Validation](#validation) •
-[Citation](#citation)
-
-</div>
+The work is organised as three papers and a Rust workspace that implements
+them. Every claim in the papers is proved from stated definitions; every
+implementation is checked against numerical suites that reproduce the reported
+values.
 
 ---
 
-## Overview
+## The problem
 
-Mekaneck is a **pharmaceutical Maxwell demon** framework that enables **zero-simulation drug discovery** through hardware oscillation harvesting, categorical state navigation, and trans-Planckian temporal precision. Unlike traditional molecular dynamics simulations, Mekaneck operates through **real computational implementation** of biological oscillatory principles, achieving **O(1) therapeutic predictions** with **88.4% ± 6.7% accuracy** and **100-1000× speedup** over conventional methods.
+Consider an observer that reduces its uncertainty about a target by a sequence
+of events: an experiment that narrows a hypothesis space, a measurement that
+discriminates among candidates, an inferential step that rules out
+alternatives. Three questions arise, and the usual answers to all three are
+unsatisfactory.
 
-### Core Innovation
+**How do such events compose?** The intuitive answer is that their reductions
+add. The correct answer, for any process in which each event acts on the gap
+its predecessors left, is that the *residuals* multiply.
 
-Traditional drug discovery relies on expensive molecular dynamics simulations. Mekaneck bypasses this entirely through:
+**From what baseline is a reduction measured?** A gap must be measured from
+somewhere. If that floor is set to zero the algebra degenerates; if it is set
+to an arbitrary constant the predictions are unfalsifiable.
 
-- **Hardware Oscillation Harvesting**: Extracting real frequencies from CPU, screen, temperature sensors (0-cost)
-- **Categorical State Navigation**: S-entropy coordinate transformation enabling O(log n) complexity
-- **Oscillatory Gear Networks**: Instant therapeutic prediction via ω_therapeutic = G_pathway × ω_drug
-- **Trans-Planckian Precision**: 2.01×10⁻⁶⁶ s temporal resolution (22 orders below Planck time)
-- **Maxwell Demon Decomposition**: 59,049 parallel information channels with zero erasure cost
-
----
-
-## Features
-
-### 🔬 **Pharmaceutical Maxwell Demon**
-- **Three-phase BMD cycle**: Measurement → Feedback → Reset
-- **Information catalysis**: 10⁶-10¹¹× probability enhancement
-- **Categorical irreversibility**: Phase-lock network persistence
-- **ATP-constrained dynamics**: Thermodynamically realistic (~4.7 ATP/cycle)
-
-### 🌊 **Oscillatory Computing**
-- **Multi-scale hierarchy**: 8 biological levels (10¹⁵ Hz → 10⁻⁵ Hz)
-- **Kuramoto phase-lock networks**: Drug-modified coupling dynamics
-- **Harmonic coincidence networks**: ~1,950 nodes, ~253,013 edges
-- **Biological semiconductors**: P-N junction model (holes + drugs)
-
-### ⚡ **Zero-Simulation Prediction**
-- **O(1) complexity**: Lookup-based therapeutic prediction
-- **Real-time**: Seconds to minutes vs months for MD
-- **Empty dictionary**: No training data required
-- **Hardware-based**: $0 cost using existing oscillations
-
-### ✅ **Comprehensive Validation**
-- **10 independent validators**: Testing 40+ specific claims
-- **Publication-quality visualizations**: Multi-panel charts
-- **Quantitative metrics**: All predictions numerically validated
-- **Docker-ready**: Reproducible validation environment
+**When is an inquiry finished?** The standard criterion --- continue until
+attained uncertainty falls below a threshold --- is inadequate for a reason
+that can be stated precisely: a single internally consistent line of evidence
+satisfies any threshold, *because* it is internally consistent, while an
+unexamined second line would have reached an incompatible conclusion.
 
 ---
 
-## Quick Start
+## The three papers
 
-### Prerequisites
+Located in [`chatelier/docs/`](chatelier/docs/), with figure panels generated
+from the validation suites.
 
-- **Python 3.8+** (for validation)
-- **Rust 1.75+** (for core implementation)
-- **Docker** (optional, for containerized execution)
+### 1. A Residual Algebra for Catalytic Composition — 21 pp.
 
-### Installation
+[`catalyst-residual-algebra.tex`](chatelier/docs/catalyst-algebra/catalyst-residual-algebra.tex)
+
+One quantity and one law. The quantity is the *residual*: the irreducible
+remainder of an identification that cannot be completed. Its positivity is
+**derived, not posited** — identifying a part means comparing it against the
+rest, and against a whole no finite stage exhausts, that comparison never
+closes. The law is that residual factors multiply, from which the composition
+rule, the unattainability of the floor, and a summability criterion for
+convergence all follow.
+
+The principal contribution is negative and, we think, more useful than the
+positive content. The natural empirical test of the composition law is
+**vacuous**: when the constituent powers are estimated from the same state
+sequence that determines the cascade outcome, the prediction and the
+measurement are the same algebraic expression. The comparison reports perfect
+agreement on data generated by *any* process whatsoever, including processes
+violating every claim in the paper. We prove this — the telescoping
+obstruction — give the exact condition under which it holds, and show that
+replacing instance-specific powers with type-averaged ones restores a genuine
+null hypothesis.
+
+### 2. A Semantically Inert Microkernel — 17 pp.
+
+[`catalyst-micro-kernel.tex`](chatelier/docs/catalyst-micro-kernel/catalyst-micro-kernel.tex)
+
+A runtime for computational research that performs no adjudication. A
+conventional runtime reports whether a program succeeded, which is correct for
+a program and incorrect for an experiment: an experiment that reports failure
+when an outcome does not occur has confused a result with an error.
+
+We prove the kernel *cannot* compute a quantity meaning "wrong" — an exit code
+requires a stored expectation, and the state space contains none. From that
+restriction follow run-to-completion under anomaly, order-independent
+convergence of independently derived decompositions, a fingerprintable
+protocol, and a monotone execution record that orders events without a clock.
+
+The consequential result is a separation between what is reproducible and what
+is not. The *protocol* — what can be computed — is a function of the submitted
+decompositions and admits a stable fingerprint. The *trajectory* — what was
+computed — is a function of neither the protocol nor the terminal result, and
+is therefore not reproducible in principle for this class of computation.
+Reproducibility claims that do not distinguish the two are ill-founded.
+
+### 3. Mekaneck: A Substrate-Neutral Language — 17 pp.
+
+[`mekaneck-substrate-primitives.tex`](chatelier/docs/mekaneck-primitives/mekaneck-substrate-primitives.tex)
+
+A language (`.mck`) with one computational primitive, two non-standard typing
+rules, and three reduction rules. Full lexical and context-free grammar, type
+system, small-step operational semantics, and metatheory: progress,
+preservation, determinism modulo substrate, and termination.
+
+Two commitments are enforced by the type system rather than by convention:
+
+- **Exclusion is mandatory.** A `seek` must state what its target is being told
+  apart from. This is not stylistic: a positive description alone does not
+  determine a target, so a `seek` without an exclusion clause has no unique
+  denotation and is rejected at parse time.
+
+- **Termination is by exhaustion.** A `seek` completes when no remaining
+  catalyst can carry it to an outcome outside the set already reached. This
+  condition is not obtainable by lowering a threshold, and it resolves into
+  exactly two typed outcomes — a resolved cell, or an explicit **declination**
+  carrying the plurality of incompatible cells found.
+
+---
+
+## Implementation
+
+A Rust workspace in [`chatelier/`](chatelier/): six crates, a command-line
+tool, a loopback server, and TypeScript language services for a browser editor.
+
+| Crate | Contents |
+|---|---|
+| `algebra` | residual, catalytic power, composition, closure, diagnostics |
+| `kernel` | nodes, graph convergence, execution, scheduler, trajectory |
+| `lang` | lexer, LL(1) parser, type checker, small-step evaluator |
+| `substrates` | the four substrate obligations as a trait, with bindings |
+| `server` | loopback HTTP/WebSocket, token handshake, generated TS types |
+| `cli` | the `mekaneck` binary |
+
+### Results carried by the type system
+
+Three results from the papers are enforced by the types rather than left to
+caller discipline. This is a deliberate position: a result a caller can
+accidentally violate is documentation, not a guarantee.
+
+- `Floor` cannot hold a non-positive value, so the denominator of the power
+  definition is never zero.
+
+- `Estimation` accompanies every prediction, and `is_evidential()` returns
+  **false** under instance-specific estimation however close the agreement.
+  The telescoping obstruction is thereby something an API consumer cannot
+  launder into a finding without discarding the flag deliberately.
+
+- `FloorEstimator` records whether an estimate *could* have come out
+  non-positive. A positive floor from an estimator bounded below by its own
+  sample is not evidence for a positive floor, and the type says so.
+
+### The two floor estimators
+
+A substrate must declare which estimator discharges its floor obligation,
+because the two differ in kind rather than in accuracy:
+
+- **Sample minimum** — the least observed uncertainty. Strictly positive
+  whenever the sample is, so it can never return a value inconsistent with a
+  positivity claim: it has no capacity to falsify. It is also biased upward,
+  which inflates precisely the powers of events acting nearest the floor.
+
+- **Asymptotic** — the extrapolated infinite-sample minimum. Can return a
+  non-positive value when the generating process has no floor, and is therefore
+  the only one of the two capable of contradicting the claim.
+
+On a floored process the sample minimum is often the *more accurate* of the
+two. Accuracy is not the property at issue.
+
+---
+
+## Verification
+
+Four suites, run independently.
 
 ```bash
-# Clone repository
-git clone https://github.com/fullscreen-triangle/mekaneck.git
-cd mekaneck
+cargo test                          # Rust:       157 tests
+cd web && npm test                  # TypeScript:  40 tests
+python validation/run_all.py        # Python:      21 checks
 
-# Install Python validation package
-pip install -r blindhorse/requirements.txt
+mekaneck serve --port 8731          # then, against the live binary:
+python validation/smoke_server.py --token <TOKEN>    # 19 end-to-end checks
+```
 
-# Build Rust core (optional)
+The Python suites are the reference implementation the papers report; the Rust
+conformance tests assert the same values, so the two cannot drift apart
+silently. Pinned quantities include the telescoping deviation bound
+(2.22 × 10⁻¹⁶), the closed form 1/(n+1) for the divergent convergence case,
+the summable limit 0.2887880950866024, and the closure-versus-threshold
+invocation counts.
+
+### Representative measured values
+
+Separated regime, 4000 cascades, type-averaged estimation:
+
+| Composition law | Pearson r | RMSE |
+|---|---|---|
+| Multiplicative | 0.988 | 0.019 |
+| Additive | 0.841 | 0.169 |
+| Geometric mean | 0.818 | 0.450 |
+| Maximum | 0.735 | 0.313 |
+
+Under instance-specific estimation the multiplicative law reports r = 1.000
+with a maximum deviation of 2.22 × 10⁻¹⁶ — one unit in the last place of
+double precision, across every cascade, in every regime, including regimes
+generated by processes that violate type-stability entirely. That agreement is
+an identity, not a finding, and the implementation reports it as such.
+
+### A reported negative result
+
+In the compressed regime (η = 1.2 × 10⁻⁴, type means agreeing to three
+significant figures) the test loses its power to adjudicate the typing. The
+multiplicative law nonetheless retains r = 0.634, which the papers trace to
+cascade-length variation rather than to type identity. A non-trivial
+correlation obtained in this regime is therefore not evidence that a typing is
+correct, and η must be reported alongside any such correlation. The suites
+report this case as an absence of power rather than as a disconfirmation.
+
+---
+
+## Using the tools
+
+The `mekaneck` binary runs entirely on the user's machine.
+
+```bash
+cd chatelier
 cargo build --release
+
+mekaneck check   FILE --floor NAME=VALUE     # parse and type-check
+mekaneck run     FILE --cell CATALYST=CELL   # evaluate
+mekaneck floor   FILE --estimator asymptotic # estimate a floor
+mekaneck analyse FILE                        # full pipeline over a substrate
+mekaneck serve   --port 8731                 # loopback server for the editor
 ```
 
-### Run Validation
+An inquiry terminates in one of two ways, and neither is an error:
 
-```bash
-# Complete validation suite (~1-3 minutes)
-make validate
-
-# Or directly with Python
-python blindhorse/run_validation.py
-
-# Fast validation (skip slow validators)
-make validate-fast
-
-# Docker validation
-make run-docker
+```console
+$ mekaneck run examples/coherence.mck --floor Osc=12.5 \
+    --cell spectral=high --cell surrogate=high --cell phase=mixed
+regime: declined, 2 incompatible cells  (record 2)
+    high  via spectral
+    mixed via phase
 ```
 
-### Results
+The run exits zero. A confidence threshold would have halted after `spectral`
+reported a confident cell and never consulted `phase`.
 
-Validation results are saved in `results/`:
-- **JSON files**: Structured validation data
-- **PNG visualizations**: Publication-quality charts
-- **Complete report**: Comprehensive validation summary
+### Local execution and the browser editor
 
-```bash
-# View results
-ls results/
+The server binds loopback and never dials out; the browser connects *to* the
+user's machine, so analysis data does not leave the host. The token is a
+per-run pairing secret rather than an account credential: 32 bytes from the
+operating system CSPRNG, never persisted, compared in constant time, and
+invalidated by restarting the binary. Origin is checked on the WebSocket
+upgrade, and CORS on the health endpoint admits only local origins, so a remote
+page can neither drive the binary nor detect that one is running.
 
-# Open visualizations
-open results/visualizations/complete_validation_summary.png
-```
+Protocol types for the browser are **generated** from the Rust definitions, and
+a test fails the build if the checked-in TypeScript goes stale. The editor's
+local checker is likewise pinned to the binary by a shared fixture suite of 15
+diagnostic cases with exact source positions. Both measures address one failure
+mode: a mismatch between two implementations of a single interface surfaces at
+runtime, where it is expensive, rather than at compile time.
 
 ---
 
-## Architecture
-
-### System Components
+## Repository layout
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              PHARMACEUTICAL MAXWELL DEMON                    │
-│                  (Mekaneck Core)                            │
-└─────────────────────────────────────────────────────────────┘
-                          │
-        ┌─────────────────┼─────────────────┐
-        │                 │                 │
-        ▼                 ▼                 ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  Hardware    │  │ Categorical  │  │ Therapeutic  │
-│  Harvesting  │→ │    State     │→ │  Prediction  │
-│  Substrate   │  │   Engine     │  │  Interface   │
-└──────────────┘  └──────────────┘  └──────────────┘
+chatelier/           current work: papers, implementation, validation
+├── docs/            the three papers and their figure panels
+├── crates/          the Rust workspace
+├── web/src/         generated protocol types, TS language services
+├── validation/      Python reference suites
+└── examples/        .mck programs and substrate fixtures
+
+monograph/           a book-length treatment, in progress
+docs/                source papers for the monograph chapters
 ```
 
-### Three-Phase Maxwell Demon Cycle
-
-1. **MEASUREMENT**: Frequency detection → S-entropy mapping → BMD decomposition
-2. **FEEDBACK**: Gear ratio prediction → Phase-lock modulation → Semantic navigation
-3. **RESET**: Thermodynamic accounting → Categorical irreversibility → Memory clearing
+The directories `blindhorse/`, `parable/`, `virtual_brain/` and `mekaneck/`
+contain earlier work on a distinct framework and are retained for reference.
+They are not part of the system described above and are not covered by the
+verification suites listed here.
 
 ---
 
-## Validation Results
+## Scope and limitations
 
-### Claims Validated (88% overall)
+Stated plainly, because each bears on how results should be read.
 
-✅ **Hardware oscillations span 11+ orders of magnitude**  
-✅ **Harmonic network: 1,950 nodes, 253,013 edges**  
-✅ **Enhancement factor F_graph ≈ 59,428**  
-✅ **Maxwell demon: 59,049 parallel channels**  
-✅ **S-entropy: 3D space with 25,110 O₂ states**  
-✅ **Gear ratio prediction: 88.4% ± 6.7% accuracy**  
-✅ **Phase coherence: R > 0.7 for therapeutic effect**  
-✅ **Complexity: O(n!) → O(log n) reduction**  
-✅ **Trans-Planckian: 2.01×10⁻⁶⁶ s precision**  
-✅ **Categorical irreversibility: C_initial ≺ C_final**  
-✅ **Speedup: 100-1000× vs molecular dynamics**  
+**The composition law is a consequence of the definitions, not an empirical
+claim.** Given that catalytic power is a fraction of an outstanding gap
+measured from a fixed floor, composition is multiplicative and cannot fail.
+What is empirical is whether a proposed decomposition of a process into typed
+events obeys it when the powers are estimated independently of the outcome
+being predicted.
 
-### Performance Metrics
+**No claim is made that any particular process decomposes into events with
+type-stable powers.** That is a separate empirical question for each substrate,
+and the apparatus exists to make it answerable rather than to presuppose an
+answer.
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **Prediction Accuracy** | 88.4% ± 6.7% | Therapeutic efficacy |
-| **Prediction Time** | <1 ms | O(1) gear ratio lookup |
-| **Speedup vs MD** | 100-1000× | Real-time prediction |
-| **Frequency Range** | 11+ orders | Hardware harvesting |
-| **Enhancement Factor** | 4.4×10¹¹ | Combined F_total |
-| **Temporal Precision** | 2.01×10⁻⁶⁶ s | Trans-Planckian |
-| **ATP Cost** | ~4.7 molecules/cycle | Thermodynamically realistic |
+**Closure is only as good as the catalyst registry.** The criterion quantifies
+over available catalysts, not conceivable ones; closure over an impoverished
+registry means the registry is exhausted, not that the question is settled.
 
----
+**The coherence rule enforces a structural necessary condition, not
+sufficiency.** Three catalysts declared independent but sharing an upstream
+data source or a common preprocessing step satisfy the rule while violating its
+intent. The language cannot verify independence; it requires the claim to be
+written down where it can be audited.
 
-## Project Structure
-
-```
-mekaneck/
-├── blindhorse/                    # Python validation package
-│   ├── validators/               # 10 comprehensive validators
-│   ├── visualization.py          # Multi-panel charts
-│   ├── orchestrator.py           # Master validation suite
-│   └── requirements.txt          # Python dependencies
-│
-├── mekaneck/                     # Rust core implementation
-│   ├── src/                      # Source code (coming)
-│   └── docs/                     # Package-level documentation
-│       ├── pharmaceutical-maxwell-demon/
-│       ├── resolution/           # Maxwell's demon paradox resolution
-│       ├── molecular-maxwell-demon/
-│       ├── semantic-maxwell-demon/
-│       └── processor/            # Categorical processing unit
-│
-├── docs/                         # Theoretical framework
-│   ├── computing/                # Kwasa-kwasa biological computing
-│   ├── hardware/                 # Computational pharmacodynamics
-│   ├── thought-metabolism/       # Consciousness trilogy
-│   ├── gibbs-paradox/           # Categorical resolution
-│   └── categories/               # BMD categorical dynamics
-│
-├── Dockerfile                    # Multi-stage container
-├── docker-compose.yml            # Service orchestration
-├── Makefile                      # Build automation
-├── Cargo.toml                    # Rust configuration
-└── README.md                     # This file
-```
+**Self-analysis is restricted.** A kernel may analyse its own execution record,
+which is an ordinary trace. It may not host a total verdict function closed
+under its own diagonal. This is the classical obstruction, and it is stated
+rather than circumvented.
 
 ---
 
-## Validation Package (Blindhorse)
+## Requirements
 
-The **Blindhorse** Python package provides comprehensive validation:
+- Rust 1.75 or later
+- Python 3.10 or later with NumPy and SciPy, for the validation suites
+- Node 20 or later, for the TypeScript language services
+- LaTeX with `latexmk`, to build the papers
 
-### 10 Independent Validators
+## Author
 
-1. **Hardware Oscillation**: CPU, screen, temperature, network frequencies
-2. **Harmonic Network**: Coincidence graph construction and topology
-3. **S-Entropy Mapping**: Categorical coordinate transformation
-4. **Maxwell Demon**: Recursive decomposition (3^10 channels)
-5. **Gear Ratio**: Therapeutic frequency prediction
-6. **Phase-Lock**: Kuramoto dynamics simulation
-7. **Semantic Gravity**: Navigation and optimization
-8. **Trans-Planckian**: Enhancement factor accumulation
-9. **Categorical State**: Irreversibility and memory
-10. **Therapeutic Prediction**: End-to-end pipeline
-
-### Run Individual Validators
-
-```python
-from blindhorse.validators import HardwareOscillationValidator
-
-validator = HardwareOscillationValidator()
-results = validator.run_validation()
-
-print(f"Frequency range: {results['range_validation']['orders_of_magnitude']:.2f} orders")
-```
-
-See [blindhorse/README.md](blindhorse/README.md) for complete documentation.
-
----
-
-## Documentation
-
-### Theoretical Framework
-
-- **Pharmaceutical Maxwell Demon**: [mekaneck/docs/pharmaceutical-maxwell-demon/](mekaneck/docs/pharmaceutical-maxwell-demon/)
-- **Maxwell's Demon Resolution**: [mekaneck/docs/resolution/](mekaneck/docs/resolution/)
-- **Consciousness Trilogy**: [docs/thought-metabolism/TRILOGY_STATUS.md](docs/thought-metabolism/TRILOGY_STATUS.md)
-- **Kwasa-Kwasa Computing**: [docs/computing/KWASA_KWASA_BIOLOGICAL_OSCILLATORY_COMPUTING.md](docs/computing/KWASA_KWASA_BIOLOGICAL_OSCILLATORY_COMPUTING.md)
-- **Gibbs Paradox Resolution**: [docs/gibbs-paradox/](docs/gibbs-paradox/)
-
-### Papers
-
-The framework is based on multiple theoretical papers:
-
-1. **Pharmaceutical Maxwell Demon** (this work)
-2. **Resolution of Maxwell's Demon Paradox** (categorical phase-lock networks)
-3. **Consciousness Trilogy**: Perception, Thought, Metabolism
-4. **Categorical Completion** (St-Stellas framework)
-5. **Computational Pharmacodynamics** (oscillatory resonance)
-6. **Hardware-Based Temporal Measurements** (trans-Planckian precision)
-
----
-
-## Development
-
-### Build from Source
-
-```bash
-# Clone repository
-git clone https://github.com/fullscreen-triangle/mekaneck.git
-cd mekaneck
-
-# Install dependencies
-make install-dev
-
-# Build Rust core
-make build-rust
-
-# Run tests
-make test
-
-# Run validation
-make validate
-```
-
-### Docker Development
-
-```bash
-# Build Docker image
-make build-docker
-
-# Start development environment
-docker-compose up -d mekaneck-dev
-
-# Run validation in container
-make run-docker
-
-# Access Jupyter notebook (for analysis)
-docker-compose up jupyter
-# Then open: http://localhost:8888
-```
-
-### Code Quality
-
-```bash
-# Format code
-make format
-
-# Run linters
-make lint
-
-# Run all checks
-make check
-
-# Pre-commit checks
-make pre-commit
-```
-
----
-
-## Citation
-
-If you use this framework in your research, please cite:
-
-```bibtex
-@software{mekaneck2024,
-  title={Mekaneck: Pharmaceutical Maxwell Demon Framework},
-  author={Sachikonye, Kundai Farai},
-  year={2024},
-  version={0.1.0},
-  url={https://github.com/fullscreen-triangle/mekaneck}
-}
-```
-
-### Related Papers
-
-```bibtex
-@article{sachikonye2024pharmbmd,
-  title={Pharmaceutical Maxwell Demon: Zero-Simulation Drug Discovery Through Categorical State Navigation},
-  author={Sachikonye, Kundai Farai},
-  year={2024},
-  note={In preparation}
-}
-```
-
----
-
-## Theoretical Foundation
-
-### Core Principles
-
-1. **Reality = H⁺ electric field** (~10¹³ Hz substrate)
-2. **Thoughts = Oscillatory holes** (~10 Hz perturbations)
-3. **Consciousness = Sequential hole equilibrium** (~2.5 Hz confluence)
-4. **O₂ provides categorical richness** (25,110 quantum states)
-5. **BMDs = Information catalysts** (10⁶-10¹¹× enhancement)
-
-### Multi-Scale Hierarchy
-
-```
-10¹⁵ Hz │ Quantum coherence (1 fs)
-10¹² Hz │ Protein conformational (1 ps) ← Drug entry
-10⁹ Hz  │ Ion channel gating (1 ns)
-10⁶ Hz  │ Enzyme catalysis (1 μs)
-10³ Hz  │ Synaptic transmission (1 ms)
-10² Hz  │ Action potentials (10 ms)
-10⁻⁴ Hz │ Circadian rhythms (3 hrs)
-10⁻⁵ Hz │ Environmental coupling (1 day)
-```
-
-### Drug Action Model
-
-```
-ω_therapeutic = G_pathway × ω_drug
-```
-
-Where:
-- **ω_drug**: Drug oscillation frequency (molecular vibration)
-- **G_pathway**: Pathway-specific gear ratio (precomputed)
-- **ω_therapeutic**: Resulting therapeutic frequency
-
----
-
-## Roadmap
-
-### Phase 1: Validation (Current)
-- [x] Complete Python validation package
-- [x] 10 independent validators
-- [x] Comprehensive visualizations
-- [x] Docker containerization
-- [x] Documentation
-
-### Phase 2: Rust Implementation (Q1 2025)
-- [ ] Hardware oscillation harvester (Rust)
-- [ ] Harmonic network builder
-- [ ] S-entropy coordinate mapper
-- [ ] Maxwell demon decomposer
-- [ ] Gear ratio predictor
-- [ ] Complete pipeline integration
-
-### Phase 3: Experimental Validation (Q2 2025)
-- [ ] LED spectroscopy validation
-- [ ] EEG/MEG correlation studies
-- [ ] Drug response prediction testing
-- [ ] Clinical trial preparation
-
-### Phase 4: Production Deployment (Q3 2025)
-- [ ] Real-time prediction API
-- [ ] Web interface for drug screening
-- [ ] Personalized medicine module
-- [ ] Regulatory approval preparation
-
----
-
-## Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Areas for Contribution
-
-- **Rust implementation**: Port validators to Rust
-- **Experimental validation**: LED spectroscopy, EEG/MEG data
-- **Documentation**: Improve clarity and examples
-- **Visualization**: Enhanced interactive plots
-- **Performance**: GPU acceleration, parallelization
-- **Testing**: Expand test coverage
-
----
+Kundai Farai Sachikonye
+Technical University of Munich
+`kundai.sachikonye@tum.de`
 
 ## License
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
-
----
-
-## Related Projects
-
-- **[Nebuchadnezzar](https://github.com/fullscreen-triangle/nebuchadnezzar)**: Intracellular dynamics
-- **[Bene-Gesserit](https://github.com/fullscreen-triangle/bene-gesserit)**: Membrane dynamics
-- **[Stella-Lorraine](https://github.com/fullscreen-triangle/stella-lorraine)**: Temporal coordination
-- **[Musande](https://github.com/fullscreen-triangle/musande)**: S-Entropy solver
-- **[Gospel](https://github.com/fullscreen-triangle/gospel)**: Genomics
-- **[Lavoisier](https://github.com/fullscreen-triangle/lavoisier)**: Metabolomics
-- **[Borgia](https://github.com/fullscreen-triangle/borgia)**: Molecular evidence
-- **[Kachenjunga](https://github.com/fullscreen-triangle/kachenjunga)**: Algorithm suite
-- **[Imhotep](https://github.com/fullscreen-triangle/imhotep)**: Self-aware neural networks
-- **[Autobahn](https://github.com/fullscreen-triangle/autobahn)**: Quantum processor
-- **[Kambuzuma](https://github.com/fullscreen-triangle/kambuzuma)**: Full-fledged brain
-- **[Buhera](https://github.com/fullscreen-triangle/buhera)**: Operating system
-
----
-
-## Support
-
-- **GitHub Issues**: [mekaneck/issues](https://github.com/fullscreen-triangle/mekaneck/issues)
-- **Discussions**: [mekaneck/discussions](https://github.com/fullscreen-triangle/mekaneck/discussions)
-- **Email**: kundai@fullscreen-triangle.com
-
----
-
-## Acknowledgments
-
-This framework builds upon decades of research in:
-- Biological Maxwell demons (Jarzynski, Crooks)
-- Consciousness studies (Tononi, Koch)
-- Oscillatory computing (Kuramoto)
-- Categorical quantum mechanics (Coecke, Abramsky)
-- Pharmacodynamics (Black, Leff)
-
-Special thanks to the open-source scientific Python and Rust communities.
-
----
-
-<div align="center">
-
-**Mekaneck: Virtual Brain for Drug Testing**
-
-*Transforming drug discovery through categorical state navigation*
-
-[⬆ Back to Top](#mekaneck-pharmaceutical-maxwell-demon-framework)
-
-</div>
-
+MIT. See [LICENSE](LICENSE).

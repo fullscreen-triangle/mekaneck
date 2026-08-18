@@ -411,7 +411,7 @@ fn cmd_serve(port: u16) -> Result<ExitCode> {
     use mekaneck_server::{serve_local, Token};
 
     let token = Token::generate()?;
-    println!("mekaneck is listening on http://127.0.0.1:{port}");
+    println!("mekaneck is listening on http://localhost:{port}  (127.0.0.1 and [::1])");
     println!();
     println!("  token: {}", token.expose());
     println!();

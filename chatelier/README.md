@@ -11,9 +11,13 @@ Implementation of the three papers in [`docs/`](docs/):
 ## Status
 
 Built and tested: **algebra**, **kernel**, **lang**, **substrates**, **server**,
-**cli** — 156 Rust tests + 19 live end-to-end server checks, zero clippy
-warnings. Not yet built: the Next.js IDE (the WebSocket client and generated
-protocol types are in place).
+**cli**, and the **web interface** — 157 Rust tests, 40 TypeScript tests, 21
+Python checks, and 19 live end-to-end server checks. Zero clippy warnings,
+TypeScript compiles clean.
+
+The web layer includes the connection client, the language services, and the
+result panels. See [web/README.md](web/README.md) for the three display
+constraints it enforces and the tests that hold it to them.
 
 ## Quick start
 
@@ -161,6 +165,29 @@ localhost. Four things address that:
 - the protocol version is compared, not negotiated: a stale browser tab
   talking to a rebuilt binary is refused with both version numbers named.
 
+## Two front halves, one set of diagnostics
+
+The editor needs to mark errors without a round trip, so `web/src/languages/mekaneck/`
+reimplements lex/parse/typecheck in TypeScript. Two front halves drift, and a
+diagnostic that differs between the editor and the binary is worse than no
+editor diagnostic at all — so both are pinned to one file of cases the Rust
+generates:
+
+```bash
+cargo test -p mekaneck-lang --test fixtures -- --ignored   # regenerate
+cargo test -p mekaneck-lang --test fixtures                # Rust side
+cd web && npm test                                          # TypeScript side
+```
+
+`fixtures.json` holds 15 cases with exact line and column positions, each
+carrying the rationale for why it exists, so a failure explains itself without
+cross-referencing the papers. The suite has real discriminating power: changing
+`MIN_COHERENCE` from 3 to 2 in the TypeScript alone immediately fails
+`two_catalysts` while leaving the other fourteen green.
+
+The mirror is not authoritative. It is fast and local; the binary re-checks on
+`run`.
+
 ## No hand-written protocol types
 
 `web/src/connection/protocol.ts` is **generated** from
@@ -189,7 +216,9 @@ chatelier/
 │   ├── substrates/       the four obligations as a trait + bindings
 │   ├── server/           loopback HTTP/WS, token, generated TS bindings
 │   └── cli/              the `mekaneck` binary
-├── web/src/connection/   generated protocol.ts + WebSocket client
+├── web/src/
+│   ├── connection/       generated protocol.ts + WebSocket client
+│   └── languages/mekaneck/  lexer, parser, checker, Monaco defs, fixtures
 ├── examples/             .mck programs and fixture data
 ├── docs/                 the three papers + figure panels
 └── validation/           Python suites the Rust conforms to
@@ -203,11 +232,19 @@ produce — the telescoping deviation bound of `2.22e-16`, the closed form
 invocation counts. The two implementations cannot drift apart silently.
 
 ```bash
-cargo test                                   # Rust, 156 tests
+cargo test                                   # Rust, 157 tests
+cd web && npm test                           # TypeScript, 40 tests
 python validation/run_all.py                 # Python, 21 checks
 
 mekaneck serve --port 8731                   # then, against the live binary:
 python validation/smoke_server.py --token <TOKEN>   # 19 end-to-end checks
+```
+
+Or, with `make`:
+
+```bash
+make check          # lint + all three suites + generated-artefact freshness
+make generated      # regenerate bindings and fixtures, fail if they changed
 ```
 
 The kernel's conformance suite additionally pins the inertia counts (5 chunks,
@@ -217,10 +254,8 @@ record 36, late chunk served in one step).
 
 ## Next
 
-- `web` — the Next.js IDE shell: Monaco with a `.mck` language definition,
-  panels for diagnostics, results and the trajectory graph. The connection
-  layer and protocol types are already in place.
-- A TypeScript mirror of lex/parse/typecheck, so diagnostics do not need a
-  round trip. It must ship with a shared fixture suite asserting the same
-  diagnostics as the Rust, for the same reason the protocol types are
-  generated: two front halves drift.
+- The Next.js IDE shell: Monaco wired to `languages/mekaneck/monarch.ts`,
+  a panel for diagnostics, a results view that renders a declination as a
+  plurality rather than a choice, and a trajectory graph.
+- A `kernel` binding for the server, so a run's committed record and
+  read-to-emit relation stream to the browser as they happen.
