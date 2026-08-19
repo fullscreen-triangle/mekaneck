@@ -1,0 +1,17 @@
+[package]
+name = "mekaneck-policy"
+description = "Selection under a bounded budget, phase exclusion, and relay drift — above the kernel, not inside it"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+mekaneck-algebra = { path = "../algebra" }
+mekaneck-kernel = { path = "../kernel" }
+serde = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }

@@ -121,6 +121,7 @@ tool, a loopback server, and TypeScript language services for a browser editor.
 | `kernel` | nodes, graph convergence, execution, scheduler, trajectory |
 | `lang` | lexer, LL(1) parser, type checker, small-step evaluator |
 | `substrates` | the four substrate obligations as a trait, with bindings |
+| `policy` | bounded-budget selection, phase exclusion, relay provenance |
 | `server` | loopback HTTP/WebSocket, token handshake, generated TS types |
 | `cli` | the `mekaneck` binary |
 
@@ -166,9 +167,9 @@ two. Accuracy is not the property at issue.
 Four suites, run independently.
 
 ```bash
-cargo test                          # Rust:       157 tests
-cd web && npm test                  # TypeScript:  40 tests
-python validation/run_all.py        # Python:      21 checks
+cargo test                          # Rust:       187 tests
+cd web && npm test                  # TypeScript:  54 tests
+python validation/run_all.py        # Python:      27 checks
 
 mekaneck serve --port 8731          # then, against the live binary:
 python validation/smoke_server.py --token <TOKEN>    # 19 end-to-end checks

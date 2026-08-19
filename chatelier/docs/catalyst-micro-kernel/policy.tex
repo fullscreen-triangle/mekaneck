@@ -1,0 +1,162 @@
+% Inserted after the scheduler section.
+% Two additions: a bounded-budget selection rule, and phase exclusion.
+
+\section{Selection under a bounded budget}
+\label{sec:budget}
+
+The scheduler of \Cref{sec:scheduler} runs every ready node until none
+remains. That is the right default for a protocol submitted in full and
+executed to completion, and it is what the guarantees of
+\Cref{thm:scheduler} describe. It is the wrong default when the ready set is
+larger than the resources available to it, which is the ordinary case once a
+kernel is fed by many contributors at once.
+
+This section adds a selection rule for that case. It is deliberately placed
+\emph{outside} the kernel: the rule requires a per-node gain, gain is an
+interpretive quantity, and by \Cref{thm:inertia} the kernel computes no such
+thing. What follows is therefore a policy a module may apply when choosing
+what to contribute, not a faculty the kernel acquires.
+
+\begin{definition}[Budget, cost, gain]
+\label{def:budget}
+A \emph{budget} $\att>0$ bounds the total cost committed per unit interval:
+if $R$ is the set of executions committed, $\sum_{r\in R}\cost(r)\le\att$.
+Each candidate carries a cost $\cost(r)\ge\flo>0$, bounded below by the
+floor, and a \emph{gain} $\gain(r)$ supplied by the submitting module. The
+\emph{gain density} of a candidate is $\gain(r)/\cost(r)$.
+\end{definition}
+
+\begin{theorem}[Selection is a threshold on gain density]
+\label{thm:threshold}
+Order candidates by gain density and commit them in decreasing order until
+the budget is exhausted. Equivalently, there is a price $p^{\star}\ge0$ such
+that a candidate is committed iff its density is at least $p^{\star}$. Then:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item the rule is optimal for the continuous relaxation, and its value is
+within the gain of a single candidate of the integer optimum;
+\item if the repertoire is \emph{divisible} --- every candidate is an
+independently selectable unit of cost $\flo$ --- the rule is exactly optimal
+among integer selections.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The problem is to maximise $\sum_{r\in R}\gain(r)$ subject to
+$\sum_{r\in R}\cost(r)\le\att$. Taking candidates in decreasing density
+until the budget is spent is optimal for the continuous relaxation, and the
+Lagrangian dual assigns a single multiplier $p^{\star}$ such that a
+candidate is selected iff its density exceeds it \citep{dantzig1957}. The
+greedy solution differs from the continuous optimum only in the fractional
+part of the boundary candidate, whose contribution is at most its own gain,
+giving (i).
+
+For (ii), if every candidate costs exactly $\flo$ then any budget admits
+$\lfloor\att/\flo\rfloor$ candidates whatever they are, so the feasible set
+is determined by cardinality alone; maximising the sum over a fixed
+cardinality is achieved by taking the largest gains, which is what ordering
+by density does when all costs are equal. The continuous optimum is
+therefore attained at an integer point.
+\end{proof}
+
+\begin{remark}[Divisibility is the load-bearing hypothesis, and it is easy to
+lose]
+\label{rem:divisibility}
+Clause (ii) requires candidates to be \emph{independently selectable} units,
+not merely to have costs that are integer multiples of the floor. The
+distinction is not pedantic: bundling several floor-sized units into one
+indivisible candidate restores an ordinary $0/1$ knapsack, where the greedy
+rule is only within one candidate of the optimum.
+
+A witness, produced by the accompanying computation. Six candidates with
+costs $(0.5,0.5,0.75,0.5,0.75,1.0)$ and gains
+$(0.2,0.2,0.3,0.4,0.6,0.8)$ under a budget of $1.75$: the greedy rule
+attains $1.2$ where the optimum is $1.4$. Every cost is a multiple of the
+floor $0.25$, so the superficial reading of ``floor-additive'' is satisfied
+and the exact claim nonetheless fails. We state clause (ii) for divisible
+repertoires only.
+\end{remark}
+
+\begin{proposition}[The price rises as the budget narrows]
+\label{prop:shadow-price}
+Let $p^{\star}(\att)$ be the gain density of the highest-density candidate
+the budget excludes. Then $p^{\star}$ is non-increasing in $\att$: widening
+the budget weakly lowers the price, and narrowing it weakly raises it.
+\end{proposition}
+
+\begin{proof}
+Candidates are considered in a fixed density order independent of $\att$.
+Increasing the budget can only extend the prefix of that order which is
+admitted, so the first excluded candidate moves later in the order or stays
+where it is; since the order is decreasing in density, its density weakly
+falls.
+\end{proof}
+
+\begin{remark}[Why the marginal excluded candidate, and not the last
+admitted one]
+\label{rem:price-definition}
+The price must be defined as the density of the highest-density candidate
+the budget \emph{excludes}. The density of the last candidate \emph{admitted}
+is a different quantity and is not monotone: widening the budget can newly
+admit a cheap, high-density candidate that did not previously fit, raising
+that value while the true shadow price falls. The accompanying computation
+exhibits the non-monotonicity directly. We record it because the two
+definitions coincide often enough that the wrong one survives casual testing.
+\end{remark}
+
+\begin{corollary}[Declining is forced, not a defect]
+\label{cor:declining}
+Under a bounded budget a module must decline some candidates whenever the
+total cost of the ready set exceeds $\att$. Since each cost is at least
+$\flo>0$, at most $\lfloor\att/\flo\rfloor$ candidates can be committed per
+interval regardless of their gains. Declining is therefore a consequence of
+boundedness and not evidence of a scheduling failure.
+\end{corollary}
+
+\section{Phase exclusion}
+\label{sec:phase}
+
+A second bound on throughput is independent of the budget and follows from
+the structure of contribution.
+
+\begin{definition}[Construction and commitment]
+\label{def:phases}
+A module is \emph{constructing} when it is forming new subtask identities and
+chunks to contribute, and \emph{committing} when it is executing chunks
+already contributed.
+\end{definition}
+
+\begin{axiom}[Phase exclusion]
+\label{ax:phase}
+A module does not construct and commit in the same instant.
+\end{axiom}
+
+\begin{proposition}[Alternation, and a ceiling on commitment]
+\label{prop:alternation}
+Under \Cref{ax:phase}, a module that spends a fraction $\phi\in[0,1]$ of its
+instants constructing commits in at most a fraction $1-\phi$ of them.
+Consequently the committed record grows at most at rate $(1-\phi)$ per
+instant, whatever the budget $\att$, and a module that never constructs
+never acquires new nodes to commit to.
+\end{proposition}
+
+\begin{proof}
+By \Cref{ax:phase} the two phases partition the instants a module occupies,
+so the fraction available for commitment is $1-\phi$. The committed record
+increments only on commitment (\Cref{def:record}), giving the rate bound.
+The final clause is immediate: nodes enter the graph only by contribution,
+which occurs in the construction phase.
+\end{proof}
+
+\begin{remark}[Two independent reasons a sweep quiesces]
+\label{rem:two-ceilings}
+\Cref{cor:declining} and \Cref{prop:alternation} are separate. The first is
+economic: the budget cannot pay for every ready candidate. The second is
+structural: an interval spent constructing is not available for committing,
+and no budget relaxes it. A kernel that observes low throughput cannot
+distinguish the two from the record alone, and a module reporting one should
+not be read as reporting the other.
+
+Neither ceiling gives the kernel a verdict. A declined candidate is not a
+failed one, and an instant spent constructing is not an idle one; both are
+recorded as what they are, and \Cref{thm:inertia} is untouched.
+\end{remark}

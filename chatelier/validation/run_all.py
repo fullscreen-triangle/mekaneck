@@ -22,6 +22,8 @@ SUITES = [
      "A Semantically Inert Microkernel"),
     ("mekaneck", "validate_mekaneck.py", "mekaneck_results.json",
      "Mekaneck: Substrate-Neutral Language for Individuation-Structured Inquiry"),
+    ("policy", "validate_policy.py", "policy_results.json",
+     "Policy: bounded-budget selection, phase exclusion, relay drift"),
 ]
 
 

@@ -11,9 +11,9 @@ Implementation of the three papers in [`docs/`](docs/):
 ## Status
 
 Built and tested: **algebra**, **kernel**, **lang**, **substrates**, **server**,
-**cli**, and the **web interface** — 157 Rust tests, 40 TypeScript tests, 21
-Python checks, and 19 live end-to-end server checks. Zero clippy warnings,
-TypeScript compiles clean.
+**policy**, **cli**, and the **web interface** — 187 Rust tests, 54 TypeScript
+tests, 27 Python checks, and 19 live end-to-end server checks. Zero clippy
+warnings, TypeScript compiles clean.
 
 The web layer includes the connection client, the language services, and the
 result panels. See [web/README.md](web/README.md) for the three display
@@ -214,6 +214,7 @@ chatelier/
 │   ├── kernel/           node, graph, exec, schedule, trajectory
 │   ├── lang/             lex, parse, types, eval, ast
 │   ├── substrates/       the four obligations as a trait + bindings
+│   ├── policy/           budget selection, phase exclusion, relay drift
 │   ├── server/           loopback HTTP/WS, token, generated TS bindings
 │   └── cli/              the `mekaneck` binary
 ├── web/src/
@@ -232,9 +233,9 @@ produce — the telescoping deviation bound of `2.22e-16`, the closed form
 invocation counts. The two implementations cannot drift apart silently.
 
 ```bash
-cargo test                                   # Rust, 157 tests
-cd web && npm test                           # TypeScript, 40 tests
-python validation/run_all.py                 # Python, 21 checks
+cargo test                                   # Rust, 187 tests
+cd web && npm test                           # TypeScript, 54 tests
+python validation/run_all.py                 # Python, 27 checks
 
 mekaneck serve --port 8731                   # then, against the live binary:
 python validation/smoke_server.py --token <TOKEN>   # 19 end-to-end checks

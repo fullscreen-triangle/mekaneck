@@ -1,0 +1,72 @@
+% Inserted after Cor: the floor is not attained in finite time.
+% Relay drift: a corollary of the composition law, in a transmission setting.
+
+\subsection{Relayed content drifts multiplicatively}
+\label{sec:relay}
+
+The composition law was stated for a cascade of events acting on one
+observer. The same algebra governs a second situation, which we record
+because the setting differs enough that the identity is easy to miss: an
+account passed from one observer to another along a chain.
+
+\begin{definition}[Relay chain]
+\label{def:relay}
+A \emph{relay} is an observer that receives an account, individuates it
+within its own graph, and emits the result. A \emph{relay chain} of length
+$n$ is a sequence of relays $\gamma_1,\dots,\gamma_n$, each applying its own
+individuation with power $\kap_i$ to the account it received.
+\end{definition}
+
+\begin{corollary}[Relayed content drifts multiplicatively]
+\label{cor:relay-drift}
+Along a relay chain the surviving fidelity of an account is
+\[
+\prod_{i=1}^{n}\bigl(1-\kap(\gamma_i)\bigr),
+\]
+the residual factor of \Cref{thm:composition}, and the accumulated drift is
+$1-\prod_i(1-\kap_i)$. If the relay powers are bounded below by $c>0$ the
+fidelity decays geometrically, at most $(1-c)^{n}$ after $n$ relays.
+\end{corollary}
+
+\begin{proof}
+Each relay individuates the account it received, so by \Cref{def:power} its
+power is the fraction of the outstanding gap it closes, and by
+\Cref{def:resfactor} the fraction surviving it is $1-\kap_i$. The account
+reaching relay $i+1$ is the account surviving relay $i$, so the surviving
+fractions compose exactly as in the proof of \Cref{thm:composition}, giving
+the stated product. The geometric bound is \Cref{prop:diminishing}.
+\end{proof}
+
+\begin{remark}[What the corollary does and does not say]
+\label{rem:relay-scope}
+Two readings must be separated, because only one is licensed.
+
+The corollary says that drift accumulates \emph{without any relay altering
+the account on purpose}. Each relay performs an ordinary individuation; the
+drift is the composition of those individuations and requires no
+intervention, no intent, and no defect in any relay. A chain of faithful
+relays produces a drifted account.
+
+The corollary does not say that the terminal account is false, or that any
+relay erred. By \Cref{cor:nosharp} no account resolves to a point in any
+observer's graph, so there is no value against which a relayed account could
+be compared to establish falsity. Whether two accounts stand in some
+relation to each other is a question an outside party may compute from both;
+it is not a property either relay holds, and nothing in this algebra assigns
+one.
+
+The distinction matters for instrumentation. A system that records relay
+depth can report accumulated drift, which is a computable quantity; a system
+that reports an account as corrupted is asserting a comparison it has not
+performed.
+\end{remark}
+
+\begin{remark}[Provenance depth is worth recording]
+\label{rem:relay-depth}
+\Cref{cor:relay-drift} gives a reason to carry relay depth alongside a
+value. Depth alone bounds the accumulated drift when a lower bound on relay
+powers is known, and does so without inspecting the content: a value at
+depth $n$ has fidelity at most $(1-c)^{n}$. This is a cheap invariant and it
+is the only statement about a relayed account that the algebra supports
+without further data.
+\end{remark}

@@ -46,6 +46,10 @@
 \newcommand{\readop}{\textsc{read}}
 \newcommand{\ident}{\textsc{identify}}
 \newcommand{\transf}{\textsc{transform}}
+\newcommand{\att}{A}                       % attention/resource budget
+\newcommand{\cost}{\mathrm{cost}}
+\newcommand{\gain}{\mathrm{gain}}
+\newcommand{\flo}{\beta}                   % the floor, as in the algebra
 
 \lstdefinestyle{proto}{
   basicstyle=\ttfamily\small,
@@ -729,6 +733,8 @@ We do not treat concurrency further here.
 \end{remark}
 
 % =====================================================================
+\input{policy}
+
 \section{The limit of self-analysis}
 \label{sec:selfanalysis}
 % =====================================================================
