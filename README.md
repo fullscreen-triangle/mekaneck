@@ -64,7 +64,7 @@ obstruction — give the exact condition under which it holds, and show that
 replacing instance-specific powers with type-averaged ones restores a genuine
 null hypothesis.
 
-### 2. A Semantically Inert Microkernel — 17 pp.
+### 2. A Semantically Inert Microkernel — 21 pp.
 
 [`catalyst-micro-kernel.tex`](chatelier/docs/catalyst-micro-kernel/catalyst-micro-kernel.tex)
 
@@ -112,8 +112,9 @@ Two commitments are enforced by the type system rather than by convention:
 
 ## Implementation
 
-A Rust workspace in [`chatelier/`](chatelier/): six crates, a command-line
-tool, a loopback server, and TypeScript language services for a browser editor.
+A Rust workspace in [`chatelier/`](chatelier/): seven crates, a command-line
+tool, a loopback server, and a browser application — a landing page that lays
+out the framework, and an editor that runs against the local binary.
 
 | Crate | Contents |
 |---|---|
@@ -167,9 +168,9 @@ two. Accuracy is not the property at issue.
 Four suites, run independently.
 
 ```bash
-cargo test                          # Rust:       187 tests
-cd web && npm test                  # TypeScript:  54 tests
-python validation/run_all.py        # Python:      27 checks
+cargo test                          # Rust:       202 tests
+cd web && npm test                  # TypeScript:  59 tests
+python validation/run_all.py        # Python:      32 checks
 
 mekaneck serve --port 8731          # then, against the live binary:
 python validation/smoke_server.py --token <TOKEN>    # 19 end-to-end checks
@@ -177,7 +178,10 @@ python validation/smoke_server.py --token <TOKEN>    # 19 end-to-end checks
 
 The Python suites are the reference implementation the papers report; the Rust
 conformance tests assert the same values, so the two cannot drift apart
-silently. Pinned quantities include the telescoping deviation bound
+silently. The cardiac suite is written so that it *can* fail: it passes only
+when zero is attained in the sample and the extrapolated intercept does not
+claim a positive floor above it, and on a synthetic floored process it
+correctly refuses to pass. Pinned quantities include the telescoping deviation bound
 (2.22 × 10⁻¹⁶), the closed form 1/(n+1) for the divergent convergence case,
 the summable limit 0.2887880950866024, and the closure-versus-threshold
 invocation counts.
@@ -211,6 +215,68 @@ report this case as an absence of power rather than as a disconfirmation.
 
 ---
 
+## A worked substrate: 86 nights of cardiac data
+
+The substrate obligations are not rhetorical, so the repository carries a case
+in which they fail. The language is bound to 86 nights of consumer wearable
+data — 8,706 five-minute epochs with sleep staging, plus intraday series at
+five-second resolution — and asked whether cardiac separation has a positive
+floor.
+
+It does not. Three candidate answers turned out to be artefacts of how the
+question was posed, and each is retained in the validation suite so the
+mistake is harder to repeat:
+
+- Writing separation as `S = c − rmssd` returns a positive floor for *every*
+  constant `c` above the sample maximum. The positivity is forced by the
+  coordinate choice.
+- Writing it as `S = |rmssd − median|` returns exactly zero, because the data
+  are integers and 157 epochs sit precisely at the median. That zero is forced
+  too.
+- Extrapolating running minima gives an intercept whose **sign is not stable**:
+  it flips with the ordering of the record and with the number of stages
+  fitted. Averaged over orderings it is −0.100 ± 0.178. A point estimate that
+  unstable is not a measurement, and is reported with its spread.
+
+What survives depends on no modelling choice. Of 321 stage separations, 9 are
+exactly zero: on those nights two sleep stages were indistinguishable in RMSSD.
+Zero is *attained*, so no positive floor can be asserted over this record. At
+five-second resolution the answer is sharper — heart rate is reported as an
+integer, 18.5% of consecutive epochs are identical, and 65.4% of the non-zero
+separations are exactly 1 bpm.
+
+**The measured floor is the instrument quantum, not the physiology.** Below one
+beat per minute the record cannot distinguish states at all. The null is not a
+power failure: at n = 321 the estimator detects a genuine 1 ms floor 99.7% of
+the time and returns approximately zero under the null.
+
+The consequence is visible at the type level. A program declaring a falsifiable
+floor over this substrate does not compile:
+
+```console
+$ mekaneck check examples/sleep_cardiac.mck --floor Cardiac=-0.100
+examples/sleep_cardiac.mck:18:16: error: substrate "Cardiac" declares floor -0.1,
+which is not strictly positive: a program may not assert an attainable zero residual
+$ echo $?
+1
+
+$ mekaneck check examples/cardiac_quantum.mck --floor CardiacQuantum=1.0
+examples/cardiac_quantum.mck: ok
+```
+
+Declaring the quantum as the floor type-checks, because 1 bpm is a real and
+strictly positive limit — it is simply a limit of the sensor. Omitting
+`--floor` is neither an error nor a pass: the checker warns that T-Seek-Pos is
+unchecked and defers to the declared estimator.
+
+Separately, the twelve transition types give η = 0.0496, below the 0.05
+threshold, so the typing does not discriminate. A non-trivial correlation
+obtained over this substrate would be carried by cascade length rather than by
+type identity. Both facts are surfaced in the editor *before* the results they
+qualify.
+
+---
+
 ## Using the tools
 
 The `mekaneck` binary runs entirely on the user's machine.
@@ -233,13 +299,34 @@ $ mekaneck run examples/coherence.mck --floor Osc=12.5 \
     --cell spectral=high --cell surrogate=high --cell phase=mixed
 regime: declined, 2 incompatible cells  (record 2)
     high  via spectral
-    mixed via phase
+    mixed  via phase
 ```
 
 The run exits zero. A confidence threshold would have halted after `spectral`
 reported a confident cell and never consulted `phase`.
 
-### Local execution and the browser editor
+### The browser application
+
+```bash
+cd chatelier/web
+npm install
+npm run dev            # http://127.0.0.1:5173
+```
+
+The application has two views. The landing page (`#/`) lays the framework out
+as a paper — abstract, the residual algebra, the inertia result, the language,
+the cardiac substrate, verification, and a stated scope. The editor (`#/editor`)
+is entered deliberately from it.
+
+That ordering is load-bearing rather than presentational. The editor will run a
+program over a substrate whose floor obligation fails, and will report a
+contested closure as a normal termination with a zero exit code. A reader who
+has not been told why neither of those is an error will read both as the tool
+misbehaving. Every figure the landing page states is read from the JSON the
+validation suites emit, and a test asserts that a missing record degrades the
+prose to its qualitative form rather than printing a number nothing computed.
+
+### Local execution and the security model
 
 The server binds loopback and never dials out; the browser connects *to* the
 user's machine, so analysis data does not leave the host. The token is a
@@ -264,7 +351,11 @@ runtime, where it is expensive, rather than at compile time.
 chatelier/           current work: papers, implementation, validation
 ├── docs/            the three papers and their figure panels
 ├── crates/          the Rust workspace
-├── web/src/         generated protocol types, TS language services
+├── web/             the browser application
+│   ├── src/landing/     the framework laid out as a paper
+│   ├── src/shell/       the editor
+│   ├── src/charts/      D3 charts, including the cardiac panels
+│   └── public/dataset/  the 86-night record and its emitted chart data
 ├── validation/      Python reference suites
 └── examples/        .mck programs and substrate fixtures
 

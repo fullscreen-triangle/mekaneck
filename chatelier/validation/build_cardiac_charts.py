@@ -39,20 +39,50 @@ def intraday(name):
     return np.array([x[0] for x in rows]), np.array([x[1] for x in rows])
 
 
-def stage_minima_curve(series, n=24):
-    """(n, running minimum) pairs plus the fitted intercept — the floor plot."""
+def stage_minima_curve(series, n=24, n_orders=64, seed=0):
+    """
+    Running minima against 1/n, with the spread across orderings.
+
+    A running minimum reads ``series[:k]``, so a single pass is a property of
+    the file order rather than of the sample. The chart therefore draws a band
+    over random orderings and reports the fraction that extrapolate positive:
+    on the stage separations the sign is not stable, which is the honest
+    result and is what the reader should see.
+    """
     series = np.asarray(series, float)
     lo = max(10, len(series) // 100)
     sizes = np.unique(np.logspace(np.log10(lo), np.log10(len(series)), n).astype(int))
-    mins = np.array([series[:k].min() for k in sizes], float)
     ns = sizes.astype(float)
     A = np.vstack([1.0 / ns, np.ones_like(ns)]).T
-    slope, intercept = np.linalg.lstsq(A, mins, rcond=None)[0]
+
+    rng = np.random.default_rng(seed)
+    curves, intercepts, slopes = [], [], []
+    for i in range(n_orders):
+        x = series if i == 0 else rng.permutation(series)
+        mins = np.array([x[:k].min() for k in sizes], float)
+        sl, ic = np.linalg.lstsq(A, mins, rcond=None)[0]
+        curves.append(mins)
+        intercepts.append(ic)
+        slopes.append(sl)
+
+    curves = np.array(curves)
+    intercepts = np.array(intercepts)
+    lo_band = np.percentile(curves, 10, axis=0)
+    hi_band = np.percentile(curves, 90, axis=0)
+    med = np.median(curves, axis=0)
+
     return {
-        "points": [{"n": int(k), "inv_n": float(1.0 / k), "min": float(m)}
-                   for k, m in zip(sizes, mins)],
-        "slope": float(slope),
-        "intercept": float(intercept),
+        "points": [
+            {"n": int(k), "inv_n": float(1.0 / k), "min": float(m),
+             "lo": float(a), "hi": float(b)}
+            for k, m, a, b in zip(sizes, med, lo_band, hi_band)
+        ],
+        "slope": float(np.mean(slopes)),
+        "intercept": float(intercepts.mean()),
+        "intercept_sd": float(intercepts.std()),
+        "fraction_positive": float((intercepts > 1e-3).mean()),
+        "sign_stable": bool((intercepts > 1e-3).mean() > 0.95
+                            or (intercepts > 1e-3).mean() < 0.05),
         "sample_minimum": float(series.min()),
     }
 
@@ -141,6 +171,13 @@ def main():
             "curve": stage_minima_curve(dhr),
             "exactly_zero": int((dhr == 0).sum()),
             "zero_fraction": float((dhr == 0).mean()),
+            # Share of the *non-zero* separations sitting exactly at the
+            # quantum. This is the number that identifies the floor as the
+            # sensor rather than the physiology, so the page reads it from
+            # here instead of carrying it in prose.
+            "quantum_fraction": float(
+                (dhr[dhr > 0] == dhr[dhr > 0].min()).mean()
+            ) if (dhr > 0).any() else None,
             "n": len(dhr),
             "histogram": [
                 {"bpm": int(b), "count": int(c)}

@@ -63,17 +63,44 @@ def load_intraday(name):
     return np.array([x[0] for x in rows]), np.array([x[1] for x in rows])
 
 
-def asymptotic(series, n_stages=24):
-    """Least-squares intercept of stage minima against 1/n."""
+def asymptotic(series, n_stages=24, seed=0, n_orders=64):
+    """
+    Least-squares intercept of running minima against 1/n.
+
+    Averaged over random orderings, because the single-pass version is not a
+    function of the sample. It reads ``series[:k]``, so the intercept depends
+    on the order in which records happen to sit in the file: on the 86-night
+    stage separations, one fixed ordering gives +0.029 while the mean over
+    orderings is -0.094. Averaging makes the estimator a property of the data.
+
+    The spread across orderings is the honest uncertainty and is reported by
+    :func:`asymptotic_spread`; a point estimate whose sign is not stable under
+    reordering is not evidence of anything.
+    """
+    return float(np.mean(_intercepts(series, n_stages, seed, n_orders)))
+
+
+def asymptotic_spread(series, n_stages=24, seed=0, n_orders=64):
+    """(mean, sd, fraction of orderings giving a positive intercept)."""
+    v = _intercepts(series, n_stages, seed, n_orders)
+    return float(v.mean()), float(v.std()), float((v > 1e-3).mean())
+
+
+def _intercepts(series, n_stages, seed, n_orders):
     series = np.asarray(series, float)
     if len(series) < 10:
-        return float("nan")
+        return np.array([float("nan")])
     lo = max(10, len(series) // 100)
     sizes = np.unique(np.logspace(np.log10(lo), np.log10(len(series)), n_stages).astype(int))
     ns = sizes.astype(float)
-    mins = np.array([series[:k].min() for k in sizes], float)
     A = np.vstack([1.0 / ns, np.ones_like(ns)]).T
-    return float(np.linalg.lstsq(A, mins, rcond=None)[0][1])
+    rng = np.random.default_rng(seed)
+    out = []
+    for i in range(n_orders):
+        x = series if i == 0 else rng.permutation(series)
+        mins = np.array([x[:k].min() for k in sizes], float)
+        out.append(np.linalg.lstsq(A, mins, rcond=None)[0][1])
+    return np.array(out)
 
 
 # ----------------------------------------------------------------------
@@ -149,24 +176,46 @@ def stage_separations(nights):
 
 
 def check_stage_floor(nights):
+    """
+    Does stage-level separation have a positive floor?
+
+    The check passes when the record is *consistent about the answer*, not
+    when the answer comes out negative. Two independent facts have to line up:
+    zero must be attained in the sample, and the extrapolated intercept must
+    not claim a positive floor above the attained zero. If the record showed a
+    genuine positive floor -- no attained zero, a stable positive intercept --
+    this check would fail, and that is the point of writing it this way.
+    """
     s = stage_separations(nights)
-    a = asymptotic(s, n_stages=20)
+    mean, sd, frac_pos = asymptotic_spread(s, n_stages=20)
+    zero_attained = bool((s == 0).sum() > 0)
+    sign_stable = bool(frac_pos > 0.95 or frac_pos < 0.05)
+    claims_positive = bool(mean > 1e-3)
+
     return {
         "claim": "stage-level cardiac separation has no positive floor",
         "resolution": "5 minutes",
         "n_separations": len(s),
         "n_nights": len(nights),
         "exactly_zero": int((s == 0).sum()),
-        "zero_is_attainable": bool((s == 0).sum() > 0),
+        "zero_is_attainable": zero_attained,
         "sample_minimum": float(s.min()),
-        "asymptotic": a,
-        "supports_positive_floor": bool(a > 1e-3),
+        "asymptotic": mean,
+        "asymptotic_sd_over_orderings": sd,
+        "fraction_of_orderings_positive": frac_pos,
+        "sign_is_stable_under_reordering": sign_stable,
+        "supports_positive_floor": claims_positive,
         "note": (
             "Nine of the separations are exactly zero: on those nights two "
-            "stages were indistinguishable in RMSSD. The estimator could "
-            "therefore have returned a positive value and did not."
+            "stages were indistinguishable in RMSSD, so the estimator could "
+            "have returned a positive value and did not. The intercept is "
+            "reported as a mean over orderings because a single pass through "
+            "the file is not a function of the sample: one fixed ordering "
+            "gives +0.029, the mean is negative, and the sign flips with the "
+            "number of stages. Only the attained zero is stable."
         ),
-        "pass": True,  # a negative result, honestly obtained, is the outcome
+        # A positive floor cannot be asserted over a sample that attains zero.
+        "pass": bool(zero_attained and not claims_positive),
     }
 
 

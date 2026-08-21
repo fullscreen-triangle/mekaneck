@@ -119,6 +119,14 @@ export function CardiacPanel({ width = 376 }: { width?: number }) {
             expect it to fail, and a program requiring a positive floor will not
             type-check over it.
           </Note>
+          <Note colour={palette.warn}>
+            The claim rests on the <em>attained zeros</em>, not on the
+            extrapolation. At 5 minutes the intercept is unstable — its sign
+            flips with the ordering of the record and with the number of stages
+            fitted, so it is reported with its spread and carries no claim on
+            its own. At 5 seconds it is exactly zero with no spread, because
+            quantisation puts it there.
+          </Note>
           <Stat label="nights" value={data.meta.n_nights} />
           <Stat label="5-min epochs" value={data.meta.n_epochs.toLocaleString()} />
           <Stat
@@ -127,8 +135,8 @@ export function CardiacPanel({ width = 376 }: { width?: number }) {
           />
           <Stat
             label="β̂ at 5 min"
-            value={floor_test.stage_level.curve.intercept.toFixed(4)}
-            colour={palette.failed}
+            value={`${floor_test.stage_level.curve.intercept.toFixed(3)} ± ${floor_test.stage_level.curve.intercept_sd.toFixed(3)}`}
+            colour={palette.warn}
           />
           <Stat
             label="β̂ at 5 s"

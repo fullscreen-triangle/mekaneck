@@ -12,6 +12,12 @@
  *   positivity would be no evidence either way;
  * - the region at or below zero is shaded, because entering it is the only
  *   observation that can falsify a positivity claim.
+ *
+ * A running minimum reads a prefix of the series, so a single pass measures
+ * the file order as much as the sample. The curve is therefore drawn as a
+ * band over random orderings, and where the extrapolated sign is not stable
+ * across them the chart says so instead of printing a number that looks like
+ * a measurement.
  */
 
 import * as d3 from "d3";
@@ -20,9 +26,12 @@ import { palette, mono } from "../../theme";
 import { M, axes, caption, useD3 } from "./d3util";
 
 export interface FloorCurve {
-  points: { n: number; inv_n: number; min: number }[];
+  points: { n: number; inv_n: number; min: number; lo: number; hi: number }[];
   slope: number;
   intercept: number;
+  intercept_sd: number;
+  fraction_positive: number;
+  sign_stable: boolean;
   sample_minimum: number;
 }
 
@@ -51,7 +60,9 @@ export function CardiacFloor({
       const xMax = d3.max(pts, (p) => p.inv_n) ?? 1;
       const x = d3.scaleLinear().domain([0, xMax * 1.05]).range([0, w]);
 
-      const yVals = pts.map((p) => p.min).concat([curve.intercept, 0]);
+      const yVals = pts
+        .flatMap((p) => [p.min, p.lo, p.hi])
+        .concat([curve.intercept, 0]);
       const yMin = Math.min(...yVals);
       const yMax = Math.max(...yVals);
       const pad = (yMax - yMin) * 0.15 || 1;
@@ -77,6 +88,22 @@ export function CardiacFloor({
       }
 
       axes(g, x, y, w, h, { xTicks: 4, yTicks: 4 });
+
+      // spread across orderings: where this is wide, a single-pass estimate
+      // would have been reporting the file order rather than the sample
+      g.append("path")
+        .datum(pts)
+        .attr("fill", palette.evidential)
+        .attr("opacity", 0.14)
+        .attr(
+          "d",
+          d3
+            .area<(typeof pts)[number]>()
+            .x((p) => x(p.inv_n))
+            .y0((p) => y(p.lo))
+            .y1((p) => y(p.hi))
+            .curve(d3.curveMonotoneX) as never,
+        );
 
       // fitted line, extrapolated to the intercept
       g.append("line")
@@ -113,7 +140,22 @@ export function CardiacFloor({
         .attr("fill", supports ? palette.resolved : palette.failed)
         .style("font-family", mono)
         .style("font-size", "10px")
-        .text(`β̂ = ${curve.intercept.toFixed(3)}`);
+        .text(
+          curve.sign_stable
+            ? `β̂ = ${curve.intercept.toFixed(3)}`
+            : `β̂ = ${curve.intercept.toFixed(3)} ± ${curve.intercept_sd.toFixed(3)}`,
+        );
+
+      // An unstable sign is not a smaller effect, it is no measurement at all.
+      if (!curve.sign_stable) {
+        g.append("text")
+          .attr("x", x(0) + 9)
+          .attr("y", y(curve.intercept) + 15)
+          .attr("fill", palette.warn)
+          .style("font-family", mono)
+          .style("font-size", "9px")
+          .text(`sign unstable — ${Math.round(curve.fraction_positive * 100)}% of orderings positive`);
+      }
 
       g.append("text")
         .attr("x", w)
@@ -133,10 +175,12 @@ export function CardiacFloor({
       caption(
         g,
         h,
-        exactlyZero > 0
-          ? `${exactlyZero.toLocaleString()} separations are exactly zero — the estimator could have returned a positive floor and did not.`
-          : "zero was never attained in this sample",
-        exactlyZero > 0 ? palette.textDim : palette.warn,
+        !curve.sign_stable
+          ? `intercept carries no claim; ${exactlyZero.toLocaleString()} attained zeros are what rule out a floor.`
+          : exactlyZero > 0
+            ? `${exactlyZero.toLocaleString()} separations are exactly zero — the estimator could have returned a positive floor and did not.`
+            : "zero was never attained in this sample",
+        !curve.sign_stable ? palette.warn : exactlyZero > 0 ? palette.textDim : palette.warn,
       );
     },
     width,
