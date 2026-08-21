@@ -10,7 +10,7 @@
 //! it. An error value is an ordinary value (Cor 3.2), so a raising chunk
 //! commits exactly as a returning one does.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use serde::{Deserialize, Serialize};
 
@@ -91,6 +91,10 @@ impl Value {
     }
 }
 
+/// What a chunk body is: a function of its declared reads, returning either a
+/// value or a message that becomes an error value.
+type ChunkBody = dyn Fn(&ReadView) -> Result<serde_json::Value, String> + Send + Sync;
+
 /// An executable chunk: a closure plus the id that identifies it.
 ///
 /// The kernel knows only that a chunk can be evaluated and that evaluating it
@@ -99,10 +103,21 @@ pub struct Chunk {
     pub id: ChunkId,
     /// The DSL or module that contributed this chunk, for display only.
     pub origin: String,
-    run: Box<dyn Fn() -> Result<serde_json::Value, String> + Send + Sync>,
+    /// Subtask identities this chunk reads before it can be evaluated.
+    ///
+    /// Declared rather than discovered. The kernel needs the read set *before*
+    /// running anything — to order execution, to reject a contribution that
+    /// would close a cycle, and to record the trajectory — and it cannot learn
+    /// it by inspecting the closure.
+    reads: Vec<Tau>,
+    run: Box<ChunkBody>,
 }
 
 impl Chunk {
+    /// A chunk that reads nothing.
+    ///
+    /// Retained unchanged: a nullary chunk is the common case and should not
+    /// have to mention an empty read set.
     pub fn new<F>(id: ChunkId, origin: impl Into<String>, run: F) -> Self
     where
         F: Fn() -> Result<serde_json::Value, String> + Send + Sync + 'static,
@@ -110,17 +125,94 @@ impl Chunk {
         Chunk {
             id,
             origin: origin.into(),
+            reads: Vec::new(),
+            run: Box::new(move |_| run()),
+        }
+    }
+
+    /// A chunk whose value depends on other nodes.
+    ///
+    /// This is what lets many contributions converge into one: a node's value
+    /// can be a function of what other nodes produced, rather than every
+    /// contribution standing alone.
+    ///
+    /// The read set is declared up front. A chunk that reads a node absent
+    /// from this list receives nothing from it — the view is restricted to
+    /// what was declared, so the trajectory recorded matches the reads
+    /// actually permitted.
+    pub fn reading<F>(
+        id: ChunkId,
+        origin: impl Into<String>,
+        reads: impl IntoIterator<Item = impl Into<Tau>>,
+        run: F,
+    ) -> Self
+    where
+        F: Fn(&ReadView) -> Result<serde_json::Value, String> + Send + Sync + 'static,
+    {
+        Chunk {
+            id,
+            origin: origin.into(),
+            reads: reads.into_iter().map(Into::into).collect(),
             run: Box::new(run),
         }
     }
 
-    /// Evaluate. A returned `Err` becomes an error *value*, not a failure of
-    /// the kernel: `Run(n)` proceeds to the next chunk regardless.
-    pub(crate) fn eval(&self) -> Value {
-        match (self.run)() {
+    /// Subtask identities this chunk declares it reads.
+    pub fn reads(&self) -> &[Tau] {
+        &self.reads
+    }
+
+    /// Evaluate against a view of what it declared it reads.
+    ///
+    /// A returned `Err` becomes an error *value*, not a failure of the kernel:
+    /// `Run(n)` proceeds to the next chunk regardless (Cor 3.2).
+    pub(crate) fn eval(&self, view: &ReadView) -> Value {
+        match (self.run)(view) {
             Ok(v) => Value::ok(v),
             Err(e) => Value::error("chunk_error", &e),
         }
+    }
+}
+
+/// What a chunk may read while evaluating.
+///
+/// Restricted to the identities the chunk declared, so a chunk cannot reach
+/// values it did not announce a dependency on — the read set is a contract,
+/// not a hint.
+///
+/// A read returns the node's whole value collection, deliberately. Several
+/// chunks may have emitted onto one node, and reducing that bag to a single
+/// answer is adjudication: whether the values agree is a question for a
+/// consuming module, which must choose a criterion visibly rather than
+/// inherit one from the kernel.
+#[derive(Debug, Default)]
+pub struct ReadView<'a> {
+    entries: BTreeMap<Tau, &'a [Value]>,
+}
+
+impl<'a> ReadView<'a> {
+    pub(crate) fn new(entries: BTreeMap<Tau, &'a [Value]>) -> Self {
+        ReadView { entries }
+    }
+
+    /// Values a node holds, or empty when the identity was not declared or
+    /// the node emitted nothing.
+    pub fn read(&self, tau: &str) -> &[Value] {
+        self.entries.get(tau).copied().unwrap_or(&[])
+    }
+
+    /// Identities available in this view.
+    pub fn available(&self) -> impl Iterator<Item = &Tau> {
+        self.entries.keys()
+    }
+
+    /// Whether every declared read produced at least one value.
+    ///
+    /// Reported, not enforced: a chunk is free to run on partial input, and
+    /// deciding that partial input is unacceptable is the chunk's judgement
+    /// to make, not the kernel's.
+    pub fn complete(&self) -> bool {
+        self.entries.values().all(|v| !v.is_empty())
     }
 }
 
@@ -211,7 +303,7 @@ mod tests {
     #[test]
     fn a_raising_chunk_yields_an_error_value() {
         let c = Chunk::new(ChunkId::of("bad"), "test", || Err("deliberate".into()));
-        let v = c.eval();
+        let v = c.eval(&ReadView::default());
         assert!(v.is_error());
         assert_eq!(v.as_json()["__error__"], "chunk_error");
     }

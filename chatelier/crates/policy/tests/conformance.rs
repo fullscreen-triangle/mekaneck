@@ -228,8 +228,8 @@ fn budget_and_phase_bounds_are_distinguished() {
         l
     };
 
-    assert_eq!(classify(0, &no_construction), Quiescence::Exhausted);
-    assert_eq!(classify(5, &no_construction), Quiescence::BudgetBound);
-    assert_eq!(classify(0, &with_construction), Quiescence::PhaseBound);
-    assert_eq!(classify(5, &with_construction), Quiescence::Both);
+    assert_eq!(classify_quiescence(0, &no_construction), Quiescence::Exhausted);
+    assert_eq!(classify_quiescence(5, &no_construction), Quiescence::BudgetBound);
+    assert_eq!(classify_quiescence(0, &with_construction), Quiescence::PhaseBound);
+    assert_eq!(classify_quiescence(5, &with_construction), Quiescence::Both);
 }

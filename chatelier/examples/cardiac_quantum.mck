@@ -1,0 +1,28 @@
+# The instrument quantum, made explicit.
+#
+# At 5-second resolution the record reports integer bpm, so 18.5% of
+# consecutive epochs are "identical" only because the sensor cannot resolve
+# a smaller difference. A substrate over this data is measuring the device
+# below 1 bpm, not the physiology.
+#
+# The floor is declared as the quantum rather than derived, and named so a
+# reader can see that the positivity is instrumental:
+
+substrate CardiacQuantum {
+  receivers  : series("intraday_base");
+  observable : heart_rate_bpm();
+  events     : rate_change();
+  floor      : instrument_quantum();   # 1 bpm — a property of the sensor
+}
+
+catalyst spectral  : band_power()        independent surrogate, temporal;
+catalyst surrogate : shuffled_baseline() independent spectral, temporal;
+catalyst temporal  : run_length()        independent spectral, surrogate;
+
+let rate_regime =
+  seek        target_state("elevated")
+  excluding   resting_states()
+  via         (spectral, surrogate, temporal)
+  until       closure;
+
+report rate_regime;

@@ -87,17 +87,21 @@ impl Kernel {
         let mut n = 0;
 
         for id in pending {
+            // Evaluate against a view of what the chunk declared it reads,
+            // holding only an immutable borrow: the kernel supplies inputs
+            // and stores outputs, and looks at neither.
+            let Some((origin, value)) = self.graph.get(tau).and_then(|node| {
+                let chunk = node.chunks.iter().find(|c| c.id == id)?;
+                let view = self.graph.view_for(chunk);
+                Some((chunk.origin.clone(), chunk.eval(&view)))
+            }) else {
+                continue;
+            };
+            let errored = value.is_error();
+
             let Some(node) = self.graph.node_mut(tau) else {
                 break;
             };
-            let Some(chunk) = node.chunks.iter().find(|c| c.id == id) else {
-                continue;
-            };
-            let origin = chunk.origin.clone();
-            // The kernel does not look at what comes back. It emits it.
-            let value = chunk.eval();
-            let errored = value.is_error();
-
             node.emit(value);
             node.mark_executed(id.clone());
 

@@ -1,0 +1,34 @@
+# Individuate a cardiac coherence regime from an 86-night wearable record.
+#
+# This program does NOT type-check against the record as it stands, and that
+# is the point of keeping it: `mekaneck check` rejects it because the floor
+# estimated from this data is not strictly positive. The type system refuses
+# to run an inquiry whose premise the data contradicts.
+#
+#   mekaneck check examples/sleep_cardiac.mck --floor Cardiac=0.0
+#     -> error: floor 0 is not strictly positive
+#
+# Supplying a positive floor makes it type, but a floor this record does not
+# support is an assumption, not a measurement — so state it as one.
+
+substrate Cardiac {
+  receivers  : nights("sleep_summary");
+  observable : rmssd_5min();
+  events     : stage_transition();      # 12 types, 2856 events
+  floor      : asymptotic_separation();  # falsifiable; returns <= 0 here
+}
+
+# Three ways of telling a cardiac state apart, declared independent because
+# they use disjoint features of the record: beat variability, rate level, and
+# the stage scoring itself.
+catalyst variability : rmssd_dispersion()  independent rate, architecture;
+catalyst rate        : hr_level()          independent variability, architecture;
+catalyst architecture: hypnogram_run()     independent variability, rate;
+
+let coherence_regime =
+  seek        target_state("high-variability")
+  excluding   all_other_states()
+  via         (variability, rate, architecture)
+  until       closure;
+
+report coherence_regime;

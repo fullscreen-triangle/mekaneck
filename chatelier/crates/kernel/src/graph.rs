@@ -12,7 +12,7 @@
 
 use std::collections::BTreeMap;
 
-use crate::node::{Chunk, Node, Tau, Value};
+use crate::node::{Chunk, ChunkId, Node, ReadView, Tau, Value};
 
 /// A submitted decomposition: chunks assigned to subtask identities.
 #[derive(Debug, Default)]
@@ -76,6 +76,37 @@ impl Graph {
     /// never occurs and the graph is a disjoint union of private
     /// decompositions.
     pub fn merge(&mut self, contribution: Contribution) {
+        // Infallible form, retained for contributions that read nothing.
+        // A nullary contribution cannot close a cycle.
+        self.try_merge(contribution)
+            .expect("a contribution of nullary chunks cannot close a cycle");
+    }
+
+    /// Merge, refusing a contribution that would close a read cycle.
+    ///
+    /// Rejection is structural, not a judgement about content: the kernel
+    /// inspects declared read sets and never values. A cycle is refused
+    /// because no execution order exists for it, and because admitting one
+    /// would make termination depend on a budget rather than on the protocol
+    /// — which would break the separation between what can be computed and
+    /// what was.
+    ///
+    /// The refusal names the cycle, since "some contribution closed a loop"
+    /// is not actionable. A refused contribution leaves the graph unchanged,
+    /// so a caller may correct and retry.
+    pub fn try_merge(&mut self, contribution: Contribution) -> Result<(), CycleError> {
+        let mut edges: Vec<(Tau, Tau)> = self.read_edges();
+        for (tau, chunks) in &contribution.chunks {
+            for c in chunks {
+                for r in c.reads() {
+                    edges.push((tau.clone(), r.clone()));
+                }
+            }
+        }
+        if let Some(cycle) = find_cycle(&edges) {
+            return Err(CycleError { cycle });
+        }
+
         for (tau, chunks) in contribution.chunks {
             let node = self.identify(tau);
             for c in chunks {
@@ -84,6 +115,20 @@ impl Graph {
                 }
             }
         }
+        Ok(())
+    }
+
+    /// Edges of the read graph: `(reader, read)` for every declared read.
+    pub fn read_edges(&self) -> Vec<(Tau, Tau)> {
+        let mut out = Vec::new();
+        for (tau, node) in &self.nodes {
+            for c in &node.chunks {
+                for r in c.reads() {
+                    out.push((tau.clone(), r.clone()));
+                }
+            }
+        }
+        out
     }
 
     pub fn nodes(&self) -> impl Iterator<Item = (&Tau, &Node)> {
@@ -98,13 +143,75 @@ impl Graph {
         self.nodes.is_empty()
     }
 
-    /// Node identities with at least one unevaluated chunk (Def 7.1).
+    /// Node identities with at least one *runnable* pending chunk (Def 7.1).
+    ///
+    /// A chunk is runnable when every identity it declared reading has
+    /// produced values. Readiness is therefore data-dependent once chunks
+    /// read: a node whose inputs have not been produced is not ready, and
+    /// becomes ready when they are.
+    ///
+    /// A node whose reads can never be satisfied is reported by
+    /// [`Self::blocked`] rather than silently never running.
     pub fn ready(&self) -> Vec<Tau> {
         self.nodes
             .iter()
-            .filter(|(_, n)| n.has_pending())
+            .filter(|(_, n)| n.pending().any(|c| self.reads_satisfied(c)))
             .map(|(t, _)| t.clone())
             .collect()
+    }
+
+    /// Nodes with pending chunks whose reads are not yet satisfied.
+    ///
+    /// Distinguishes "waiting on a node that exists but has not run" from
+    /// "waiting on an identity nobody contributed". The second cannot resolve
+    /// without a further contribution and is worth surfacing; neither is an
+    /// error the kernel adjudicates.
+    pub fn blocked(&self) -> Vec<Blocked> {
+        let mut out = Vec::new();
+        for (tau, node) in &self.nodes {
+            for c in node.pending() {
+                if self.reads_satisfied(c) {
+                    continue;
+                }
+                let missing: Vec<Tau> = c
+                    .reads()
+                    .iter()
+                    .filter(|r| !self.has_run(r))
+                    .cloned()
+                    .collect();
+                let unreachable = missing.iter().any(|m| !self.nodes.contains_key(m));
+                out.push(Blocked {
+                    tau: tau.clone(),
+                    chunk: c.id.clone(),
+                    waiting_on: missing,
+                    unreachable,
+                });
+            }
+        }
+        out
+    }
+
+    /// Whether every identity this chunk reads has produced values.
+    fn reads_satisfied(&self, chunk: &Chunk) -> bool {
+        chunk.reads().iter().all(|r| self.has_run(r))
+    }
+
+    fn has_run(&self, tau: &str) -> bool {
+        self.nodes
+            .get(tau)
+            .map(|n| !n.values().is_empty())
+            .unwrap_or(false)
+    }
+
+    /// A view over what a chunk declared it reads.
+    pub(crate) fn view_for<'a>(&'a self, chunk: &Chunk) -> ReadView<'a> {
+        let mut entries = BTreeMap::new();
+        for r in chunk.reads() {
+            if let Some(node) = self.nodes.get(r) {
+                entries.insert(r.clone(), node.values());
+            }
+        }
+        ReadView::new(entries)
     }
 
     /// The protocol fingerprint (Thm 5.3): a hash of node identities and their
@@ -228,4 +335,83 @@ mod tests {
         let g = Graph::new();
         assert!(g.read("nothing-here").is_empty());
     }
+}
+
+
+/// A pending chunk whose declared reads are not yet satisfied.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Blocked {
+    pub tau: Tau,
+    pub chunk: ChunkId,
+    /// Identities it is waiting on.
+    pub waiting_on: Vec<Tau>,
+    /// True when at least one awaited identity was never contributed, so the
+    /// wait cannot resolve without a further contribution.
+    pub unreachable: bool,
+}
+
+/// A contribution refused because it would close a read cycle.
+#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+#[error("contribution would close a read cycle: {}", .cycle.join(" -> "))]
+pub struct CycleError {
+    /// The cycle, as a sequence of identities returning to its start.
+    pub cycle: Vec<Tau>,
+}
+
+/// Find a cycle in a directed edge list, returning it if one exists.
+///
+/// Iterative depth-first search, so the cycle can be reported rather than
+/// merely detected, and so a deep graph cannot overflow the stack.
+fn find_cycle(edges: &[(Tau, Tau)]) -> Option<Vec<Tau>> {
+    use std::collections::BTreeMap as Map;
+
+    let mut adj: Map<&str, Vec<&str>> = Map::new();
+    for (from, to) in edges {
+        adj.entry(from.as_str()).or_default().push(to.as_str());
+        adj.entry(to.as_str()).or_default();
+    }
+
+    #[derive(Clone, Copy, PartialEq)]
+    enum Mark {
+        Open,
+        Done,
+    }
+
+    let mut mark: Map<&str, Mark> = Map::new();
+    let keys: Vec<&str> = adj.keys().copied().collect();
+
+    for root in keys {
+        if mark.contains_key(root) {
+            continue;
+        }
+        // (node, index of next child to visit)
+        let mut stack: Vec<(&str, usize)> = vec![(root, 0)];
+        mark.insert(root, Mark::Open);
+
+        while let Some(&mut (node, ref mut idx)) = stack.last_mut() {
+            let children = adj.get(node).map(Vec::as_slice).unwrap_or(&[]);
+            if *idx < children.len() {
+                let next = children[*idx];
+                *idx += 1;
+                match mark.get(next) {
+                    Some(Mark::Done) => {}
+                    Some(Mark::Open) => {
+                        let at = stack.iter().position(|(n, _)| *n == next).unwrap_or(0);
+                        let mut cyc: Vec<Tau> =
+                            stack[at..].iter().map(|(n, _)| n.to_string()).collect();
+                        cyc.push(next.to_string());
+                        return Some(cyc);
+                    }
+                    None => {
+                        mark.insert(next, Mark::Open);
+                        stack.push((next, 0));
+                    }
+                }
+            } else {
+                mark.insert(node, Mark::Done);
+                stack.pop();
+            }
+        }
+    }
+    None
 }

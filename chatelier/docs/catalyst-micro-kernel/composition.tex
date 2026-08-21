@@ -1,0 +1,187 @@
+% Inserted after the trajectory section.
+% Chunks that read: composition of contributions, and what it costs.
+
+\section{Contributions that compose}
+\label{sec:composition}
+
+As presented so far a chunk is a nullary closure: it is evaluated and emits,
+and what it emits cannot depend on what any other node produced. Every
+contribution therefore stands alone, and a node's values are a collection of
+independent results that happen to share an identity.
+
+This section widens a chunk to declare a \emph{read set}. A chunk may name
+identities whose values it consults, so that a node's value can be a function
+of other nodes' values. The change is what allows several lines of work to
+converge into one conclusion rather than merely to accumulate at one address.
+It costs three things, and we take them in turn.
+
+\begin{definition}[Read set; read graph]
+\label{def:reads}
+A chunk carries a finite set of identities $\mathrm{reads}(c)\subseteq\Tau$,
+declared at contribution. The \emph{read graph} of a protocol has an edge
+$\tau\to\tau'$ whenever some chunk on the node $\tau$ declares a read of
+$\tau'$.
+\end{definition}
+
+The read set is declared rather than discovered. The kernel requires it before
+executing anything --- to order execution, to refuse a contribution that would
+close a cycle, and to record which reads were permitted --- and it cannot
+obtain it by inspecting a closure.
+
+\begin{definition}[Restricted view]
+\label{def:view}
+When a chunk is evaluated it receives a \emph{view}: a map from each declared
+identity to that node's value collection. Identities absent from the read set
+are absent from the view, whatever the graph contains.
+\end{definition}
+
+\begin{proposition}[The declared read set bounds what a chunk observes]
+\label{prop:read-bound}
+A chunk's emitted value is a function of its declared reads and of sources
+outside the graph; it is not a function of any node it did not declare.
+Consequently the read graph is a sound over-approximation of the run's
+read-to-emit relation.
+\end{proposition}
+
+\begin{proof}
+By \Cref{def:view} the view supplied to a chunk contains exactly the declared
+identities, so no undeclared node's values are available to it. The emitted
+value is therefore determined by the view together with whatever external
+source the closure consults, and every edge realised in the run appears in the
+read graph.
+\end{proof}
+
+\Cref{prop:read-bound} recovers, in part, something \Cref{thm:emergence}
+denied. The trajectory remains not a function of the protocol --- external
+sources still vary between runs, and a chunk may consult a declared node
+without its value affecting the outcome --- but the read graph now bounds
+which trajectories are possible. What was formerly an obligation on modules to
+log their reads is now structure the protocol carries.
+
+\subsection{Cycles are refused}
+
+\begin{definition}[Runnable]
+\label{def:runnable}
+A pending chunk is \emph{runnable} when every identity it declares reading has
+produced at least one value. A node is ready when it carries a runnable
+pending chunk.
+\end{definition}
+
+Readiness is thereby data-dependent, where before it was a property of the
+chunk bag alone. A protocol whose read graph contains a cycle has no
+execution order: each node in the cycle waits on another, and none becomes
+runnable.
+
+\begin{theorem}[Acyclicity is necessary and sufficient for progress]
+\label{thm:acyclic}
+Let a protocol have a finite read graph. Every contributed chunk eventually
+becomes runnable if and only if the read graph is acyclic and every declared
+identity is contributed.
+\end{theorem}
+
+\begin{proof}
+($\Leftarrow$) A finite acyclic digraph admits a topological order. Taking
+nodes in that order, every identity a chunk reads precedes it and has
+therefore produced values by the time the chunk is considered, so the chunk is
+runnable.
+
+($\Rightarrow$) Suppose the read graph contains a cycle
+$\tau_1\to\tau_2\to\cdots\to\tau_k\to\tau_1$. For any chunk on $\tau_1$
+participating in the cycle to be runnable, $\tau_2$ must have produced values;
+for that, $\tau_3$ must have; and so on around the cycle to $\tau_1$ itself,
+which by hypothesis has not. No member of the cycle is ever runnable. If
+instead some declared identity is never contributed, the chunks reading it are
+never runnable by \Cref{def:runnable}.
+\end{proof}
+
+The kernel therefore refuses, at contribution time, any contribution that
+would close a cycle in the read graph, and reports the cycle it found. Three
+remarks on why refusal is the right response rather than the alternatives.
+
+\begin{remark}[Refusal is structural, not adjudication]
+\label{rem:refusal-inert}
+The check inspects declared read sets and never values, so
+\Cref{thm:inertia} is untouched. The kernel is not judging a contribution to
+be wrong; it is reporting that no execution order exists for it. A refused
+contribution leaves the graph unchanged, so a contributor may correct the
+declaration and retry.
+\end{remark}
+
+\begin{remark}[Why not a bounded fixed-point iteration]
+\label{rem:no-fixpoint}
+A cyclic read graph could be admitted and iterated to a fixed point under a
+step or resource bound. We decline this because it would make the terminal
+values a function of that bound, so two runs of one protocol under different
+bounds would disagree --- and the separation between what can be computed and
+what was (\Cref{cor:repro}) rests on the protocol determining the former.
+A construct whose result depends on how much resource it was given belongs to
+the trajectory, not the protocol, and should not masquerade as the latter.
+\end{remark}
+
+\begin{remark}[Acyclicity does not conflict with mutual support]
+\label{rem:not-coherence}
+The coherence requirement of the companion language --- that a claim rest on
+at least three \emph{mutually independent} sources --- might appear to demand
+a cycle. It does not, and the distinction is worth stating because the
+opposite reading is natural.
+
+That requirement concerns a \emph{support} graph: an observer's assessment,
+after the fact, of which findings corroborate which. Mutual independence
+means precisely that the sources do \emph{not} inform one another. Three
+catalysts reading each other's outputs would violate the requirement rather
+than satisfy it. The read graph and the support graph are different objects,
+and acyclicity of the first is consistent with --- indeed enforces --- the
+independence the second requires.
+\end{remark}
+
+\begin{proposition}[Unreachable reads are reported, not silently stalled]
+\label{prop:blocked}
+A pending chunk whose declared reads are unsatisfied is reported together with
+the identities it awaits, and with whether any of them was never contributed.
+A sweep containing only such chunks performs no executions and terminates.
+\end{proposition}
+
+The distinction the report carries is between waiting on a node that exists
+but has not run, which a further sweep may resolve, and waiting on an identity
+nobody contributed, which cannot resolve without a further contribution.
+Neither is an error the kernel adjudicates; both are conditions a module may
+wish to act on.
+
+\subsection{A node's values remain a collection}
+
+Several chunks may emit onto one node, and a consumer reading that node
+receives all of their values. It does not receive a single answer, and the
+kernel provides no means of obtaining one.
+
+\begin{remark}[Why no reduction]
+\label{rem:no-reduction}
+Reducing a collection to one value requires a criterion --- the mean, the
+latest, the majority, the most confident --- and every such criterion is a
+judgement about which values count. Supplying one in the kernel would place
+that judgement in the substrate, where it is invisible and applies uniformly
+to payloads it was never chosen for.
+
+The consequence for a consumer is real: every reader must handle a
+collection. We take that cost deliberately. A node whose values agree and a
+node whose values conflict are different situations, and an interface that
+returns one number for both has discarded the difference at the point where
+it was still recoverable.
+\end{remark}
+
+The two situations are the two an inquiry already admits. A collection whose
+values agree, under a criterion the consumer names, is a convergent closure; a
+collection whose values disagree is a contested closure, whose honest report
+is the plurality together with what produced each member. A module performing
+that classification is choosing a criterion visibly, which is where the choice
+belongs.
+
+\begin{remark}[A majority is not agreement]
+\label{rem:majority}
+It is tempting to resolve a contested collection by its modal value when the
+mode is large enough. We report the modal share and do not use it to resolve.
+The reason is the one that tells against threshold criteria generally: a
+majority rule discards the minority precisely in the cases where the minority
+is the informative part, and it does so without recording that it did. A collection in which four sources agree and one
+dissents is contested, and the dissent is the thing a reader most needs to
+see.
+\end{remark}

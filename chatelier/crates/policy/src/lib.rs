@@ -38,11 +38,15 @@
 #![warn(missing_debug_implementations)]
 
 pub mod budget;
+pub mod consensus;
 pub mod phase;
 pub mod relay;
 
 pub use budget::{is_divisible, select, Budget, Candidate, Selection};
-pub use phase::{classify, Phase, PhaseLog, Quiescence};
+// Both modules classify, but different things: one a value bag, one a sweep.
+// Re-exported under distinct names so a call site says which.
+pub use consensus::{classify as classify_values, Agreement, Consensus};
+pub use phase::{classify as classify_quiescence, Phase, PhaseLog, Quiescence};
 pub use relay::{fidelity_bound, relays_until, Relayed};
 
 /// Errors from the policy layer.

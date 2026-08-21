@@ -46,8 +46,8 @@ pub mod schedule;
 pub mod trajectory;
 
 pub use exec::{Commit, Kernel, Record};
-pub use graph::{Contribution, Graph};
-pub use node::{Chunk, ChunkId, Node, Tau, Value};
+pub use graph::{Blocked, Contribution, CycleError, Graph};
+pub use node::{Chunk, ChunkId, Node, ReadView, Tau, Value};
 pub use schedule::{Scheduler, Selection, Sweep};
 pub use trajectory::{Link, Trajectory};
 

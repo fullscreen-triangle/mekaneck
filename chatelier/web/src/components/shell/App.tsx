@@ -15,12 +15,13 @@ import { useMemo, useState } from "react";
 import { LawComparison } from "../charts/LawComparison";
 import { FloorPanel } from "../charts/FloorPanel";
 import { SeparationGauge } from "../charts/SeparationGauge";
+import { CardiacPanel } from "../panels/CardiacPanel";
 import { OutcomePanel } from "../panels/OutcomePanel";
 import { Editor } from "./Editor";
 import { useStore, toggle } from "../../state/store";
 import { mono, palette, sans } from "../../theme";
 
-const PANELS = ["Console", "Outcome", "Floors", "Laws", "Separation"] as const;
+const PANELS = ["Console", "Outcome", "Floors", "Laws", "Separation", "Cardiac"] as const;
 
 export function App() {
   const {
@@ -195,6 +196,7 @@ export function App() {
                 width={376}
               />
             )}
+            {activePanel === "Cardiac" && <CardiacPanel width={376} />}
             {activePanel === "Separation" && (
               <SeparationGauge separation={analysis?.separation ?? null} width={376} />
             )}
