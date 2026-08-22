@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "paper": "Mekaneck: A Substrate-Neutral Language for Individuation-Structured Inquiry",
+    "language": ".mck",
+    "seed": 20260816
+  },
+  "checks": {
+    "parsing_and_mandatory_exclusion": {
+      "claim": "well-formed programs parse; seek without 'excluding' is rejected",
+      "theorem": "Prop 4.1, Thm 4.3, Cor 4.4",
+      "good_program_parses": true,
+      "good_program_error": null,
+      "exclusion_free_rejected": true,
+      "rejection_message": "seek requires an 'excluding' clause (position 440): a target is not determined by a positive description alone",
+      "pass": true
+    },
+    "typing_rules": {
+      "claim": "positivity and coherence rules enforced at compile time",
+      "theorem": "Def 5.3 (T-Seek-Pos), Def 5.4 (T-Seek-Coh), Thm 7.2",
+      "conforming_program_types": true,
+      "conforming_error": null,
+      "zero_floor_rejected": true,
+      "zero_floor_message": "T-Seek-Pos: substrate 'Osc' declares floor 0.0 <= 0; a program may not assert an attainable zero residual",
+      "negative_floor_rejected": true,
+      "two_catalysts_rejected": true,
+      "two_catalysts_message": "T-Seek-Coh: via names 2 catalyst(s); a robust support structure requires at least 3 (a 1-cycle is vacuous, a 2-cycle collapses on removal of either member)",
+      "non_mutually_independent_rejected": true,
+      "non_independent_message": "T-Seek-Coh: catalysts 'a' and 'c' are not mutually declared independent",
+      "pass": true
+    },
+    "operational_semantics": {
+      "claim": "progress, preservation, determinism, termination, record, dichotomy",
+      "theorem": "Thm 6.1, 6.2, 6.3, 6.4, 6.5, 6.7",
+      "n_trials": 500,
+      "n_orderings_per_trial": 6,
+      "progress_or_preservation_violations": 0,
+      "determinism_violations": 0,
+      "termination_bound_violations": 0,
+      "record_monotonicity_violations": 0,
+      "dichotomy_violations": 0,
+      "outcomes_resolved": 296,
+      "outcomes_declined": 204,
+      "both_branches_exercised": true,
+      "pass": true
+    },
+    "closure_vs_threshold": {
+      "claim": "threshold terminates on a self-consistent line; closure does not",
+      "theorem": "Thm 6.6, Cor 6.8",
+      "substrate": {
+        "spectral": "cellA",
+        "surrogate": "cellA",
+        "phase": "cellB"
+      },
+      "uncertainty": {
+        "cellA": 5.0,
+        "cellB": 40.0
+      },
+      "theta": 10.0,
+      "threshold_outcome": "Resolved(cellA)",
+      "threshold_invocations": 1,
+      "closure_outcome": "Declined(['cellA', 'cellB'])",
+      "closure_invocations": 2,
+      "threshold_stopped_early": true,
+      "threshold_reports_resolved": true,
+      "closure_reports_declined": true,
+      "interpretation": "The threshold rule reports a confident answer after two agreeing sources; closure invokes the third and reports a contested outcome. Declination is a normal termination, not an error.",
+      "pass": true
+    },
+    "substrate_diagnostics": {
+      "claim": "eta detects uninformative bindings; asymptotic floor is falsifiable while the sample minimum cannot return a non-positive value",
+      "theorem": "Prop 9.2, Rem 9.3",
+      "eta_separated": 0.9924089388776399,
+      "eta_compressed": 0.0021964487619046853,
+      "separated_binding_informative": true,
+      "compressed_binding_flagged": true,
+      "floor_estimators_by_regime": {
+        "realistic_n_50_to_400": {
+          "total_samples": 2695,
+          "sample_minimum_floored": 10.000000000955938,
+          "sample_minimum_unfloored": 2.8177494419826115e-11,
+          "sample_minimum_reports_positive_floor_for_unfloored": true,
+          "sample_minimum_relative_error_unfloored": 2.8177494419826115e-11,
+          "asymptotic_floored": 9.998133515415141,
+          "asymptotic_unfloored": -1.758176948974306e-05,
+          "asymptotic_correct": true
+        },
+        "large_n_50_to_4000": {
+          "total_samples": 80981,
+          "sample_minimum_floored": 10.000000000000325,
+          "sample_minimum_unfloored": 6.08181900287865e-17,
+          "sample_minimum_reports_positive_floor_for_unfloored": true,
+          "sample_minimum_relative_error_unfloored": 6.08181900287865e-17,
+          "asymptotic_floored": 9.99996603945045,
+          "asymptotic_unfloored": -0.0023204032564736227,
+          "asymptotic_correct": true
+        }
+      },
+      "sample_minimum_never_returns_nonpositive": true,
+      "sample_minimum_biased_upward": true,
+      "asymptotic_correct_in_all_regimes": true,
+      "asymptotic_recovers_true_floor": true,
+      "interpretation": "The sample minimum returns a strictly positive value for BOTH a floored and an unfloored process in every regime, so it cannot falsify a positivity claim; it is also biased upward, which by Prop 4.8 of the algebra inflates the powers of events acting near the floor. With very large samples it happens to order the two processes correctly, but ordering is not falsification. The asymptotic estimator recovers the true floor and returns approximately zero when none exists.",
+      "pass": true
+    }
+  },
+  "summary": {
+    "n_checks": 5,
+    "n_passed": 5,
+    "n_failed": 0,
+    "failed": [],
+    "all_passed": true
+  }
+}

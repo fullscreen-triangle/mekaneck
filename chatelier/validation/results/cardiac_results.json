@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "suite": "cardiac substrate, 86-night consumer wearable record",
+    "n_nights": 86
+  },
+  "checks": {
+    "forced_constructions": {
+      "claim": "a coordinate choice can force either sign; neither is evidence",
+      "n_epochs": 8706,
+      "rmssd_max": 143.0,
+      "affine_offset_estimates": {
+        "200": 59.31741632585688,
+        "1000": 859.3174163258567
+      },
+      "affine_always_positive": true,
+      "values_are_integers": true,
+      "epochs_exactly_at_median": 157,
+      "centred_sample_minimum": 0.0,
+      "note": "The affine map returns a positive floor for every scale above max(rmssd), so its positivity is guaranteed. The centred map returns zero because integer data places epochs exactly at the median. Neither measures the physiology.",
+      "pass": true
+    },
+    "stage_floor": {
+      "claim": "stage-level cardiac separation has no positive floor",
+      "resolution": "5 minutes",
+      "n_separations": 321,
+      "n_nights": 86,
+      "exactly_zero": 9,
+      "zero_is_attainable": true,
+      "sample_minimum": 0.0,
+      "asymptotic": -0.09987055655978475,
+      "asymptotic_sd_over_orderings": 0.17841581083203686,
+      "fraction_of_orderings_positive": 0.140625,
+      "sign_is_stable_under_reordering": false,
+      "supports_positive_floor": false,
+      "note": "Nine of the separations are exactly zero: on those nights two stages were indistinguishable in RMSSD, so the estimator could have returned a positive value and did not. The intercept is reported as a mean over orderings because a single pass through the file is not a function of the sample: one fixed ordering gives +0.029, the mean is negative, and the sign flips with the number of stages. Only the attained zero is stable.",
+      "pass": true
+    },
+    "intraday_floor": {
+      "claim": "the measured floor is the instrument quantum, not the physiology",
+      "resolution": "5 seconds",
+      "series": {
+        "intraday_base.json": {
+          "n_samples": 8881,
+          "hr_min": 45.0,
+          "hr_max": 185.0,
+          "integer_quantised": true,
+          "n_separations": 8880,
+          "exactly_zero": 1642,
+          "zero_fraction": 0.1849099099099099,
+          "smallest_nonzero": 1.0,
+          "fraction_at_quantum": 0.6540480795799944,
+          "sample_minimum": 0.0,
+          "asymptotic": 0.0
+        },
+        "intrasecond_heart_fitbit.json": {
+          "n_samples": 8897,
+          "hr_min": 44.0,
+          "hr_max": 187.0,
+          "integer_quantised": true,
+          "n_separations": 8896,
+          "exactly_zero": 1431,
+          "zero_fraction": 0.1608588129496403,
+          "smallest_nonzero": 1.0,
+          "fraction_at_quantum": 0.6625586068318822,
+          "sample_minimum": 0.0,
+          "asymptotic": 0.0
+        },
+        "intrasecond_running.json": {
+          "n_samples": 7526,
+          "hr_min": 45.0,
+          "hr_max": 186.0,
+          "integer_quantised": true,
+          "n_separations": 7525,
+          "exactly_zero": 1069,
+          "zero_fraction": 0.14205980066445184,
+          "smallest_nonzero": 1.0,
+          "fraction_at_quantum": 0.6240706319702602,
+          "sample_minimum": 0.0,
+          "asymptotic": 0.0
+        }
+      },
+      "all_integer_quantised": true,
+      "quantum_is_one_bpm": true,
+      "no_series_supports_positive_floor": true,
+      "note": "Heart rate is reported as an integer, so a separation of zero means the device reported the same value twice rather than that two states coincided. Below 1 bpm the record cannot distinguish states at all. A floor estimated from this data measures the sensor, and a substrate binding must say so.",
+      "pass": true
+    },
+    "estimator_power": {
+      "claim": "the null result is not a power failure",
+      "n_used": 321,
+      "rows": [
+        {
+          "true_floor": 0.0,
+          "median_estimate": -0.07672604140505378,
+          "called_positive": 0.0
+        },
+        {
+          "true_floor": 0.5,
+          "median_estimate": 0.4217482341841742,
+          "called_positive": 1.0
+        },
+        {
+          "true_floor": 1.0,
+          "median_estimate": 0.9235023583642709,
+          "called_positive": 1.0
+        },
+        {
+          "true_floor": 2.0,
+          "median_estimate": 1.921553114929156,
+          "called_positive": 1.0
+        },
+        {
+          "true_floor": 5.0,
+          "median_estimate": 4.923264090499747,
+          "called_positive": 1.0
+        }
+      ],
+      "power_at_1ms": 1.0,
+      "false_positive_rate_at_zero": 0.0,
+      "note": "At this sample size the estimator detects a 1 ms floor almost always and returns approximately zero when there is none, so the negative result on the real record is about the data.",
+      "pass": true
+    },
+    "separation_statistic": {
+      "claim": "stage transitions provide event types for the separation statistic",
+      "n_types": 12,
+      "n_events": 2856,
+      "type_means": {
+        "awake->deep": -0.0095,
+        "awake->light": -0.0096,
+        "awake->rem": 0.0095,
+        "deep->awake": -0.1257,
+        "deep->light": -0.0825,
+        "deep->rem": 0.0712,
+        "light->awake": -0.0361,
+        "light->deep": 0.0068,
+        "light->rem": 0.0367,
+        "rem->awake": 0.012,
+        "rem->deep": -0.0486,
+        "rem->light": -0.0532
+      },
+      "between": 0.002634785996412,
+      "within": 0.05047202693605324,
+      "eta": 0.049612956434847616,
+      "informative": false,
+      "note": "eta must be reported alongside any correlation computed on this substrate: below the flagging threshold a law comparison cannot adjudicate the typing, whatever it reports.",
+      "pass": true
+    }
+  },
+  "finding": "Cardiac separation cost has no positive floor on this record at either resolution tested. The measured floor is the instrument quantum: heart rate is reported as an integer, so no separation below 1 bpm is representable. A substrate binding over this data must declare a falsifiable estimator and expect it to fail, and a program requiring a positive floor will not type-check over it.",
+  "summary": {
+    "n_checks": 5,
+    "n_passed": 5,
+    "n_failed": 0,
+    "failed": [],
+    "all_passed": true
+  }
+}

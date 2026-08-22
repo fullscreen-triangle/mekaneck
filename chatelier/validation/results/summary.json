@@ -1,0 +1,60 @@
+{
+  "suites": {
+    "algebra": {
+      "paper": "A Residual Algebra for Catalytic Composition",
+      "results_file": "algebra_results.json",
+      "n_checks": 9,
+      "n_passed": 9,
+      "n_failed": 0,
+      "failed": [],
+      "all_passed": true,
+      "degeneracy_note": {
+        "compressed_eta": 0.00011977322918449551,
+        "compressed_test_has_power": false,
+        "expected": "eta near 0, test_has_power False -- absence of power, not disconfirmation"
+      }
+    },
+    "kernel": {
+      "paper": "A Semantically Inert Microkernel",
+      "results_file": "kernel_results.json",
+      "n_checks": 7,
+      "n_passed": 7,
+      "n_failed": 0,
+      "failed": [],
+      "all_passed": true
+    },
+    "mekaneck": {
+      "paper": "Mekaneck: Substrate-Neutral Language for Individuation-Structured Inquiry",
+      "results_file": "mekaneck_results.json",
+      "n_checks": 5,
+      "n_passed": 5,
+      "n_failed": 0,
+      "failed": [],
+      "all_passed": true
+    },
+    "policy": {
+      "paper": "Policy: bounded-budget selection, phase exclusion, relay drift",
+      "results_file": "policy_results.json",
+      "n_checks": 6,
+      "n_passed": 6,
+      "n_failed": 0,
+      "failed": [],
+      "all_passed": true
+    },
+    "cardiac": {
+      "paper": "Cardiac substrate: the floor obligation on an 86-night record",
+      "results_file": "cardiac_results.json",
+      "n_checks": 5,
+      "n_passed": 5,
+      "n_failed": 0,
+      "failed": [],
+      "all_passed": true
+    }
+  },
+  "totals": {
+    "n_checks": 32,
+    "n_passed": 32,
+    "n_failed": 0,
+    "all_passed": true
+  }
+}

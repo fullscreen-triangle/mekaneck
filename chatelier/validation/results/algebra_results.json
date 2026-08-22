@@ -1,0 +1,245 @@
+{
+  "meta": {
+    "paper": "A Residual Algebra for Catalytic Composition",
+    "seed": 20260816,
+    "n_cascades_per_regime": 4000
+  },
+  "checks": {
+    "telescoping_obstruction": {
+      "separated": {
+        "claim": "instance-specific multiplicative prediction == measured net power",
+        "theorem": "Thm 5.2 (telescoping obstruction)",
+        "max_abs_deviation": 2.220446049250313e-16,
+        "tolerance": 1e-12,
+        "identity_holds": true,
+        "pearson_r": 1.0,
+        "interpretation": "Agreement is algebraic, not empirical. An r of 1.0 here is a restatement of the composition law and is evidence of nothing.",
+        "pass": true
+      },
+      "intermediate": {
+        "claim": "instance-specific multiplicative prediction == measured net power",
+        "theorem": "Thm 5.2 (telescoping obstruction)",
+        "max_abs_deviation": 2.220446049250313e-16,
+        "tolerance": 1e-12,
+        "identity_holds": true,
+        "pearson_r": 1.0,
+        "interpretation": "Agreement is algebraic, not empirical. An r of 1.0 here is a restatement of the composition law and is evidence of nothing.",
+        "pass": true
+      },
+      "compressed": {
+        "claim": "instance-specific multiplicative prediction == measured net power",
+        "theorem": "Thm 5.2 (telescoping obstruction)",
+        "max_abs_deviation": 2.220446049250313e-16,
+        "tolerance": 1e-12,
+        "identity_holds": true,
+        "pearson_r": 1.0,
+        "interpretation": "Agreement is algebraic, not empirical. An r of 1.0 here is a restatement of the composition law and is evidence of nothing.",
+        "pass": true
+      }
+    },
+    "type_averaged_test": {
+      "separated": {
+        "regime": "separated",
+        "claim": "type-averaged test has a genuine null (Thm 5.5)",
+        "type_means": {
+          "A->B": 0.5496255116792838,
+          "A->C": 0.42041954659757946,
+          "B->C": 0.2996022376334598,
+          "C->A": 0.08058432153251026
+        },
+        "type_separation_eta": 0.9708503209643786,
+        "n_cascades": 4000,
+        "max_abs_discrepancy": 0.13743058715630868,
+        "non_degenerate": true,
+        "laws": {
+          "multiplicative": {
+            "pearson_r": 0.9881934000377351,
+            "rmse": 0.019365428396178264
+          },
+          "additive": {
+            "pearson_r": 0.8411979529635154,
+            "rmse": 0.16910789999197418
+          },
+          "geometric_mean": {
+            "pearson_r": 0.8181283678045499,
+            "rmse": 0.4495255298093043
+          },
+          "maximum": {
+            "pearson_r": 0.7345969804866469,
+            "rmse": 0.31287898594148816
+          }
+        },
+        "best_law_by_r": "multiplicative",
+        "test_has_power": true,
+        "pass": true
+      },
+      "intermediate": {
+        "regime": "intermediate",
+        "claim": "type-averaged test has a genuine null (Thm 5.5)",
+        "type_means": {
+          "C->A": 0.23790005688308008,
+          "A->C": 0.3305350506943549,
+          "B->C": 0.30067695394905486,
+          "A->B": 0.35838295403161774
+        },
+        "type_separation_eta": 0.2383084095557001,
+        "n_cascades": 4000,
+        "max_abs_discrepancy": 0.22814169079547847,
+        "non_degenerate": true,
+        "laws": {
+          "multiplicative": {
+            "pearson_r": 0.8065864250399901,
+            "rmse": 0.05492782912600079
+          },
+          "additive": {
+            "pearson_r": 0.6231574975816107,
+            "rmse": 0.22424716334292466
+          },
+          "geometric_mean": {
+            "pearson_r": 0.30777312476528496,
+            "rmse": 0.46111404016310326
+          },
+          "maximum": {
+            "pearson_r": 0.33032015698884,
+            "rmse": 0.42279514252148803
+          }
+        },
+        "best_law_by_r": "multiplicative",
+        "test_has_power": true,
+        "pass": true
+      },
+      "compressed": {
+        "regime": "compressed",
+        "claim": "type-averaged test has a genuine null (Thm 5.5)",
+        "type_means": {
+          "A->C": 0.3024132817909575,
+          "A->B": 0.30029040123481665,
+          "C->A": 0.3000872864029694,
+          "B->C": 0.3031143555543319
+        },
+        "type_separation_eta": 0.00011977322918449551,
+        "n_cascades": 4000,
+        "max_abs_discrepancy": 0.4158135124175324,
+        "non_degenerate": true,
+        "laws": {
+          "multiplicative": {
+            "pearson_r": 0.6395233126739974,
+            "rmse": 0.08558850479980051
+          },
+          "additive": {
+            "pearson_r": 0.5891022045188267,
+            "rmse": 0.2351204136043112
+          },
+          "geometric_mean": {
+            "pearson_r": 0.033409621040822325,
+            "rmse": 0.46331110524941477
+          },
+          "maximum": {
+            "pearson_r": 0.15435223550180072,
+            "rmse": 0.4620630021321094
+          }
+        },
+        "best_law_by_r": "multiplicative",
+        "test_has_power": false,
+        "pass": true
+      }
+    },
+    "floor_estimators": {
+      "claim": "asymptotic floor estimator is falsifiable; sample-minimum is not",
+      "theorem": "Rem 3.5, Prop 4.8",
+      "estimates": {
+        "floored_beta_10": {
+          "sample_minimum_estimate": 10.000000000000414,
+          "sample_minimum_is_positive": true,
+          "asymptotic_estimate": 10.000000335201994,
+          "asymptotic_is_positive": true
+        },
+        "unfloored_beta_0": {
+          "sample_minimum_estimate": 6.08181900287865e-17,
+          "sample_minimum_is_positive": true,
+          "asymptotic_estimate": -5.279298154338491e-06,
+          "asymptotic_is_positive": false
+        }
+      },
+      "true_floor_floored_case": 10.0,
+      "sample_minimum_never_returns_nonpositive": true,
+      "sample_minimum_biased_upward": true,
+      "asymptotic_discriminates": true,
+      "asymptotic_recovers_true_floor": true,
+      "interpretation": "The sample minimum is strictly positive for BOTH processes, so it cannot falsify a positivity claim, and it is biased upward, which inflates near-floor catalytic powers (Prop 4.8). The asymptotic estimator recovers the true floor and returns approximately zero when none exists.",
+      "pass": true
+    },
+    "convergence_criterion": {
+      "claim": "gap -> 0 iff sum(kappa) diverges",
+      "theorem": "Thm 4.6",
+      "stages_n": [
+        1000,
+        10000,
+        100000,
+        1000000
+      ],
+      "summable_case": {
+        "kappa_i": "2^-(i+1), sum converges to 1",
+        "residual_fraction_trajectory": [
+          0.2887880950866025,
+          0.2887880950866025,
+          0.2887880950866025,
+          0.2887880950866025
+        ],
+        "limit": 0.2887880950866025,
+        "stabilised": true,
+        "limit_is_positive": true,
+        "converges_to_floor": false
+      },
+      "divergent_case": {
+        "kappa_i": "1/(i+2), sum diverges",
+        "residual_fraction_trajectory": [
+          0.0009990009990010027,
+          9.999000099989867e-05,
+          9.999900000997944e-06,
+          9.99998999999876e-07
+        ],
+        "closed_form_1_over_n_plus_1": [
+          0.000999000999000999,
+          9.999000099990002e-05,
+          9.99990000099999e-06,
+          9.99999000001e-07
+        ],
+        "matches_closed_form": true,
+        "monotone_decreasing": true,
+        "tends_to_zero": true,
+        "converges_to_floor": true
+      },
+      "final_gap_summable": 28.878809508660254,
+      "final_gap_divergent": 9.999989999998761e-05,
+      "interpretation": "Divergent-sum cascade drives the gap to zero but only harmonically (exactly 1/(n+1)); a fixed tolerance at finite n tests the tolerance, not the theorem.",
+      "pass": true
+    },
+    "monoid_structure": {
+      "claim": "composition is associative, commutative, identity 0, absorbing 1",
+      "theorem": "Cor 4.2",
+      "operands": [
+        -0.2700532512653556,
+        -0.4108962272237562,
+        0.8628012019888169
+      ],
+      "associativity_error": 1.1102230246251565e-16,
+      "commutativity_error": 0.0,
+      "identity_error": 1.1102230246251565e-16,
+      "absorbing_error": 0.0,
+      "pass": true
+    }
+  },
+  "summary": {
+    "n_checks": 9,
+    "n_passed": 9,
+    "n_failed": 0,
+    "failed": [],
+    "all_passed": true,
+    "degeneracy_note": {
+      "compressed_eta": 0.00011977322918449551,
+      "compressed_test_has_power": false,
+      "expected": "eta near 0, test_has_power False -- absence of power, not disconfirmation"
+    }
+  }
+}

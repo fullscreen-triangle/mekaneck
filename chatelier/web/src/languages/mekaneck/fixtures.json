@@ -1,0 +1,228 @@
+[
+  {
+    "name": "well_formed",
+    "rationale": "A conforming program produces no diagnostics at all.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": []
+  },
+  {
+    "name": "missing_exclusion",
+    "rationale": "Thm 4.3: a positive description alone does not determine a target, so a seek without `excluding` is a form the language does not contain. Rejected at parse time, before typing.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 5,
+        "column": 18,
+        "message_contains": "excluding"
+      }
+    ]
+  },
+  {
+    "name": "zero_floor",
+    "rationale": "T-Seek-Pos: a program may not assert an attainable zero residual.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": 0.0
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 1,
+        "column": 74,
+        "message_contains": "positive"
+      }
+    ]
+  },
+  {
+    "name": "negative_floor",
+    "rationale": "T-Seek-Pos again, with a floor below zero rather than at it.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": -3.0
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 1,
+        "column": 74,
+        "message_contains": "positive"
+      }
+    ]
+  },
+  {
+    "name": "two_catalysts",
+    "rationale": "T-Seek-Coh: no support structure shorter than three survives the loss of a member (a 1-cycle is vacuous, a 2-cycle collapses).",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 5,
+        "column": 35,
+        "message_contains": "catalyst"
+      }
+    ]
+  },
+  {
+    "name": "not_mutually_independent",
+    "rationale": "T-Seek-Coh checks the independence relation, not merely the count: three catalysts that are not pairwise declared independent fail.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h();\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 5,
+        "column": 35,
+        "message_contains": "catalyst"
+      }
+    ]
+  },
+  {
+    "name": "unknown_catalyst_in_via",
+    "rationale": "A via clause naming a catalyst that was never declared.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, zz) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 5,
+        "column": 35,
+        "message_contains": "catalyst"
+      }
+    ]
+  },
+  {
+    "name": "duplicate_catalyst_in_via",
+    "rationale": "Naming one catalyst twice does not make a triad.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, a, b) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 5,
+        "column": 35,
+        "message_contains": "catalyst"
+      }
+    ]
+  },
+  {
+    "name": "independence_names_unknown",
+    "rationale": "An independence declaration referring to a catalyst that does not exist is unverifiable in a way the checker can detect.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, ghost;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 2,
+        "column": 1,
+        "message_contains": "catalyst"
+      }
+    ]
+  },
+  {
+    "name": "report_unbound",
+    "rationale": "Reporting a name that was never bound.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport nope;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 6,
+        "column": 1,
+        "message_contains": "bound"
+      }
+    ]
+  },
+  {
+    "name": "no_substrate",
+    "rationale": "Without a substrate there is no floor obligation for a seek to satisfy.",
+    "source": "catalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 1,
+        "column": 1,
+        "message_contains": "substrate"
+      }
+    ]
+  },
+  {
+    "name": "missing_substrate_field",
+    "rationale": "The four obligations are positional; a missing one is named.",
+    "source": "substrate Osc { receivers : r(); observable : o(); floor : f(); }\ncatalyst a : f() independent b, c;\ncatalyst b : g() independent a, c;\ncatalyst c : h() independent a, b;\nlet x = seek t() excluding rest() via (a, b, c) until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 1,
+        "column": 52,
+        "message_contains": "events"
+      }
+    ]
+  },
+  {
+    "name": "unterminated_string",
+    "rationale": "Lexical: a string literal running to end of line.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\nlet x = seek t(\"open) excluding rest() until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 2,
+        "column": 16,
+        "message_contains": "string"
+      }
+    ]
+  },
+  {
+    "name": "unexpected_character",
+    "rationale": "Lexical: a character no token may begin with.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\nlet x @ y;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": [
+      {
+        "severity": "error",
+        "line": 2,
+        "column": 7,
+        "message_contains": "character"
+      }
+    ]
+  },
+  {
+    "name": "no_via_clause_is_legal",
+    "rationale": "T-Seek-Coh applies only to an explicit chain, so omitting `via` is well typed — the rule constrains what is named, not that anything is.",
+    "source": "substrate Osc { receivers : r(); observable : o(); events : e(); floor : asymptotic(); }\nlet x = seek t() excluding rest() until closure;\nreport x;",
+    "floors": {
+      "Osc": 12.5
+    },
+    "expected": []
+  }
+]

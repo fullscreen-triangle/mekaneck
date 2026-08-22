@@ -5,9 +5,35 @@ this displays it.
 
 ```bash
 npm install
-npm test            # 40 tests
+npm run dev         # http://127.0.0.1:5173
+npm test            # 61 tests
 npm run typecheck
+npm run build       # type-checks, then emits dist/
 ```
+
+## Two views
+
+The landing page (`#/`) lays the framework out as a paper; the editor
+(`#/editor`) is entered from it. Every figure the landing page states is read
+from `public/dataset/cardiac_charts.json`, which the validation suite emits, so
+the prose cannot drift from the reported numbers. If the file is absent the
+sentences fall back to their qualitative form rather than printing a number
+nothing computed — there is a test for that.
+
+## Deployment
+
+The repository root carries a `vercel.json` that builds this directory. Only
+the derived `cardiac_charts.json` is committed; the raw 86-night wearable
+records behind it stay local, so regenerate them from your own copy with
+`python validation/build_cardiac_charts.py` if you need to rebuild the
+aggregate.
+
+A **deployed** instance is the landing page plus a read-only editor. It cannot
+pair with a binary: a page served over https may not open a websocket to
+`127.0.0.1`, and that restriction is worth keeping rather than working around
+— it is the same-origin rule doing exactly what the local-only guarantee
+claims. To run programs, clone the repository and serve this directory
+yourself alongside `mekaneck serve`.
 
 ## What the interface is constrained not to do
 

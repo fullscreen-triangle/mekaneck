@@ -270,11 +270,33 @@ $RECYCLE.BIN/
 # ============================================================================
 
 # Validation results
-results/
+/results/
 blindhorse/results/
 *.json
 !package.json
 !package-lock.json
+!tsconfig*.json
+!vercel.json
+
+# Anything under a source tree is code, not emitted output. The shared
+# diagnostic fixtures live here and pin the browser checker to the binary, so
+# excluding them silently broke the build rather than only the tests.
+!chatelier/web/src/**/*.json
+
+# The browser application ships the *derived* chart data it fetches. The
+# blanket *.json above was excluding the whole of web/public, so the deployed
+# landing page and cardiac panel fetched a 404 and fell back to their no-data
+# wording.
+#
+# Only the aggregate is committed. The raw per-night records behind it are a
+# personal wearable trace -- dated bedtimes, per-night physiology -- and this
+# repository is public, so they stay local. Rebuild the aggregate from a local
+# copy with `python validation/build_cardiac_charts.py`.
+!chatelier/web/public/dataset/cardiac_charts.json
+
+# The emitted validation results are what the papers and the README report,
+# so they are reviewable artefacts rather than scratch output.
+!chatelier/validation/results/*.json
 
 # Generated visualizations (keep examples in git)
 results/visualizations/*.png

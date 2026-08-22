@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "suite": "policy extensions",
+    "seed": 20260819
+  },
+  "checks": {
+    "relay_drift": {
+      "claim": "relay drift is the composition law; fidelity decays geometrically",
+      "max_abs_deviation": 2.220446049250313e-16,
+      "is_identity": true,
+      "decay_is_geometric": true,
+      "fidelity_after_10_relays_at_k02": 0.10737418240000006,
+      "rows": [
+        {
+          "n": 1,
+          "example_survive": 0.9469308661791862
+        },
+        {
+          "n": 2,
+          "example_survive": 0.6882487922980973
+        },
+        {
+          "n": 3,
+          "example_survive": 0.4485732727918996
+        },
+        {
+          "n": 5,
+          "example_survive": 0.37254227741107543
+        },
+        {
+          "n": 10,
+          "example_survive": 0.02011298823888902
+        },
+        {
+          "n": 25,
+          "example_survive": 0.0031017083799630136
+        }
+      ],
+      "pass": true
+    },
+    "threshold_general": {
+      "claim": "greedy threshold is within one response of the integer optimum",
+      "trials": 600,
+      "exactly_optimal": 444,
+      "exactly_optimal_fraction": 0.74,
+      "worst_gap_in_units_of_largest_gain": 0.6619492621082809,
+      "bound_violations": 0,
+      "pass": true
+    },
+    "threshold_floor_additive": {
+      "claim": "exact optimality holds for divisible floor-sized responses, and fails for indivisible bundles",
+      "trials_each": 400,
+      "divisible_suboptimal_cases": 0,
+      "indivisible_suboptimal_cases": 73,
+      "indivisible_counterexample": {
+        "costs": [
+          0.5,
+          0.5,
+          0.75,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "gains": [
+          0.2,
+          0.2,
+          0.3,
+          0.4,
+          0.6,
+          0.8
+        ],
+        "budget": 1.75,
+        "greedy": 1.2,
+        "optimum": 1.4
+      },
+      "note": "Floor-additivity means a response is an integer number of independently selectable floor units. Bundling those units into an indivisible response makes the problem 0/1 knapsack, where greedy is only within one item of the optimum. The exact claim must therefore be stated for divisible repertoires only.",
+      "pass": true
+    },
+    "shadow_price": {
+      "claim": "the shadow price rises as attention narrows",
+      "budgets": [
+        0.4,
+        0.6434782608695653,
+        0.8869565217391304,
+        1.1304347826086958,
+        1.373913043478261,
+        1.617391304347826,
+        1.8608695652173912,
+        2.1043478260869564,
+        2.3478260869565215,
+        2.5913043478260867,
+        2.834782608695652,
+        3.078260869565217,
+        3.3217391304347825,
+        3.5652173913043477,
+        3.808695652173913,
+        4.052173913043478,
+        4.2956521739130435,
+        4.539130434782609,
+        4.782608695652174,
+        5.026086956521739,
+        5.269565217391304,
+        5.51304347826087,
+        5.756521739130434,
+        6.0
+      ],
+      "prices": [
+        2.448034709148767,
+        2.3033508961210587,
+        2.2332735949660103,
+        2.2332735949660103,
+        2.126479227688899,
+        1.8486345369935924,
+        1.8486345369935924,
+        1.4200624353555176,
+        0.9819098067867305,
+        0.9819098067867305,
+        0.9819098067867305,
+        0.9819098067867305,
+        0.9713055150824272,
+        0.7966738002780428,
+        0.7966738002780428,
+        0.7966738002780428,
+        0.7966738002780428,
+        0.7851363200327782,
+        0.3480138949582494,
+        0.3480138949582494,
+        0.14012929979323702,
+        0.14012929979323702,
+        0.12218356628286352,
+        0.12218356628286352
+      ],
+      "committed": [
+        2,
+        2,
+        3,
+        4,
+        4,
+        5,
+        6,
+        6,
+        7,
+        8,
+        9,
+        9,
+        8,
+        9,
+        10,
+        10,
+        11,
+        10,
+        11,
+        11,
+        12,
+        12,
+        13,
+        13
+      ],
+      "price_non_increasing_in_budget": true,
+      "commitment_grows_with_budget": true,
+      "price_at_tightest": 2.448034709148767,
+      "price_at_loosest": 0.12218356628286352,
+      "pass": true
+    },
+    "coherence_pre_commitment": {
+      "claim": "coherence is decidable pre-commitment from local transports; a cycle basis decides EXACT coherence but does not bound the maximum holonomy",
+      "trials": 300,
+      "n_cycles_enumerated": 14,
+      "n_basis_cycles": 3,
+      "zero_holonomy_disagreements": 0,
+      "basis_underestimates_max_count": 250,
+      "basis_underestimate_witness": {
+        "basis_max": 1.781591,
+        "all_cycles_max": 2.339202,
+        "ratio": 1.313
+      },
+      "ordinal_test_disagreements_with_definition": 0,
+      "responses_refused": 149,
+      "tempting_responses_refused": 75,
+      "note": "The basis result must be stated for exact coherence only. Ranking degrees of incoherence requires a cycle set closed under the composition being ranked, not merely a spanning basis.",
+      "pass": true
+    },
+    "phase_exclusion": {
+      "claim": "phase exclusion imposes a throughput ceiling independent of budget",
+      "rows": [
+        {
+          "construct_fraction": 0.0,
+          "committed": 2000,
+          "observed_commit_fraction": 1.0
+        },
+        {
+          "construct_fraction": 0.25,
+          "committed": 1507,
+          "observed_commit_fraction": 0.7535
+        },
+        {
+          "construct_fraction": 0.5,
+          "committed": 992,
+          "observed_commit_fraction": 0.496
+        },
+        {
+          "construct_fraction": 0.75,
+          "committed": 495,
+          "observed_commit_fraction": 0.2475
+        }
+      ],
+      "max_deviation_from_predicted": 0.0040000000000000036,
+      "committed_decreases_with_construction": true,
+      "pass": true
+    }
+  },
+  "summary": {
+    "n_checks": 6,
+    "n_passed": 6,
+    "n_failed": 0,
+    "failed": [],
+    "all_passed": true
+  }
+}

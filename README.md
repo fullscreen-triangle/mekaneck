@@ -169,7 +169,7 @@ Four suites, run independently.
 
 ```bash
 cargo test                          # Rust:       202 tests
-cd web && npm test                  # TypeScript:  59 tests
+cd web && npm test                  # TypeScript:  61 tests
 python validation/run_all.py        # Python:      32 checks
 
 mekaneck serve --port 8731          # then, against the live binary:

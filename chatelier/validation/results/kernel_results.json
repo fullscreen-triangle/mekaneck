@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "paper": "A Semantically Inert Microkernel",
+    "seed": 20260816
+  },
+  "checks": {
+    "inertia_and_completion": {
+      "claim": "every chunk runs; anomalies become ordinary values; no exit code",
+      "theorem": "Thm 3.1, Cor 3.2, Cor 3.3",
+      "n_chunks": 5,
+      "n_values_emitted": 5,
+      "n_error_values": 2,
+      "n_normal_values": 3,
+      "all_chunks_evaluated": true,
+      "non_raising_chunks_all_ran": true,
+      "kernel_exposes_exit_code": false,
+      "committed_record": 5,
+      "pass": true
+    },
+    "convergence_monoid": {
+      "claim": "merge is associative, commutative, idempotent",
+      "theorem": "Thm 4.1",
+      "n_merge_orders_tested": 6,
+      "n_distinct_fingerprints": 1,
+      "order_independent": true,
+      "associative": true,
+      "idempotent": true,
+      "converged_node_chunk_count": 4,
+      "convergence_occurred": true,
+      "pass": true
+    },
+    "protocol_fingerprint": {
+      "claim": "fingerprint stable under order, discriminates chunk/identity changes",
+      "theorem": "Thm 5.3",
+      "fingerprint": "97d87512a4e2dc04",
+      "stable_across_order": true,
+      "detects_chunk_change": true,
+      "detects_identity_change": true,
+      "pass": true
+    },
+    "trajectory_emergence": {
+      "claim": "identical protocol, differing trajectories",
+      "theorem": "Thm 5.1",
+      "protocol_fingerprint_a": "ad5799a0c9a41a24",
+      "protocol_fingerprint_b": "ad5799a0c9a41a24",
+      "same_protocol": true,
+      "trajectory_a": [
+        [
+          "n1",
+          "2",
+          "n2"
+        ],
+        [
+          "n2",
+          "TERMINAL_n2",
+          "n4"
+        ]
+      ],
+      "trajectory_b": [
+        [
+          "n1",
+          "3",
+          "n3"
+        ],
+        [
+          "n3",
+          "TERMINAL_n3",
+          "n4"
+        ]
+      ],
+      "different_trajectory": true,
+      "pass": true
+    },
+    "trajectory_opacity": {
+      "claim": "same terminal store => no store-function separates trajectories",
+      "theorem": "Thm 5.4, Cor 5.5",
+      "terminal_store_a": [
+        "TERMINAL"
+      ],
+      "terminal_store_b": [
+        "TERMINAL"
+      ],
+      "same_terminal_store": true,
+      "different_interior_trajectory": true,
+      "store_functions_probed": [
+        "len",
+        "sorted_repr",
+        "hash"
+      ],
+      "store_functions_that_separate": [],
+      "pass": true
+    },
+    "monotone_record": {
+      "claim": "record strictly increases; recurrence of configuration is not return",
+      "theorem": "Thm 6.1, Cor 6.2",
+      "record_trace": [
+        0,
+        1,
+        2
+      ],
+      "strictly_increasing": true,
+      "never_decreases": true,
+      "value_configuration_recurred": true,
+      "records_distinguish_states": true,
+      "no_restart_on_unchanged_bag": true,
+      "pass": true
+    },
+    "scheduler_soundness": {
+      "claim": "no redundant re-execution, no starvation, termination",
+      "theorem": "Thm 7.1",
+      "n_nodes": 12,
+      "chunks_per_node": 3,
+      "total_chunks": 36,
+      "committed_record_after_sweep": 36,
+      "all_chunks_evaluated": true,
+      "terminated": true,
+      "executions": 12,
+      "no_redundant_execution": true,
+      "late_chunk_served": true,
+      "pass": true
+    }
+  },
+  "summary": {
+    "n_checks": 7,
+    "n_passed": 7,
+    "n_failed": 0,
+    "failed": [],
+    "all_passed": true
+  }
+}

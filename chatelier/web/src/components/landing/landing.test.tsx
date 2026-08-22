@@ -10,6 +10,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { App } from "../shell/App";
 import { Landing } from "./Landing";
 
 /** The shape the chart builder emits, with values from the 86-night record. */
@@ -93,5 +94,40 @@ describe("landing page", () => {
     // invites the reader to take it as a result under any estimator.
     await waitFor(() => expect(container.textContent).toContain("0.988"));
     expect(container.textContent).toMatch(/type-averaged/i);
+  });
+});
+
+describe("deployed instance", () => {
+  /**
+   * A deployed page cannot pair with a local binary: the browser blocks a
+   * ws:// connection to loopback from an https origin. Showing the usual
+   * "run `mekaneck serve`" prompt there sends the reader after a fault that
+   * is not theirs and that no action of theirs can fix.
+   */
+  it("says why pairing is impossible over https rather than prompting for a token", () => {
+    const orig = window.location;
+    // jsdom's location is read-only; replace it for the duration of the test.
+    Object.defineProperty(window, "location", {
+      value: { ...orig, protocol: "https:", hash: "" },
+      writable: true,
+      configurable: true,
+    });
+
+    try {
+      const { container } = render(<App />);
+      expect(container.textContent).toMatch(/read-only/i);
+      expect(container.textContent).not.toMatch(/enter its token/i);
+    } finally {
+      Object.defineProperty(window, "location", {
+        value: orig,
+        writable: true,
+        configurable: true,
+      });
+    }
+  });
+
+  it("keeps the pairing prompt when served locally", () => {
+    const { container } = render(<App />);
+    expect(container.textContent).toMatch(/mekaneck serve/i);
   });
 });

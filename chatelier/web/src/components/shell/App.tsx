@@ -209,6 +209,20 @@ export function App() {
   );
 }
 
+/**
+ * Whether this origin is permitted to open a loopback websocket at all.
+ *
+ * A page served over https may not connect to `ws://127.0.0.1`; the browser
+ * refuses it as mixed content before the binary is ever contacted. That is
+ * the same-origin rule enforcing the guarantee the tool makes, so the
+ * interface reports it rather than presenting a pairing prompt that cannot
+ * succeed.
+ */
+function canPairFromHere(): boolean {
+  if (typeof window === "undefined") return true;
+  return window.location.protocol !== "https:";
+}
+
 function ConnectionBanner({ state }: { state: ReturnType<typeof useStore.getState>["connection"] }) {
   const [text, colour] =
     state.status === "ready"
@@ -219,7 +233,17 @@ function ConnectionBanner({ state }: { state: ReturnType<typeof useStore.getStat
           ? [state.reason, palette.warn]
           : state.status === "connecting"
             ? ["Connecting…", palette.textDim]
-            : ["Not paired — run `mekaneck serve` and enter its token", palette.textDim];
+            : [
+                // Over https the browser blocks a ws:// connection to
+                // loopback as mixed content, so pairing is impossible on a
+                // deployed instance however the user is instructed. Telling
+                // them to run `mekaneck serve` there would send them after a
+                // fault that is not theirs.
+                canPairFromHere()
+                  ? "Not paired — run `mekaneck serve` and enter its token"
+                  : "Read-only: a page served over https cannot reach a binary on 127.0.0.1. Clone the repository to run programs.",
+                palette.textDim,
+              ];
 
   return (
     <div
