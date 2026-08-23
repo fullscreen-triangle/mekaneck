@@ -18,10 +18,11 @@ import { SeparationGauge } from "../charts/SeparationGauge";
 import { CardiacPanel } from "../panels/CardiacPanel";
 import { OutcomePanel } from "../panels/OutcomePanel";
 import { Editor } from "./Editor";
+import { Pairing, canPairFromHere } from "./Pairing";
 import { useStore, toggle } from "../../state/store";
 import { mono, palette, sans } from "../../theme";
 
-const PANELS = ["Console", "Outcome", "Floors", "Laws", "Separation", "Cardiac"] as const;
+const PANELS = ["Pair", "Console", "Outcome", "Floors", "Laws", "Separation", "Cardiac"] as const;
 
 export function App() {
   const {
@@ -174,6 +175,7 @@ export function App() {
           )}
 
           <div style={{ flex: 1, overflow: "auto", padding: 10 }}>
+            {activePanel === "Pair" && <Pairing />}
             {activePanel === "Console" && <Console log={log} />}
             {activePanel === "Outcome" && <OutcomePanel bindings={bindings} width={376} />}
             {activePanel === "Floors" && (
@@ -209,20 +211,6 @@ export function App() {
   );
 }
 
-/**
- * Whether this origin is permitted to open a loopback websocket at all.
- *
- * A page served over https may not connect to `ws://127.0.0.1`; the browser
- * refuses it as mixed content before the binary is ever contacted. That is
- * the same-origin rule enforcing the guarantee the tool makes, so the
- * interface reports it rather than presenting a pairing prompt that cannot
- * succeed.
- */
-function canPairFromHere(): boolean {
-  if (typeof window === "undefined") return true;
-  return window.location.protocol !== "https:";
-}
-
 function ConnectionBanner({ state }: { state: ReturnType<typeof useStore.getState>["connection"] }) {
   const [text, colour] =
     state.status === "ready"
@@ -240,8 +228,8 @@ function ConnectionBanner({ state }: { state: ReturnType<typeof useStore.getStat
                 // them to run `mekaneck serve` there would send them after a
                 // fault that is not theirs.
                 canPairFromHere()
-                  ? "Not paired — run `mekaneck serve` and enter its token"
-                  : "Read-only: a page served over https cannot reach a binary on 127.0.0.1. Clone the repository to run programs.",
+                  ? "Not paired — run `mekaneck serve`, then enter its token in the Pair panel"
+                  : "Hosted instance: pairing needs an http origin. See the Pair panel to run it locally.",
                 palette.textDim,
               ];
 

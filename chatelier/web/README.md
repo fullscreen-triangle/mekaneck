@@ -28,12 +28,26 @@ records behind it stay local, so regenerate them from your own copy with
 `python validation/build_cardiac_charts.py` if you need to rebuild the
 aggregate.
 
-A **deployed** instance is the landing page plus a read-only editor. It cannot
-pair with a binary: a page served over https may not open a websocket to
-`127.0.0.1`, and that restriction is worth keeping rather than working around
-— it is the same-origin rule doing exactly what the local-only guarantee
-claims. To run programs, clone the repository and serve this directory
-yourself alongside `mekaneck serve`.
+## Pairing with the binary
+
+This is the intended way to use the tool. Start the binary, copy the token it
+prints, and paste it into the **Pair** panel:
+
+```bash
+mekaneck serve --port 8731     # prints a token
+npm run dev                    # http://127.0.0.1:5173 — paste it in
+```
+
+The browser connects *to* your machine, so analysis never leaves the host. The
+token is a per-run secret — 32 bytes from the OS CSPRNG, never written to
+disk, invalidated when the binary restarts.
+
+A **hosted** instance is the landing page plus an unpaired editor. It cannot
+reach a binary, because a browser will not open a `ws://` connection from an
+https origin — it is blocked as mixed content before the binary is contacted.
+That is the same-origin rule doing what the local-only guarantee claims, so
+the Pair panel explains it and gives the commands above rather than offering a
+token field that cannot work.
 
 ## What the interface is constrained not to do
 

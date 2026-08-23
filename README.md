@@ -318,6 +318,19 @@ as a paper — abstract, the residual algebra, the inertia result, the language,
 the cardiac substrate, verification, and a stated scope. The editor (`#/editor`)
 is entered deliberately from it.
 
+To use the editor, pair it with a binary on the same machine:
+
+```bash
+mekaneck serve --port 8731     # prints a per-run token
+cd chatelier/web && npm run dev
+```
+
+Paste the token into the editor's **Pair** panel. The browser connects *to*
+your machine rather than the other way round, so nothing analysed leaves the
+host. A hosted copy of this page cannot pair — a browser blocks a `ws://`
+connection from an https origin as mixed content — so the panel explains that
+and gives these commands instead.
+
 That ordering is load-bearing rather than presentational. The editor will run a
 program over a substrate whose floor obligation fails, and will report a
 contested closure as a normal termination with a zero exit code. A reader who

@@ -142,7 +142,10 @@ export const useStore = create<Store>((set, get) => ({
   select: (patch) => set((s) => ({ selection: { ...s.selection, ...patch } })),
   clearSelection: () => set({ selection: EMPTY_SELECTION }),
 
-  activePanel: "Console",
+  // An unpaired session opens on Pair: the Console has nothing in it until a
+  // binary is connected, and landing there reads as a tool that is broken
+  // rather than one that is waiting for a token.
+  activePanel: "Pair",
   setActivePanel: (activePanel) => set({ activePanel }),
   activityView: "files",
   setActivityView: (activityView) => set({ activityView }),

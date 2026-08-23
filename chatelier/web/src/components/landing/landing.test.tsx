@@ -115,8 +115,11 @@ describe("deployed instance", () => {
 
     try {
       const { container } = render(<App />);
-      expect(container.textContent).toMatch(/read-only/i);
-      expect(container.textContent).not.toMatch(/enter its token/i);
+      // It must explain the mixed-content block and route the reader to the
+      // local path, not offer a token field that cannot succeed.
+      expect(container.textContent).toMatch(/mixed content/i);
+      expect(container.textContent).toMatch(/run the tool locally/i);
+      expect(container.querySelector('input[placeholder*="token"]')).toBeNull();
     } finally {
       Object.defineProperty(window, "location", {
         value: orig,
@@ -126,8 +129,10 @@ describe("deployed instance", () => {
     }
   });
 
-  it("keeps the pairing prompt when served locally", () => {
+  it("offers a working token field when served locally", () => {
     const { container } = render(<App />);
+    // http origin: pairing is possible, so the field must actually be there.
     expect(container.textContent).toMatch(/mekaneck serve/i);
+    expect(container.querySelector('input[placeholder*="token"]')).not.toBeNull();
   });
 });
