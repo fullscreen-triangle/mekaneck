@@ -283,16 +283,14 @@ blindhorse/results/
 # excluding them silently broke the build rather than only the tests.
 !chatelier/web/src/**/*.json
 
-# The browser application ships the *derived* chart data it fetches. The
-# blanket *.json above was excluding the whole of web/public, so the deployed
-# landing page and cardiac panel fetched a 404 and fell back to their no-data
-# wording.
+# The browser application ships the data it fetches. The blanket *.json above
+# was excluding the whole of web/public, so the deployed landing page and
+# cardiac panel fetched a 404 and fell back to their no-data wording.
 #
-# Only the aggregate is committed. The raw per-night records behind it are a
-# personal wearable trace -- dated bedtimes, per-night physiology -- and this
-# repository is public, so they stay local. Rebuild the aggregate from a local
-# copy with `python validation/build_cardiac_charts.py`.
-!chatelier/web/public/dataset/cardiac_charts.json
+# The full 86-night record is committed at the author's direction, which makes
+# the cardiac validation reproducible by anyone: `validate_cardiac.py` and
+# `build_cardiac_charts.py` both read from here.
+!chatelier/web/public/**/*.json
 
 # The emitted validation results are what the papers and the README report,
 # so they are reviewable artefacts rather than scratch output.
